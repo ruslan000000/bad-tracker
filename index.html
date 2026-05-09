@@ -21,40 +21,41 @@
             padding: 16px;
         }
 
+        /* СТАРТОВЫЙ ЭКРАН */
         .start-screen {
-            max-width: 550px;
+            max-width: 600px;
             width: 100%;
             background: #151922;
             border-radius: 48px;
-            padding: 48px 32px;
+            padding: 60px 40px;
             text-align: center;
             border: 1px solid #252B36;
         }
 
-        .hero-icon { font-size: 70px; margin-bottom: 20px; }
+        .hero-icon { font-size: 80px; margin-bottom: 24px; }
         .start-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFFFFF, #C7CDD8);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
-        .start-sub { color: #C7CDD8; font-size: 0.9rem; margin-bottom: 40px; opacity: 0.7; }
+        .start-sub { color: #C7CDD8; font-size: 1rem; margin-bottom: 48px; opacity: 0.7; }
         
         .start-buttons {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 18px;
+            margin-bottom: 40px;
         }
         
         .start-btn {
-            padding: 18px 20px;
+            padding: 20px 24px;
             border: none;
             border-radius: 60px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
             display: flex;
@@ -68,21 +69,22 @@
         .start-btn:active { transform: scale(0.97); }
         
         .contact-section { padding-top: 24px; border-top: 1px solid #252B36; }
-        .contact-label { font-size: 0.7rem; color: #6E7683; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .contact-label { font-size: 0.75rem; color: #6E7683; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
         .contact-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: #202531;
-            padding: 10px 20px;
-            border-radius: 40px;
+            padding: 12px 24px;
+            border-radius: 50px;
             text-decoration: none;
             color: #C7CDD8;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
-        .version { font-size: 0.6rem; color: #4A505E; margin-top: 20px; }
+        .version { font-size: 0.65rem; color: #4A505E; margin-top: 24px; }
 
+        /* МОДАЛЬНЫЕ ОКНА — УВЕЛИЧЕННЫЕ */
         .modal {
             display: none;
             position: fixed;
@@ -95,16 +97,34 @@
         }
         .modal-card {
             background: #151922;
-            width: 92%;
-            max-width: 450px;
-            border-radius: 32px;
-            padding: 24px;
-            max-height: 85vh;
+            width: 94%;
+            max-width: 550px;
+            border-radius: 44px;
+            padding: 32px 28px;
+            max-height: 90vh;
             overflow-y: auto;
             border: 1px solid #252B36;
         }
-        .modal-card h2 { color: white; text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
-        .modal-card h3 { color: #7cb342; font-size: 1.1rem; margin: 16px 0 10px; }
+        .modal-card h2 { color: white; text-align: center; font-size: 1.8rem; margin-bottom: 28px; }
+        .modal-card h3 { color: #7cb342; font-size: 1.3rem; margin: 20px 0 15px; }
+        .modal-card label { 
+            color: white; 
+            display: block; 
+            margin: 18px 0 8px; 
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .modal-card input, .modal-card select { 
+            width: 100%; 
+            padding: 16px; 
+            margin: 5px 0; 
+            border: 1px solid #252B36; 
+            border-radius: 32px; 
+            background: #202531; 
+            color: white; 
+            font-size: 1rem;
+        }
+        .modal-card input::placeholder { color: #6E7683; }
         
         .instruction-table {
             width: 100%;
@@ -112,17 +132,17 @@
             border-collapse: collapse;
         }
         .instruction-table td {
-            padding: 8px 6px;
+            padding: 12px 8px;
             border-bottom: 1px solid #2A303E;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #C7CDD8;
         }
         .instruction-table td:first-child { font-weight: 600; width: 40%; }
         .badge {
             display: inline-block;
             background: #2A5F3A;
-            padding: 3px 10px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 24px;
             font-size: 0.75rem;
             margin-right: 5px;
         }
@@ -130,13 +150,58 @@
             background: #2A5F3A;
             color: white;
             border: none;
-            padding: 14px;
-            border-radius: 40px;
-            font-weight: 600;
+            padding: 18px;
+            border-radius: 50px;
+            font-weight: 700;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 28px;
             cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        /* Стили для группового приёма БАДов */
+        .group-item-selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2A5F3A;
+            padding: 14px 16px;
+            border-radius: 28px;
+            margin-bottom: 10px;
+            color: white;
             font-size: 1rem;
+        }
+        .group-item-available {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2A303E;
+            padding: 14px 16px;
+            border-radius: 28px;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        .group-item-available span { color: white; }
+        .group-btn-add {
+            background: #1E3A5F;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .group-btn-remove {
+            background: #3A1E1E;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #E57373;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
         
         .app-container {
@@ -163,21 +228,21 @@
         .back-btn {
             background: #202531;
             border: none;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
             color: #C7CDD8;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
-        .section-title { font-size: 1.4rem; font-weight: 700; flex: 1; color: white; }
+        .section-title { font-size: 1.5rem; font-weight: 700; flex: 1; color: white; }
         .action-btn {
             background: #2A5F3A;
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 10px 16px;
             border-radius: 30px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -190,73 +255,65 @@
         .supply-card, .workout-card {
             background: #202531;
             border-radius: 24px;
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 12px;
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
-        .card-title { font-weight: 700; font-size: 1rem; color: white; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px; }
+        .card-title { font-weight: 700; font-size: 1.1rem; color: white; }
         .supply-stock { color: #4CAF50; font-weight: 700; font-size: 1.1rem; }
         
         .exercise-item {
             background: #151922;
-            border-radius: 16px;
-            padding: 12px;
-            margin-top: 10px;
+            border-radius: 20px;
+            padding: 14px;
+            margin-top: 12px;
         }
-        .exercise-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .exercise-name { font-weight: 600; color: white; }
-        .sets-list { font-size: 0.75rem; color: #A0A6B2; margin-top: 6px; }
+        .exercise-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .exercise-name { font-weight: 600; color: white; font-size: 1rem; }
+        .sets-list { font-size: 0.8rem; color: #A0A6B2; margin-top: 6px; }
         
         .history-item {
             background: #202531;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 8px;
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 10px;
         }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .history-name { color: white; font-weight: 600; font-size: 0.9rem; }
-        .history-detail { font-size: 0.8rem; color: #A0A6B2; margin: 4px 0; }
-        .history-date { font-size: 0.65rem; color: #6E7683; margin-top: 4px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .history-name { color: white; font-weight: 600; font-size: 1rem; }
+        .history-detail { font-size: 0.85rem; color: #A0A6B2; margin: 5px 0; }
+        .history-date { font-size: 0.7rem; color: #6E7683; margin-top: 5px; }
         
         .add-btn {
             background: #2A5F3A;
             color: white;
             border: none;
-            padding: 14px;
+            padding: 16px;
             border-radius: 60px;
-            font-weight: 600;
+            font-weight: 700;
             width: 100%;
             margin-top: 12px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         .add-btn.blue { background: #1E3A5F; }
         .small-btn {
             background: #2A303E;
             border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
             cursor: pointer;
             color: #C7CDD8;
-            margin-left: 6px;
+            margin-left: 8px;
+            font-weight: 500;
         }
         .danger-btn { background: #3A1E1E; color: #E57373; }
-        .remove-item {
-            background: #3A1E1E;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            cursor: pointer;
-            color: #E57373;
-            font-size: 0.7rem;
-        }
         
-        .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .filter-row input { flex: 1; padding: 12px; border: 1px solid #252B36; border-radius: 28px; background: #151922; color: white; font-size: 0.9rem; }
-        .filter-row button { padding: 10px 16px; border-radius: 28px; border: none; background: #202531; color: #C7CDD8; cursor: pointer; }
+        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-row input { flex: 1; padding: 14px; border: 1px solid #252B36; border-radius: 30px; background: #151922; color: white; font-size: 1rem; }
+        .filter-row button { padding: 14px 20px; border-radius: 30px; border: none; background: #202531; color: #C7CDD8; cursor: pointer; font-size: 1rem; }
         
-        .empty-state { text-align: center; padding: 40px; color: #6E7683; font-size: 0.9rem; }
+        .empty-state { text-align: center; padding: 50px; color: #6E7683; font-size: 1rem; }
         
         .toast {
             position: fixed;
@@ -265,9 +322,9 @@
             transform: translateX(-50%);
             background: #2A5F3A;
             color: white;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 60px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             z-index: 2000;
             animation: fadeOut 3s ease forwards;
         }
@@ -280,13 +337,40 @@
         .edit-icon, .delete-icon {
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 20px;
+            padding: 6px 10px;
+            border-radius: 25px;
         }
         .edit-icon { color: #7cb342; }
         .delete-icon { color: #E57373; }
+        
+        /* Для подходов в тренировках */
+        .set-row {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            align-items: center;
+        }
+        .set-row input {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #252B36;
+            border-radius: 28px;
+            background: #202531;
+            color: white;
+            font-size: 0.95rem;
+        }
+        .remove-item {
+            background: #3A1E1E;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 18px;
+            cursor: pointer;
+            color: #E57373;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -399,7 +483,7 @@
                     <tr><td>💾 Бэкап</td><td>Полная копия всех данных</td></tr>
                     <tr><td>📂 Импорт</td><td>Восстановить из бэкапа</td></tr>
                 </table>
-                <p style="font-size:0.75rem; color:#6E7683; text-align:center; margin-top:16px;">📬 Вопросы: <strong>@Rusrus4</strong> (Telegram)</p>
+                <p style="font-size:0.8rem; color:#6E7683; text-align:center; margin-top:20px;">📬 Вопросы: <strong>@Rusrus4</strong> (Telegram)</p>
                 <button class="close-instruction" onclick="closeModal()">Закрыть</button>
             </div>
         `);
@@ -421,7 +505,7 @@
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v2.6 — бэкап на телефонах исправлен</div>
+                <div class="version">v2.8 — увеличенные модалки</div>
             </div>
         `;
     }
@@ -440,15 +524,18 @@
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать БАД</h3>
-                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}" placeholder="Название">
+                <label>Название:</label>
+                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
+                <label>Единица измерения:</label>
                 <select id="editSuppUnit">
                     <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы (г)</option>
                     <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки (шт)</option>
                 </select>
-                <input type="number" id="editSuppQuantity" value="${supp.quantity}" placeholder="Количество" step="any">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="updateSupplement('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <label>Количество:</label>
+                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -479,12 +566,14 @@
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать приём</h3>
-                <div style="margin-bottom:10px;"><strong>${escapeHtml(entry.suppName)}</strong></div>
-                <input type="number" id="editHistoryAmount" value="${entry.amount}" placeholder="Количество" step="any">
+                <div style="margin-bottom:15px; color:white; font-size:1.1rem;"><strong>${escapeHtml(entry.suppName)}</strong></div>
+                <label>Количество:</label>
+                <input type="number" id="editHistoryAmount" value="${entry.amount}" step="any">
+                <label>Дата и время:</label>
                 <input type="datetime-local" id="editHistoryDate" value="${entry.date.slice(0,16)}">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="updateHistoryEntry('${entryId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateHistoryEntry('${entryId}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -559,7 +648,7 @@
                         <button class="delete-icon" onclick="deleteSupplement('${sup.id}')">🗑️</button>
                     </div>
                 </div>
-                <div style="font-size:0.7rem; color:#6E7683;">${sup.unit === 'г' ? 'граммы' : 'таблетки'}</div>
+                <div style="font-size:0.75rem; color:#6E7683;">${sup.unit === 'г' ? 'граммы' : 'таблетки'}</div>
             </div>
         `).join('');
         
@@ -583,13 +672,13 @@
                 <button onclick="filterBadsHistory()">🔍</button>
                 <button onclick="clearBadsFilter()">✖️</button>
             </div>
-            <div style="margin-bottom:20px;">
-                <div style="color:white; margin-bottom:8px;">📦 Мои БАДы</div>
-                ${supplementsHtml || '<div class="empty-state">Нет БАДов.</div>'}
+            <div style="margin-bottom:25px;">
+                <div style="color:white; margin-bottom:12px; font-size:1.1rem;">📦 Мои БАДы</div>
+                ${supplementsHtml || '<div class="empty-state">Нет БАДов. Нажмите "Добавить БАД"</div>'}
                 <button class="add-btn" onclick="openAddSuppModal()">➕ Добавить БАД</button>
             </div>
             <div>
-                <div style="color:white; margin-bottom:8px;">📜 История приёмов</div>
+                <div style="color:white; margin-bottom:12px; font-size:1.1rem;">📜 История приёмов</div>
                 <div id="historyList">${historyHtml || '<div class="empty-state">Нет записей</div>'}</div>
             </div>
         `;
@@ -608,12 +697,18 @@
         showModal(`
             <div class="modal-card">
                 <h3>✨ Добавить БАД</h3>
-                <input type="text" id="suppName" placeholder="Название">
-                <select id="suppUnit"><option value="г">граммы (г)</option><option value="таб">таблетки (шт)</option></select>
+                <label>Название:</label>
+                <input type="text" id="suppName" placeholder="Например: Витамин D">
+                <label>Единица измерения:</label>
+                <select id="suppUnit">
+                    <option value="г">граммы (г)</option>
+                    <option value="таб">таблетки (шт)</option>
+                </select>
+                <label>Количество:</label>
                 <input type="number" id="suppAmount" placeholder="Количество" step="any">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="addSupplement()">Добавить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -648,38 +743,38 @@
         let availableBads = supplements.filter(s => !selectedBads.find(sb => sb.id === s.id));
         
         let selectedHtml = selectedBads.map(s => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#202531; padding:10px; border-radius:16px; margin-bottom:8px;">
+            <div class="group-item-selected">
                 <span>${escapeHtml(s.name)} — ${s.amount} ${s.unit === 'г' ? 'г' : 'таб'}</span>
-                <button class="remove-item" onclick="removeFromGroup('${s.id}')">✖️</button>
+                <button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️ Убрать</button>
             </div>
         `).join('');
         
         let availableHtml = availableBads.map(s => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#2A303E; padding:10px; border-radius:16px; margin-bottom:8px;">
-                <span>${escapeHtml(s.name)} (${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'})</span>
-                <button class="small-btn" onclick="addToGroup('${s.id}')">+ Добавить</button>
+            <div class="group-item-available">
+                <span>${escapeHtml(s.name)} — остаток: ${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'}</span>
+                <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
             </div>
         `).join('');
         
         showModal(`
             <div class="modal-card">
-                <h3>💊 Приём БАДов</h3>
-                <label style="color:#C7CDD8;">Дата приёма:</label>
+                <h2>💊 Приём БАДов</h2>
+                <label>📅 Дата приёма:</label>
                 <input type="datetime-local" id="groupConsumeDate" value="${new Date().toISOString().slice(0,16)}">
                 
-                <div style="margin: 12px 0;">
-                    <div style="color:#7cb342; margin-bottom:6px;">✅ Выбранные (${selectedBads.length}):</div>
-                    <div style="max-height:150px; overflow-y:auto;">${selectedHtml || '<div style="color:#6E7683;">Ничего не выбрано</div>'}</div>
+                <div style="margin: 20px 0;">
+                    <div style="color:#7cb342; margin-bottom:12px; font-weight:bold; font-size:1rem;">✅ Выбранные (${selectedBads.length}):</div>
+                    <div style="max-height:180px; overflow-y:auto;">${selectedHtml || '<div class="empty-state" style="padding:20px;">Ничего не выбрано</div>'}</div>
                 </div>
                 
-                <div style="margin: 12px 0;">
-                    <div style="color:#1E3A5F; margin-bottom:6px;">📦 Доступные БАДы:</div>
-                    <div style="max-height:200px; overflow-y:auto;">${availableHtml || '<div style="color:#6E7683;">Нет доступных БАДов</div>'}</div>
+                <div style="margin: 20px 0;">
+                    <div style="color:#1E3A5F; margin-bottom:12px; font-weight:bold; font-size:1rem;">📦 Доступные БАДы:</div>
+                    <div style="max-height:230px; overflow-y:auto;">${availableHtml || '<div class="empty-state" style="padding:20px;">Нет доступных БАДов</div>'}</div>
                 </div>
                 
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="saveGroupConsume()">💾 Записать всё</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:20px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="saveGroupConsume()">💾 Записать всё</button>
+                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -761,37 +856,29 @@
         filterBadsHistory();
     };
 
-    // ========== БЭКАП (РАБОТАЕТ НА ТЕЛЕФОНАХ) ==========
+    // ========== БЭКАП ==========
     function exportBackup() {
         const now = new Date();
         const backup = { 
             supplements, historyLog, workouts, exerciseLibrary, 
             date: now.toISOString(),
-            version: '2.6'
+            version: '2.8'
         };
         
         const dataStr = JSON.stringify(backup, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
-        
-        // Создаём временную ссылку
         const url = URL.createObjectURL(blob);
-        
-        // Создаём скрытую ссылку и эмулируем клик
         const link = document.createElement('a');
         link.href = url;
         link.download = `fitness_backup_${now.toISOString().slice(0,19).replace(/:/g, '-')}.json`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
-        // Очищаем URL
         setTimeout(() => URL.revokeObjectURL(url), 100);
-        
         showToast('📦 Бэкап сохранён!');
     }
 
     function importBackup() {
-        // Создаём скрытый input для выбора файла
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
@@ -879,11 +966,13 @@
         showModal(`
             <div class="modal-card">
                 <h3>📎 Выгрузка данных</h3>
-                <input type="date" id="exportStartDate" placeholder="С даты">
-                <input type="date" id="exportEndDate" placeholder="По дату">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="doExport()">📊 Выгрузить CSV</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <label>📅 С даты:</label>
+                <input type="date" id="exportStartDate">
+                <label>📅 По дату:</label>
+                <input type="date" id="exportEndDate">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="doExport()">📊 Выгрузить CSV</button>
+                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -926,7 +1015,7 @@
                 <div class="card-header">
                     <span class="card-title">🏷️ ${escapeHtml(w.name || 'Тренировка')}</span>
                     <div>
-                        <span style="color:#A0A6B2; font-size:0.8rem;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
+                        <span style="color:#A0A6B2; font-size:0.85rem;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
                         <button class="delete-icon" onclick="deleteWorkout('${w.id}')">🗑️</button>
                     </div>
                 </div>
@@ -942,8 +1031,8 @@
                         <div class="sets-list">${(ex.sets || []).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
                     </div>
                 `).join('')}
-                <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:8px;" onclick="addExerciseToWorkout('${w.id}')">➕ Упражнение</button>
-                <button class="small-btn" style="background:#2A303E; margin-top:4px;" onclick="editWorkoutNameDate('${w.id}')">✏️ Название/дата</button>
+                <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:10px; width:100%;" onclick="addExerciseToWorkout('${w.id}')">➕ Добавить упражнение</button>
+                <button class="small-btn" style="background:#2A303E; margin-top:8px; width:100%;" onclick="editWorkoutNameDate('${w.id}')">✏️ Изменить название/дату</button>
             </div>
         `).join('');
         container.innerHTML += `<button class="add-btn blue" onclick="openAddWorkoutModal()">➕ Новая тренировка</button>`;
@@ -963,10 +1052,10 @@
         `).join('');
         showModal(`
             <div class="modal-card">
-                <h3>📚 Библиотека упражнений</h3>
-                <div style="max-height:300px; overflow-y:auto;">${exercisesHtml || '<div class="empty-state">Нет упражнений</div>'}</div>
-                <button class="add-btn" style="background:#1E3A5F; margin-top:12px;" onclick="addNewExerciseToLibrary()">➕ Добавить упражнение</button>
-                <button class="small-btn danger-btn" style="margin-top:12px;" onclick="closeModal()">Закрыть</button>
+                <h2>📚 Библиотека упражнений</h2>
+                <div style="max-height:350px; overflow-y:auto;">${exercisesHtml || '<div class="empty-state">Нет упражнений</div>'}</div>
+                <button class="add-btn" style="background:#1E3A5F; margin-top:15px;" onclick="addNewExerciseToLibrary()">➕ Добавить упражнение</button>
+                <button class="small-btn danger-btn" style="margin-top:15px; width:100%;" onclick="closeModal()">Закрыть</button>
             </div>
         `);
     }
@@ -975,11 +1064,13 @@
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новое упражнение</h3>
-                <input type="text" id="newExName" placeholder="Название">
-                <input type="text" id="newExMuscle" placeholder="Группа мышц">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="saveNewExercise()">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <label>Название упражнения:</label>
+                <input type="text" id="newExName" placeholder="Например: Жим лёжа">
+                <label>Группа мышц:</label>
+                <input type="text" id="newExMuscle" placeholder="Например: Грудь">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveNewExercise()">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -1000,11 +1091,13 @@
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать упражнение</h3>
+                <label>Название:</label>
                 <input type="text" id="editExName" value="${escapeHtml(ex.name)}">
+                <label>Группа мышц:</label>
                 <input type="text" id="editExMuscle" value="${escapeHtml(ex.muscleGroup)}">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="updateExerciseInLibrary('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInLibrary('${id}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -1031,11 +1124,13 @@
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новая тренировка</h3>
-                <input type="text" id="workoutName" placeholder="Название тренировки">
+                <label>Название тренировки:</label>
+                <input type="text" id="workoutName" placeholder="Например: Силовая">
+                <label>Дата:</label>
                 <input type="date" id="workoutDate" value="${new Date().toISOString().slice(0,10)}">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#1E3A5F; color:white;" onclick="createWorkout()">Создать</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#1E3A5F; color:white; flex:1;" onclick="createWorkout()">Создать</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -1059,11 +1154,13 @@
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать тренировку</h3>
+                <label>Название:</label>
                 <input type="text" id="editWorkoutName" value="${escapeHtml(w.name)}">
+                <label>Дата:</label>
                 <input type="date" id="editWorkoutDate" value="${w.date}">
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="updateWorkout('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateWorkout('${id}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -1082,19 +1179,22 @@
         showModal(`
             <div class="modal-card">
                 <h3>🏋️ Добавить упражнение</h3>
+                <label>Выберите упражнение:</label>
                 <select id="exSelect" onchange="toggleNewExerciseField()">${options}</select>
                 <div id="newExerciseFields" style="display:none;">
+                    <label>Название:</label>
                     <input type="text" id="newExNameLib" placeholder="Название">
+                    <label>Группа мышц:</label>
                     <input type="text" id="newExMuscleLib" placeholder="Группа мышц">
                 </div>
                 <div id="setsContainer">
-                    <div style="color:white; margin:8px 0;">Подходы:</div>
+                    <div style="color:white; margin:15px 0 10px; font-weight:bold;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetField()" style="margin-top:10px;">+ Добавить подход</button>
                 </div>
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="saveExerciseToWorkout('${workoutId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveExerciseToWorkout('${workoutId}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
@@ -1115,9 +1215,9 @@
         const container = document.getElementById('setsList');
         if(!container) return;
         container.innerHTML = currentSets.map((set, idx) => `
-            <div style="display:flex; gap:8px; margin:6px 0;">
-                <input type="number" placeholder="Вес (кг)" value="${set.weight}" onchange="currentSets[${idx}].weight = this.value" style="flex:1; padding:8px; border-radius:20px; border:1px solid #252B36; background:#202531; color:white;">
-                <input type="number" placeholder="Повторы" value="${set.reps}" onchange="currentSets[${idx}].reps = this.value" style="flex:1; padding:8px; border-radius:20px; border:1px solid #252B36; background:#202531; color:white;">
+            <div class="set-row">
+                <input type="number" placeholder="Вес (кг)" value="${set.weight}" onchange="currentSets[${idx}].weight = this.value">
+                <input type="number" placeholder="Повторы" value="${set.reps}" onchange="currentSets[${idx}].reps = this.value">
                 <button class="remove-item" onclick="removeSetField(${idx})">✖️</button>
             </div>
         `).join('');
@@ -1154,13 +1254,13 @@
             <div class="modal-card">
                 <h3>✏️ Редактировать упражнение</h3>
                 <div id="setsContainer">
-                    <div style="color:white; margin:8px 0;">Подходы:</div>
+                    <div style="color:white; margin:15px 0 10px; font-weight:bold;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetField()" style="margin-top:10px;">+ Добавить подход</button>
                 </div>
-                <div style="display:flex; gap:12px; margin-top:16px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white;" onclick="updateExerciseInWorkout('${workoutId}','${exerciseId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInWorkout('${workoutId}','${exerciseId}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
