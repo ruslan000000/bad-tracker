@@ -105,6 +105,7 @@
         }
         .modal-card h2 { color: white; text-align: center; font-size: 1.8rem; margin-bottom: 28px; }
         .modal-card h3 { color: #7cb342; font-size: 1.3rem; margin: 20px 0 15px; }
+        .modal-card p { color: #C7CDD8; font-size: 0.95rem; margin: 8px 0; line-height: 1.4; }
         .modal-card label { 
             color: white; 
             display: block; 
@@ -121,6 +122,21 @@
             background: #202531; 
             color: white; 
             font-size: 1rem;
+        }
+        .modal-card input::placeholder { color: #8A90A0; }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        .instruction-list li {
+            color: #C7CDD8;
+            padding: 10px 0;
+            border-bottom: 1px solid #2A303E;
+            font-size: 0.9rem;
+        }
+        .instruction-list li strong {
+            color: #7cb342;
         }
         
         .app-container {
@@ -189,7 +205,7 @@
         }
         .exercise-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .exercise-name { font-weight: 600; color: white; font-size: 1rem; }
-        .sets-list { font-size: 0.8rem; color: #A0A6B2; margin-top: 6px; }
+        .sets-list { font-size: 0.8rem; color: #C7CDD8; margin-top: 6px; }
         
         .history-item {
             background: #202531;
@@ -199,7 +215,7 @@
         }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .history-name { color: white; font-weight: 600; font-size: 1rem; }
-        .history-detail { font-size: 0.85rem; color: #A0A6B2; margin: 5px 0; }
+        .history-detail { font-size: 0.85rem; color: #C7CDD8; margin: 5px 0; }
         .history-date { font-size: 0.7rem; color: #6E7683; margin-top: 5px; }
         
         .add-btn {
@@ -279,6 +295,7 @@
             color: white;
             font-size: 0.95rem;
         }
+        .set-row input::placeholder { color: #8A90A0; }
         .remove-item {
             background: #3A1E1E;
             border: none;
@@ -312,7 +329,6 @@
             color: white;
             font-size: 1rem;
         }
-        .group-item-available span { color: white; }
         .group-btn-add {
             background: #1E3A5F;
             border: none;
@@ -321,7 +337,6 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9rem;
         }
         .group-btn-remove {
             background: #3A1E1E;
@@ -331,7 +346,6 @@
             color: #E57373;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -350,7 +364,6 @@
         localStorage.setItem('fitness_history', JSON.stringify(historyLog));
         localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
         localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
-        showToast('💾 Данные сохранены');
     }
 
     function loadAll() {
@@ -420,28 +433,49 @@
         currentModalCallback = null;
     }
 
-    // ========== ИНСТРУКЦИЯ ==========
+    // ========== ИНСТРУКЦИЯ (исправлена — белый текст) ==========
     function showInstruction() {
         showModal(`
             <div class="modal-card">
                 <h2>📖 Инструкция</h2>
+                
                 <h3>💊 БАДы</h3>
-                <p>➕ Добавить БАД — ввести название, единицу, количество</p>
-                <p>✏️ Редактировать БАД — нажать ✏️ у карточки</p>
-                <p>💊 Приём БАДов — выбрать несколько БАДов → записать все сразу</p>
-                <p>✏️ Редактировать приём — нажать ✏️ в истории</p>
-                <p>🗑️ Удалить приём — нажать 🗑️ в истории</p>
+                <ul class="instruction-list">
+                    <li><strong>➕ Добавить БАД</strong> — ввести название, единицу, количество</li>
+                    <li><strong>✏️ Редактировать БАД</strong> — нажать ✏️ у карточки БАДа</li>
+                    <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов, указать количество, записать все сразу</li>
+                    <li><strong>✏️ Редактировать приём</strong> — нажать ✏️ в истории → изменить дату/количество</li>
+                    <li><strong>🗑️ Удалить приём</strong> — нажать 🗑️ в истории → БАДы вернутся на остаток</li>
+                    <li><strong>📅 Фильтр по дате</strong> — выбрать дату → нажать 🔍</li>
+                </ul>
+                
                 <h3>🏋️ Тренировки</h3>
-                <p>➕ Новая тренировка — ввести название и дату</p>
-                <p>➕ Упражнение — выбрать из библиотеки, добавить подходы</p>
-                <p>✏️ Редактировать — нажать ✏️ у упражнения</p>
-                <p>📚 Библиотека — добавление/удаление упражнений</p>
-                <h3>💾 Бэкапы</h3>
-                <p>💾 Бэкап — сохранить ВСЕ данные в файл</p>
-                <p>📂 Импорт — восстановить из файла бэкапа</p>
-                <p>📎 Export — сохранить историю в CSV (Excel)</p>
-                <p style="margin-top:20px;">📬 Вопросы: <strong>@Rusrus4</strong> (Telegram)</p>
-                <button class="add-btn" onclick="closeModal()" style="margin-top:20px;">Закрыть</button>
+                <ul class="instruction-list">
+                    <li><strong>➕ Новая тренировка</strong> — ввести название и дату</li>
+                    <li><strong>➕ Упражнение</strong> — выбрать из библиотеки или создать новое, добавить подходы (вес×повторы)</li>
+                    <li><strong>✏️ Редактировать упражнение</strong> — нажать ✏️ у упражнения → изменить подходы</li>
+                    <li><strong>🗑️ Удалить упражнение</strong> — нажать 🗑️ у упражнения</li>
+                    <li><strong>📚 Библиотека упражнений</strong> — кнопка 📚 Упр. (добавление/удаление упражнений)</li>
+                </ul>
+                
+                <h3>💾 Бэкапы (защита данных)</h3>
+                <ul class="instruction-list">
+                    <li><strong>📎 Export</strong> — сохранить историю в CSV (открывается в Excel/Google Sheets)</li>
+                    <li><strong>💾 Бэкап</strong> — полная копия ВСЕХ данных (БАДы + тренировки + библиотека)</li>
+                    <li><strong>📂 Импорт</strong> — восстановить данные из файла бэкапа</li>
+                </ul>
+                
+                <h3>⚠️ ВАЖНО</h3>
+                <ul class="instruction-list">
+                    <li>✅ Закрытие вкладки — данные <strong>НЕ ТЕРЯЮТСЯ</strong></li>
+                    <li>✅ Перезагрузка телефона — данные <strong>НЕ ТЕРЯЮТСЯ</strong></li>
+                    <li>❌ Очистка истории браузера — данные <strong>УДАЛЯЮТСЯ</strong> (делайте бэкап!)</li>
+                    <li>❌ Смена телефона — <strong>нужен бэкап</strong> для переноса данных</li>
+                </ul>
+                
+                <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong> (Telegram)</p>
+                
+                <button class="add-btn" onclick="closeModal()" style="margin-top: 20px;">Закрыть</button>
             </div>
         `);
     }
@@ -462,7 +496,7 @@
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v2.9 — исправлен бэкап на телефонах</div>
+                <div class="version">v3.0 — исправлены цвета + бэкап</div>
             </div>
         `;
     }
@@ -479,7 +513,7 @@
         try {
             const now = new Date();
             const backupData = {
-                version: '2.9',
+                version: '3.0',
                 date: now.toISOString(),
                 supplements: supplements,
                 historyLog: historyLog,
@@ -489,26 +523,26 @@
             
             const jsonStr = JSON.stringify(backupData, null, 2);
             const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
             
-            // Создаём временную ссылку и эмулируем клик
-            const link = document.createElement('a');
-            link.href = url;
-            const fileName = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            showToast('📦 Бэкап сохранён! Файл в папке "Загрузки"');
+            // Используем FileReader и сохранение через data URL для телефонов
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const link = document.createElement('a');
+                link.href = event.target.result;
+                const fileName = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('📦 Бэкап сохранён!');
+            };
+            reader.readAsDataURL(blob);
         } catch(e) {
             alert('Ошибка при создании бэкапа: ' + e.message);
         }
     }
 
     function importBackup() {
-        // Создаём скрытый input для выбора файла
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
@@ -527,7 +561,6 @@
                 try {
                     const data = JSON.parse(ev.target.result);
                     
-                    // Проверяем структуру данных
                     if (data.supplements !== undefined) supplements = data.supplements;
                     if (data.historyLog !== undefined) historyLog = data.historyLog;
                     if (data.workouts !== undefined) workouts = data.workouts;
@@ -536,7 +569,6 @@
                     saveAll();
                     showToast('✅ Данные восстановлены!');
                     
-                    // Обновляем интерфейс
                     if (document.getElementById('badsContent')) renderBadsContent();
                     if (document.getElementById('workoutsContent')) renderWorkoutsContent();
                 } catch(err) { 
@@ -640,48 +672,7 @@
         closeModal();
     };
 
-    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ (сокращённо, но рабочие) ==========
-    
-    // Редактирование БАДа
-    function editSupplement(id) {
-        const supp = supplements.find(s => s.id === id);
-        if(!supp) return;
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать БАД</h3>
-                <label>Название:</label>
-                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
-                <label>Единица:</label>
-                <select id="editSuppUnit">
-                    <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы</option>
-                    <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки</option>
-                </select>
-                <label>Количество:</label>
-                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateSupplement(id) {
-        const name = document.getElementById('editSuppName')?.value;
-        const unit = document.getElementById('editSuppUnit')?.value;
-        const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
-        const supp = supplements.find(s => s.id === id);
-        if(supp && name && !isNaN(quantity) && quantity >= 0) {
-            supp.name = name;
-            supp.unit = unit;
-            supp.quantity = quantity;
-            saveAll();
-            closeModal();
-            renderBadsContent();
-        }
-    }
-
-    // БАДы
+    // ========== БАДЫ ==========
     function renderBadsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -746,8 +737,47 @@
         `;
     }
 
+    function editSupplement(id) {
+        const supp = supplements.find(s => s.id === id);
+        if(!supp) return;
+        showModal(`
+            <div class="modal-card">
+                <h3>✏️ Редактировать БАД</h3>
+                <label>Название:</label>
+                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
+                <label>Единица:</label>
+                <select id="editSuppUnit">
+                    <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы</option>
+                    <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки</option>
+                </select>
+                <label>Количество:</label>
+                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
+        `);
+    }
+
+    function updateSupplement(id) {
+        const name = document.getElementById('editSuppName')?.value;
+        const unit = document.getElementById('editSuppUnit')?.value;
+        const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
+        const supp = supplements.find(s => s.id === id);
+        if(supp && name && !isNaN(quantity) && quantity >= 0) {
+            supp.name = name;
+            supp.unit = unit;
+            supp.quantity = quantity;
+            saveAll();
+            closeModal();
+            renderBadsContent();
+            showToast('✅ БАД обновлён');
+        }
+    }
+
     window.deleteSupplement = (id) => {
-        if(confirm('Удалить БАД?')) {
+        if(confirm('Удалить БАД? Все записи о приёме тоже удалятся.')) {
             historyLog = historyLog.filter(h => h.suppId !== id);
             supplements = supplements.filter(s => s.id !== id);
             saveAll();
@@ -786,7 +816,6 @@
         renderBadsContent();
     };
 
-    // Редактирование записи истории
     function editHistoryEntry(entryId) {
         const entry = historyLog.find(h => h.id === entryId);
         if(!entry) return;
@@ -963,7 +992,7 @@
         showToast(`✅ Записано ${selectedBads.length} БАДов`);
     }
 
-    // ТРЕНИРОВКИ (сокращённо, основные функции)
+    // ========== ТРЕНИРОВКИ ==========
     function renderWorkoutsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -1173,13 +1202,14 @@
         showModal(`
             <div class="modal-card">
                 <h3>🏋️ Добавить упражнение</h3>
+                <label>Выберите упражнение:</label>
                 <select id="exSelect" onchange="toggleNewExerciseField()">${options}</select>
                 <div id="newExerciseFields" style="display:none;">
                     <input type="text" id="newExNameLib" placeholder="Название">
                     <input type="text" id="newExMuscleLib" placeholder="Группа мышц">
                 </div>
                 <div id="setsContainer">
-                    <div style="margin:15px 0 10px;">🏋️ Подходы:</div>
+                    <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
                     <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
                 </div>
@@ -1245,7 +1275,7 @@
             <div class="modal-card">
                 <h3>✏️ Редактировать упражнение</h3>
                 <div id="setsContainer">
-                    <div style="margin:15px 0 10px;">🏋️ Подходы:</div>
+                    <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
                     <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
                 </div>
