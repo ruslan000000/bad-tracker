@@ -396,14 +396,65 @@
     let workouts = [];
     let exerciseLibrary = [];
     let collapsedWorkouts = {};
+function getExercisePR(name) {
+    let max = 0;
 
-    function saveAll() {
+    workouts.forEach(w => {
+        (w.exercises || []).forEach(ex => {
+            if(ex.name === name) {
+                (ex.sets || []).forEach(s => {
+                    if(s.weight > max) max = s.weight;
+                });
+            }
+        });
+    });
+
+    return max;
+}
+
+function vibrate() {
+    if(navigator.vibrate) navigator.vibrate(40);
+}
+
+function checkPR(exName, sets) {
+    let oldPR = getExercisePR(exName);
+    let newPR = Math.max(...sets.map(s => s.weight || 0));
+
+    if(newPR > oldPR && oldPR > 0) {
+        showToast("🏆 Новый PR: " + newPR + " кг");
+        vibrate();
+    }
+}
+
+function autoBackup() {
+    try {
+        localStorage.setItem("fitness_auto_backup", JSON.stringify({
+            date: new Date().toISOString(),
+            workouts,
+            supplements,
+            historyLog,
+            exerciseLibrary
+        }));
+
+        localStorage.setItem("fitness_backup_date", new Date().toISOString());
+    } catch(e) {
+        console.log("backup error", e);
+    }
+}
+function saveAll() {
+    try {
         localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
         localStorage.setItem('fitness_history', JSON.stringify(historyLog));
         localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
         localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
         localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
+
+        autoBackup(); // 🔥 ВАЖНО
+
+    } catch(e) {
+        console.log("save error", e);
     }
+}
 
     function loadAll() {
         supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
@@ -550,7 +601,16 @@ function getLastExerciseData(exerciseName) {
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v3.3 — умный выбор упражнений</div>
+                <div class="version">
+v3.4 — PR + Auto Backup
+</div>
+
+<div style="font-size:11px;color:#7cb342;margin-top:6px;">
+💾 Backup: 
+${localStorage.getItem("fitness_backup_date")
+? new Date(localStorage.getItem("fitness_backup_date")).toLocaleString()
+: "ещё нет"}
+</div>
             </div>
         `;
     }
@@ -1276,7 +1336,11 @@ function getLastExerciseData(exerciseName) {
             const lastData = getLastExerciseData(exerciseName);
             if(lastData) {
                 lastInfoDiv.style.display = 'block';
-                lastInfoDiv.innerHTML = `📊 Последний раз: ${lastData.weight} кг × ${lastData.reps} повт`;
+                lastInfoDiv.innerHTML = `
+📊 Последний раз: ${lastData.weight} кг × ${lastData.reps}
+<br>
+🏆 PR: ${getExercisePR(exerciseName)} кг
+`;
                 // Предлагаем заполнить первый подход последними данными
                 if(currentSets.length > 0 && currentSets[0].weight === '') {
                     currentSets[0].weight = lastData.weight;
@@ -1337,6 +1401,7 @@ function getLastExerciseData(exerciseName) {
         
         const workout = workouts.find(w => w.id === workoutId);
         workout.exercises.push({ id: Date.now().toString(), name: ex.name, muscleGroup: ex.muscleGroup, sets });
+        checkPR(ex.name, sets);
         saveAll();
         closeModal();
         renderWorkoutsContent();
