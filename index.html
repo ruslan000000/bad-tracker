@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>БАД-трекер - учёт приёма</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #e9f0e6;
+            margin: 0;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .app {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 18px 16px 25px;
+        }
+        h1 {
+            font-size: 1.6rem;
+            margin: 0 0 0.2rem 0;
+            color: #2c5e2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sub {
+            color: #5a6e5a;
+            margin-bottom: 18px;
+            border-left: 3px solid #7cb342;
+            padding-left: 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Кнопки навигации - увеличены для пальцев */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .nav-btn {
+            flex: 1;
+            background: #eef3ea;
+            border: none;
+            padding: 14px 8px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2b482b;
+            touch-action: manipulation;
+        }
+        .nav-btn.active {
+            background: #2e7d32;
+            color: white;
+            box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+        }
+        .nav-btn:active {
+            transform: scale(0.97);
+        }
+        
+        /* Панели */
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .panel.active-panel {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Карточки остатков */
+        .supply-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 450px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .supply-card {
+            background: #f4f9ef;
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid #7cb342;
+            gap: 10px;
+        }
+        .supply-info {
+            flex: 1;
+        }
+        .supply-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+        }
+        .supply-meta {
+            font-size: 0.7rem;
+            color: #5e6b5e;
+        }
+        .supply-stock {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1f4f1f;
+            text-align: right;
+            white-space: nowrap;
+        }
+        .unit-type {
+            font-size: 0.7rem;
+            font-weight: normal;
+            color: #6c7a6c;
+        }
+        .edit-supp-btn {
+            background: #e0ecd6;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #2e7d32;
+            padding: 8px 12px;
+            border-radius: 40px;
+            transition: 0.2s;
+            touch-action: manipulation;
+        }
+        .edit-supp-btn:active {
+            background: #c8dbc0;
+            transform: scale(0.95);
+        }
+        
+        /* Кнопки действий */
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0 20px;
+        }
+        button {
+            background: #eef3ea;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex: 1;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2b482b;
+            touch-action: manipulation;
+        }
+        button.primary {
+            background: #2e7d32;
+            color: white;
+            box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+        }
+        button.primary:active { background: #1b5e20; transform: scale(0.97);}
+        button.secondary:active { background: #d9e3d3; transform: scale(0.97);}
+        
+        /* Фильтр по дате */
+        .filter-controls {
+            background: #f4f9ef;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-row input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #cddfc2;
+            border-radius: 28px;
+            font-size: 0.9rem;
+            background: white;
+            font-family: inherit;
+        }
+        .filter-row button {
+            flex: none;
+            padding: 12px 16px;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        .clear-filter {
+            background: #e0d6c6;
+        }
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        .sort-btn {
+            background: #eef3ea;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            flex: none;
+            border-radius: 30px;
+            touch-action: manipulation;
+        }
+        .sort-btn.active-sort {
+            background: #2e7d32;
+            color: white;
+        }
+        .filter-info {
+            font-size: 0.75rem;
+            color: #7cb342;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        /* История */
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .history-item {
+            background: #fefef7;
+            border-radius: 16px;
+            padding: 12px 14px;
+            border-left: 4px solid #bdccae;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .history-name {
+            font-weight: 700;
+            color: #2c5e2e;
+            font-size: 0.95rem;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #bc8f8f;
+            padding: 6px 10px;
+            touch-action: manipulation;
+        }
+        .delete-btn:active {
+            transform: scale(0.9);
+        }
+        .history-detail {
+            color: #3b553b;
+            font-size: 0.85rem;
+            margin: 5px 0;
+        }
+        .history-date {
+            color: #8e9e8e;
+            font-size: 0.7rem;
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            touch-action: none;
+        }
+        .modal-card {
+            background: white;
+            width: 90%;
+            max-width: 360px;
+            border-radius: 36px;
+            padding: 24px 20px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.2s ease;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-card h3 {
+            margin-top: 0;
+            text-align: center;
+            color: #2c5e2e;
+        }
+        .modal-card input, .modal-card select {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #cddfc2;
+            border-radius: 28px;
+            font-size: 1rem;
+            background: #fefef7;
+            font-family: inherit;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .small-btn {
+            background: #cfdfc6;
+            padding: 12px 0;
+            text-align: center;
+            border-radius: 40px;
+            flex: 1;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            touch-action: manipulation;
+        }
+        .danger-btn {
+            background: #f3dfdf;
+            color: #a14343;
+        }
+        .confirm-btn {
+            background: #2e7d32;
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #98a898;
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #90a583;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #e0ecd6;
+        }
+        
+        /* Улучшения для телефона */
+        @media (max-width: 480px) {
+            .app {
+                padding: 14px 12px 20px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .nav-btn, button, .small-btn {
+                min-height: 48px;
+            }
+            .supply-card {
+                padding: 12px;
+            }
+            .edit-supp-btn {
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <h1>💊 БАД-трекер</h1>
+    <div class="sub">➕ пополнение | ✅ приём | ✏️ редактирование</div>
+
+    <!-- Кнопки навигации -->
+    <div class="nav-buttons">
+        <button class="nav-btn active" data-panel="stock">📦 Бады в наличии</button>
+        <button class="nav-btn" data-panel="history">📜 История приёмов</button>
+    </div>
+
+    <!-- Панель: Бады в наличии -->
+    <div id="stockPanel" class="panel active-panel">
+        <div id="stockContainer" class="supply-list">
+            <!-- динамически -->
+        </div>
+        <div class="action-row">
+            <button class="primary" id="addSuppBtn">➕ Добавить БАД</button>
+            <button class="secondary" id="consumeBtn">💊 Употребление</button>
+        </div>
+    </div>
+
+    <!-- Панель: История приёмов -->
+    <div id="historyPanel" class="panel">
+        <div class="filter-controls">
+            <div class="filter-row">
+                <input type="date" id="dateFilter" placeholder="Выберите дату">
+                <button class="small-btn" id="applyFilterBtn">🔍 Показать</button>
+                <button class="small-btn clear-filter" id="clearFilterBtn">✖️ Сбросить</button>
+            </div>
+            <div class="sort-controls">
+                <button class="sort-btn active-sort" data-sort="newest">🆕 Сначала новые</button>
+                <button class="sort-btn" data-sort="oldest">📅 Сначала старые</button>
+            </div>
+            <div id="filterInfo" class="filter-info"></div>
+        </div>
+        <div id="historyList" class="history-list">
+            <!-- динамически -->
+        </div>
+    </div>
+
+    <footer>📱 Нажмите ✏️ для редактирования остатка | 🗑️ с подтверждением</footer>
+</div>
+
+<!-- Модалка: Добавить БАД -->
+<div id="modalAdd" class="modal">
+    <div class="modal-card">
+        <h3>✨ Добавить БАД</h3>
+        <input type="text" id="suppName" placeholder="Название (витамин C, Омега-3...)" autocomplete="off">
+        <select id="suppUnit">
+            <option value="г">граммы (г)</option>
+            <option value="таб">таблетки (шт)</option>
+        </select>
+        <input type="number" id="suppAmount" placeholder="Объём / количество" step="any">
+        <div class="modal-buttons">
+            <button class="small-btn" id="confirmAddBtn">➕ Добавить</button>
+            <button class="small-btn danger-btn" id="closeAddModal">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Редактирование остатка -->
+<div id="modalEditStock" class="modal">
+    <div class="modal-card">
+        <h3>✏️ Редактировать остаток</h3>
+        <p id="editStockName" style="text-align:center; font-weight:bold;"></p>
+        <input type="number" id="editStockAmount" placeholder="Новое количество" step="any">
+        <div class="modal-buttons">
+            <button class="small-btn confirm-btn" id="confirmEditBtn">💾 Сохранить</button>
+            <button class="small-btn danger-btn" id="closeEditModal">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Подтверждение удаления -->
+<div id="modalConfirmDelete" class="modal">
+    <div class="modal-card">
+        <h3>⚠️ Подтверждение</h3>
+        <p style="text-align:center;">Вы уверены, что хотите удалить эту запись?<br>БАДы вернутся на остаток.</p>
+        <div class="modal-buttons">
+            <button class="small-btn confirm-btn" id="confirmDeleteBtn">✅ Да, удалить</button>
+            <button class="small-btn danger-btn" id="cancelDeleteBtn">❌ Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модалка: Употребление -->
+<div id="modalConsume" class="modal">
+    <div class="modal-card">
+        <h3>💊 Приём БАДа</h3>
+        <select id="consumeSelectSupp"></select>
+        <input type="number" id="consumeAmount" placeholder="Сколько принято (г / таб)" step="any">
+        <input type="datetime-local" id="consumeDate" step="1">
+        <div class="modal-buttons">
+            <button class="small-btn" id="confirmConsumeBtn">✅ Записать приём</button>
+            <button class="small-btn danger-btn" id="closeConsumeModal">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let supplements = [];
+    let historyLog = [];
+    let currentSort = 'newest';
+    let currentDateFilter = null;
+    let pendingDeleteId = null;
+
+    const STORAGE_SUPPS = "bad_supplements";
+    const STORAGE_HISTORY = "bad_history";
+
+    function saveData() {
+        localStorage.setItem(STORAGE_SUPPS, JSON.stringify(supplements));
+        localStorage.setItem(STORAGE_HISTORY, JSON.stringify(historyLog));
+    }
+
+    function loadData() {
+        const savedSups = localStorage.getItem(STORAGE_SUPPS);
+        supplements = savedSups ? JSON.parse(savedSups) : [];
+        
+        const savedHist = localStorage.getItem(STORAGE_HISTORY);
+        historyLog = savedHist ? JSON.parse(savedHist) : [];
+        
+        renderAll();
+    }
+
+    function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 8); }
+
+    function formatDate(dateString) {
+        if(!dateString) return new Date().toLocaleString();
+        try {
+            let date = new Date(dateString);
+            if(isNaN(date.getTime())) return dateString;
+            return date.toLocaleString('ru-RU', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        } catch(e) {
+            return dateString;
+        }
+    }
+
+    function getDateOnly(isoString) {
+        return isoString ? isoString.split('T')[0] : '';
+    }
+
+    function renderAll() {
+        renderStock();
+        renderHistory();
+    }
+
+    function renderStock() {
+        const container = document.getElementById('stockContainer');
+        if(!supplements.length) {
+            container.innerHTML = '<div class="empty-state">📭 Нет добавленных БАДов<br>Нажмите "➕ Добавить БАД"</div>';
+            return;
+        }
+        container.innerHTML = supplements.map(sup => {
+            let unitLabel = sup.unit === 'г' ? 'грамм' : 'таблеток';
+            return `
+                <div class="supply-card">
+                    <div class="supply-info">
+                        <h4>${escapeHtml(sup.name)}</h4>
+                        <div class="supply-meta">${sup.unit === 'г' ? 'граммы (г)' : 'таблетки (шт)'}</div>
+                    </div>
+                    <div class="supply-stock">
+                        ${sup.quantity} <span class="unit-type">${unitLabel}</span>
+                    </div>
+                    <button class="edit-supp-btn" data-id="${sup.id}" data-name="${escapeHtml(sup.name)}" data-quantity="${sup.quantity}">✏️</button>
+                </div>
+            `;
+        }).join('');
+
+        document.querySelectorAll('.edit-supp-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                const name = btn.getAttribute('data-name');
+                const quantity = btn.getAttribute('data-quantity');
+                openEditStockModal(id, name, quantity);
+            });
+        });
+    }
+
+    function openEditStockModal(id, name, currentQuantity) {
+        document.getElementById('editStockName').innerText = name;
+        document.getElementById('editStockAmount').value = currentQuantity;
+        document.getElementById('modalEditStock').style.display = 'flex';
+        
+        document.getElementById('confirmEditBtn').onclick = () => {
+            const newAmount = parseFloat(document.getElementById('editStockAmount').value);
+            if(isNaN(newAmount) || newAmount < 0) {
+                alert("Введите корректное количество (не отрицательное)");
+                return;
+            }
+            const supp = supplements.find(s => s.id === id);
+            if(supp) {
+                supp.quantity = newAmount;
+                saveData();
+                renderAll();
+                document.getElementById('modalEditStock').style.display = 'none';
+            }
+        };
+    }
+
+    function renderHistory() {
+        const historyDiv = document.getElementById('historyList');
+        let consumeEntries = historyLog.filter(entry => entry.type === 'consume');
+        
+        if(currentDateFilter) {
+            consumeEntries = consumeEntries.filter(entry => getDateOnly(entry.date) === currentDateFilter);
+        }
+        
+        if(!consumeEntries.length) {
+            let filterText = currentDateFilter ? ` за ${currentDateFilter}` : '';
+            historyDiv.innerHTML = `<div class="empty-state">📭 Нет записей о приёме${filterText}<br>Запишите первый приём БАДа</div>`;
+            document.getElementById('filterInfo').innerHTML = currentDateFilter ? `📅 Показаны приёмы за ${currentDateFilter}` : '';
+            return;
+        }
+        
+        if(currentSort === 'newest') {
+            consumeEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else {
+            consumeEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+        
+        historyDiv.innerHTML = consumeEntries.map(entry => `
+            <div class="history-item">
+                <div class="history-header">
+                    <span class="history-name">${escapeHtml(entry.suppName)}</span>
+                    <button class="delete-btn" data-entryid="${entry.id}">🗑️</button>
+                </div>
+                <div class="history-detail">💊 Принято: ${entry.amount} ${entry.unit === 'г' ? 'г' : 'таб.'}</div>
+                <div class="history-date">📅 ${formatDate(entry.date)}</div>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('#historyList .delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                pendingDeleteId = btn.getAttribute('data-entryid');
+                document.getElementById('modalConfirmDelete').style.display = 'flex';
+            });
+        });
+        
+        document.getElementById('filterInfo').innerHTML = currentDateFilter ? `📅 Показаны приёмы за ${currentDateFilter}` : '';
+    }
+
+    function deleteHistoryEntry(entryId) {
+        const entryToDelete = historyLog.find(entry => entry.id === entryId);
+        if(!entryToDelete) return;
+        
+        if(entryToDelete.type === 'consume') {
+            const supp = supplements.find(s => s.id === entryToDelete.suppId);
+            if(supp) supp.quantity += entryToDelete.amount;
+        }
+        
+        historyLog = historyLog.filter(entry => entry.id !== entryId);
+        saveData();
+        renderAll();
+    }
+
+    function addSuppOrIncrease(name, unit, amount) {
+        if(!name.trim()) { alert("Введите название БАДа"); return false; }
+        if(isNaN(amount) || amount <= 0) { alert("Введите корректное количество > 0"); return false; }
+        amount = parseFloat(amount);
+        
+        let existing = supplements.find(s => s.name.toLowerCase() === name.trim().toLowerCase() && s.unit === unit);
+        if(existing) {
+            existing.quantity += amount;
+            historyLog.push({ id: genId(), type: "add", suppId: existing.id, suppName: existing.name, amount, unit, date: new Date().toISOString() });
+        } else {
+            const newId = genId();
+            supplements.push({ id: newId, name: name.trim(), unit, quantity: amount });
+            historyLog.push({ id: genId(), type: "add", suppId: newId, suppName: name.trim(), amount, unit, date: new Date().toISOString() });
+        }
+        saveData();
+        renderAll();
+        return true;
+    }
+
+    function consumeSupp(suppId, amount, customDate) {
+        if(isNaN(amount) || amount <= 0) { alert("Укажите принятое количество > 0"); return false; }
+        amount = parseFloat(amount);
+        const supp = supplements.find(s => s.id === suppId);
+        if(!supp) { alert("БАД не найден"); return false; }
+        if(supp.quantity < amount) {
+            alert(`Недостаточно ${supp.name}! Доступно: ${supp.quantity} ${supp.unit === 'г' ? 'г' : 'таб.'}`);
+            return false;
+        }
+        
+        supp.quantity -= amount;
+        let entryDate = customDate ? new Date(customDate).toISOString() : new Date().toISOString();
+        historyLog.push({ id: genId(), type: "consume", suppId: supp.id, suppName: supp.name, amount, unit: supp.unit, date: entryDate });
+        saveData();
+        renderAll();
+        return true;
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
+    }
+
+    function switchPanel(panelName) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+        document.getElementById(`${panelName}Panel`).classList.add('active-panel');
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.getAttribute('data-panel') === panelName) btn.classList.add('active');
+        });
+    }
+
+    // Модалки
+    const modalAdd = document.getElementById('modalAdd');
+    const modalConsume = document.getElementById('modalConsume');
+    const modalConfirmDelete = document.getElementById('modalConfirmDelete');
+    
+    document.getElementById('addSuppBtn').onclick = () => {
+        document.getElementById('suppName').value = '';
+        document.getElementById('suppAmount').value = '';
+        modalAdd.style.display = 'flex';
+    };
+    document.getElementById('closeAddModal').onclick = () => modalAdd.style.display = 'none';
+    document.getElementById('closeEditModal').onclick = () => document.getElementById('modalEditStock').style.display = 'none';
+    document.getElementById('confirmAddBtn').onclick = () => {
+        const name = document.getElementById('suppName').value;
+        const unit = document.getElementById('suppUnit').value;
+        const amount = parseFloat(document.getElementById('suppAmount').value);
+        if(addSuppOrIncrease(name, unit, amount)) modalAdd.style.display = 'none';
+    };
+    
+    document.getElementById('confirmDeleteBtn').onclick = () => {
+        if(pendingDeleteId) deleteHistoryEntry(pendingDeleteId);
+        pendingDeleteId = null;
+        modalConfirmDelete.style.display = 'none';
+    };
+    document.getElementById('cancelDeleteBtn').onclick = () => {
+        pendingDeleteId = null;
+        modalConfirmDelete.style.display = 'none';
+    };
+    
+    document.getElementById('consumeBtn').onclick = () => {
+        const select = document.getElementById('consumeSelectSupp');
+        if(!supplements.length) {
+            select.innerHTML = '<option disabled>Нет добавленных БАДов</option>';
+            alert("Сначала добавьте хотя бы один БАД на остаток");
+            return;
+        }
+        select.innerHTML = supplements.map(sup => `<option value="${sup.id}">${escapeHtml(sup.name)} (остаток: ${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'})</option>`).join('');
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('consumeDate').value = now.toISOString().slice(0, 16);
+        document.getElementById('consumeAmount').value = '';
+        modalConsume.style.display = 'flex';
+    };
+    document.getElementById('closeConsumeModal').onclick = () => modalConsume.style.display = 'none';
+    document.getElementById('confirmConsumeBtn').onclick = () => {
+        const suppId = document.getElementById('consumeSelectSupp').value;
+        const amount = parseFloat(document.getElementById('consumeAmount').value);
+        const customDate = document.getElementById('consumeDate').value;
+        if(consumeSupp(suppId, amount, customDate)) modalConsume.style.display = 'none';
+    };
+    
+    // Фильтр
+    document.getElementById('applyFilterBtn').onclick = () => {
+        currentDateFilter = document.getElementById('dateFilter').value;
+        renderHistory();
+    };
+    document.getElementById('clearFilterBtn').onclick = () => {
+        document.getElementById('dateFilter').value = '';
+        currentDateFilter = null;
+        renderHistory();
+    };
+    
+    // Сортировка
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentSort = btn.getAttribute('data-sort');
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active-sort'));
+            btn.classList.add('active-sort');
+            renderHistory();
+        });
+    });
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchPanel(btn.getAttribute('data-panel')));
+    });
+    
+    window.onclick = (e) => {
+        if(e.target === modalAdd) modalAdd.style.display = 'none';
+        if(e.target === modalConsume) modalConsume.style.display = 'none';
+        if(e.target === modalConfirmDelete) modalConfirmDelete.style.display = 'none';
+        if(e.target === document.getElementById('modalEditStock')) document.getElementById('modalEditStock').style.display = 'none';
+    };
+    
+    loadData();
+</script>
+</body>
+</html>
