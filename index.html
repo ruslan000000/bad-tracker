@@ -135,9 +135,7 @@
             border-bottom: 1px solid #2A303E;
             font-size: 0.9rem;
         }
-        .instruction-list li strong {
-            color: #7cb342;
-        }
+        .instruction-list li strong { color: #7cb342; }
         
         .app-container {
             max-width: 600px;
@@ -196,6 +194,33 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px; }
         .card-title { font-weight: 700; font-size: 1.1rem; color: white; }
         .supply-stock { color: #4CAF50; font-weight: 700; font-size: 1.1rem; }
+        
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 0;
+        }
+        .workout-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .collapse-icon {
+            font-size: 1.2rem;
+            color: #7cb342;
+            cursor: pointer;
+            user-select: none;
+        }
+        .exercises-container {
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+        .exercises-container.collapsed {
+            display: none;
+        }
         
         .exercise-item {
             background: #151922;
@@ -347,6 +372,13 @@
             font-weight: 600;
             cursor: pointer;
         }
+        
+        /* Состояния свернутых тренировок */
+        .workout-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -358,12 +390,16 @@
     let historyLog = [];
     let workouts = [];
     let exerciseLibrary = [];
+    
+    // Хранилище состояний свёрнутых тренировок
+    let collapsedWorkouts = {};
 
     function saveAll() {
         localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
         localStorage.setItem('fitness_history', JSON.stringify(historyLog));
         localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
         localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
+        localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
     }
 
     function loadAll() {
@@ -371,6 +407,7 @@
         historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
         workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
         exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
+        collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
         
         const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
         
@@ -411,6 +448,7 @@
     }
 
     let currentModalCallback = null;
+    let scrollPosition = 0;
 
     function showModal(html, onClose) {
         let modal = document.getElementById('dynamicModal');
@@ -431,10 +469,23 @@
         if(modal) modal.style.display = 'none';
         if(currentModalCallback) currentModalCallback();
         currentModalCallback = null;
+        // Восстанавливаем позицию прокрутки после закрытия модалки
+        const content = document.querySelector('.section-content');
+        if(content && scrollPosition) {
+            content.scrollTop = scrollPosition;
+            scrollPosition = 0;
+        }
     }
 
-    // ========== ИНСТРУКЦИЯ (исправлена — белый текст) ==========
+    // Сохраняем позицию прокрутки перед открытием модалки
+    function saveScrollPosition() {
+        const content = document.querySelector('.section-content');
+        if(content) scrollPosition = content.scrollTop;
+    }
+
+    // ========== ИНСТРУКЦИЯ ==========
     function showInstruction() {
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h2>📖 Инструкция</h2>
@@ -446,35 +497,25 @@
                     <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов, указать количество, записать все сразу</li>
                     <li><strong>✏️ Редактировать приём</strong> — нажать ✏️ в истории → изменить дату/количество</li>
                     <li><strong>🗑️ Удалить приём</strong> — нажать 🗑️ в истории → БАДы вернутся на остаток</li>
-                    <li><strong>📅 Фильтр по дате</strong> — выбрать дату → нажать 🔍</li>
                 </ul>
                 
                 <h3>🏋️ Тренировки</h3>
                 <ul class="instruction-list">
-                    <li><strong>➕ Новая тренировка</strong> — ввести название и дату</li>
-                    <li><strong>➕ Упражнение</strong> — выбрать из библиотеки или создать новое, добавить подходы (вес×повторы)</li>
+                    <li><strong>➕ Новая тренировка</strong> — кнопка в шапке ➕</li>
+                    <li><strong>▶️▼ Свернуть/развернуть</strong> — нажмите на иконку слева от названия</li>
+                    <li><strong>➕ Упражнение</strong> — выбрать из библиотеки или создать новое, добавить подходы</li>
                     <li><strong>✏️ Редактировать упражнение</strong> — нажать ✏️ у упражнения → изменить подходы</li>
-                    <li><strong>🗑️ Удалить упражнение</strong> — нажать 🗑️ у упражнения</li>
-                    <li><strong>📚 Библиотека упражнений</strong> — кнопка 📚 Упр. (добавление/удаление упражнений)</li>
+                    <li><strong>📚 Библиотека упражнений</strong> — кнопка 📚 Упр.</li>
                 </ul>
                 
-                <h3>💾 Бэкапы (защита данных)</h3>
+                <h3>💾 Бэкапы</h3>
                 <ul class="instruction-list">
-                    <li><strong>📎 Export</strong> — сохранить историю в CSV (открывается в Excel/Google Sheets)</li>
-                    <li><strong>💾 Бэкап</strong> — полная копия ВСЕХ данных (БАДы + тренировки + библиотека)</li>
+                    <li><strong>📎 Export</strong> — сохранить историю в CSV</li>
+                    <li><strong>💾 Бэкап</strong> — полная копия ВСЕХ данных</li>
                     <li><strong>📂 Импорт</strong> — восстановить данные из файла бэкапа</li>
                 </ul>
                 
-                <h3>⚠️ ВАЖНО</h3>
-                <ul class="instruction-list">
-                    <li>✅ Закрытие вкладки — данные <strong>НЕ ТЕРЯЮТСЯ</strong></li>
-                    <li>✅ Перезагрузка телефона — данные <strong>НЕ ТЕРЯЮТСЯ</strong></li>
-                    <li>❌ Очистка истории браузера — данные <strong>УДАЛЯЮТСЯ</strong> (делайте бэкап!)</li>
-                    <li>❌ Смена телефона — <strong>нужен бэкап</strong> для переноса данных</li>
-                </ul>
-                
                 <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong> (Telegram)</p>
-                
                 <button class="add-btn" onclick="closeModal()" style="margin-top: 20px;">Закрыть</button>
             </div>
         `);
@@ -496,7 +537,7 @@
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v3.0 — исправлены цвета + бэкап</div>
+                <div class="version">v3.2 — сворачивание тренировок + кнопка в шапке</div>
             </div>
         `;
     }
@@ -508,23 +549,23 @@
 
     function goBack() { renderStartScreen(); }
 
-    // ========== БЭКАП (РАБОТАЕТ НА ТЕЛЕФОНАХ) ==========
+    // ========== БЭКАП ==========
     function exportBackup() {
         try {
             const now = new Date();
             const backupData = {
-                version: '3.0',
+                version: '3.2',
                 date: now.toISOString(),
                 supplements: supplements,
                 historyLog: historyLog,
                 workouts: workouts,
-                exerciseLibrary: exerciseLibrary
+                exerciseLibrary: exerciseLibrary,
+                collapsedWorkouts: collapsedWorkouts
             };
             
             const jsonStr = JSON.stringify(backupData, null, 2);
             const blob = new Blob([jsonStr], { type: 'application/json' });
             
-            // Используем FileReader и сохранение через data URL для телефонов
             const reader = new FileReader();
             reader.onload = function(event) {
                 const link = document.createElement('a');
@@ -560,29 +601,23 @@
             reader.onload = (ev) => {
                 try {
                     const data = JSON.parse(ev.target.result);
-                    
                     if (data.supplements !== undefined) supplements = data.supplements;
                     if (data.historyLog !== undefined) historyLog = data.historyLog;
                     if (data.workouts !== undefined) workouts = data.workouts;
                     if (data.exerciseLibrary !== undefined) exerciseLibrary = data.exerciseLibrary;
+                    if (data.collapsedWorkouts !== undefined) collapsedWorkouts = data.collapsedWorkouts;
                     
                     saveAll();
                     showToast('✅ Данные восстановлены!');
-                    
                     if (document.getElementById('badsContent')) renderBadsContent();
                     if (document.getElementById('workoutsContent')) renderWorkoutsContent();
                 } catch(err) { 
-                    alert('Ошибка: неверный формат файла бэкапа.\nФайл должен быть .json, созданный этим приложением.'); 
+                    alert('Ошибка: неверный формат файла бэкапа.'); 
                 }
-                document.body.removeChild(input);
-            };
-            reader.onerror = () => {
-                alert('Ошибка чтения файла');
                 document.body.removeChild(input);
             };
             reader.readAsText(file, 'UTF-8');
         };
-        
         input.click();
     }
 
@@ -650,6 +685,7 @@
     let currentExportType = '';
     function openExportModal(type) {
         currentExportType = type;
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h3>📎 Выгрузка данных</h3>
@@ -672,7 +708,14 @@
         closeModal();
     };
 
-    // ========== БАДЫ ==========
+    // ========== ФУНКЦИИ ДЛЯ ТРЕНИРОВОК ==========
+    function toggleWorkoutCollapse(workoutId) {
+        collapsedWorkouts[workoutId] = !collapsedWorkouts[workoutId];
+        saveAll();
+        renderWorkoutsContent();
+    }
+
+    // ========== БАДЫ (сокращённо, но все функции есть) ==========
     function renderBadsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -699,7 +742,7 @@
                     <div>
                         <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
                         <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteSupplement('${sup.id}')">🗑️</button>
+                        <button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
                     </div>
                 </div>
             </div>
@@ -711,7 +754,7 @@
                     <span class="history-name">${escapeHtml(h.suppName)}</span>
                     <div>
                         <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
+                        <button class="delete-icon" onclick="deleteHistoryEntryById('${h.id}')">🗑️</button>
                     </div>
                 </div>
                 <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
@@ -738,6 +781,7 @@
     }
 
     function editSupplement(id) {
+        saveScrollPosition();
         const supp = supplements.find(s => s.id === id);
         if(!supp) return;
         showModal(`
@@ -776,7 +820,7 @@
         }
     }
 
-    window.deleteSupplement = (id) => {
+    window.deleteSupplementFromList = (id) => {
         if(confirm('Удалить БАД? Все записи о приёме тоже удалятся.')) {
             historyLog = historyLog.filter(h => h.suppId !== id);
             supplements = supplements.filter(s => s.id !== id);
@@ -786,6 +830,7 @@
     };
 
     window.openAddSuppModal = () => {
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h3>✨ Добавить БАД</h3>
@@ -817,6 +862,7 @@
     };
 
     function editHistoryEntry(entryId) {
+        saveScrollPosition();
         const entry = historyLog.find(h => h.id === entryId);
         if(!entry) return;
         showModal(`
@@ -859,7 +905,7 @@
         renderBadsContent();
     }
 
-    function deleteHistoryEntry(entryId) {
+    window.deleteHistoryEntryById = (entryId) => {
         if(!confirm('Удалить запись?')) return;
         const entry = historyLog.find(h => h.id === entryId);
         if(entry) {
@@ -869,7 +915,7 @@
             saveAll();
             renderBadsContent();
         }
-    }
+    };
 
     function filterBadsHistory() {
         const filterDate = document.getElementById('badsFilterDate')?.value;
@@ -882,7 +928,7 @@
                     <span class="history-name">${escapeHtml(h.suppName)}</span>
                     <div>
                         <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
+                        <button class="delete-icon" onclick="deleteHistoryEntryById('${h.id}')">🗑️</button>
                     </div>
                 </div>
                 <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
@@ -896,7 +942,7 @@
         filterBadsHistory();
     }
 
-    // Групповой приём БАДов
+    // ========== ГРУППОВОЙ ПРИЁМ БАДОВ ==========
     let selectedBads = [];
 
     function openGroupConsumeModal() {
@@ -925,6 +971,7 @@
             </div>
         `).join('');
         
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h2>💊 Приём БАДов</h2>
@@ -999,6 +1046,7 @@
                 <div class="section-header">
                     <button class="back-btn" onclick="goBack()">← Назад</button>
                     <div class="section-title">🏋️ Тренировки</div>
+                    <button class="action-btn blue" onclick="openAddWorkoutModal()">➕ Новая</button>
                     <button class="action-btn" onclick="openExportModal('workouts')">📎 Export</button>
                     <button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button>
                     <button class="action-btn blue" onclick="importBackup()">📂 Импорт</button>
@@ -1013,37 +1061,51 @@
     function renderWorkoutsContent() {
         const container = document.getElementById('workoutsContent');
         if(!workouts.length) {
-            container.innerHTML = `<div class="empty-state">🏋️ Нет тренировок</div><button class="add-btn blue" onclick="openAddWorkoutModal()">➕ Новая тренировка</button>`;
+            container.innerHTML = `<div class="empty-state">🏋️ Нет тренировок</div>`;
             return;
         }
         const sorted = [...workouts].sort((a,b) => new Date(b.date) - new Date(a.date));
-        container.innerHTML = sorted.map(w => `
-            <div class="workout-card">
-                <div class="card-header">
-                    <span class="card-title">🏷️ ${escapeHtml(w.name || 'Тренировка')}</span>
-                    <div>
-                        <span style="color:#A0A6B2;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
-                        <button class="delete-icon" onclick="deleteWorkout('${w.id}')">🗑️</button>
+        container.innerHTML = sorted.map(w => {
+            const isCollapsed = collapsedWorkouts[w.id] === true;
+            const collapseIcon = isCollapsed ? '▶️' : '▼';
+            return `
+                <div class="workout-card">
+                    <div class="workout-header" onclick="toggleWorkoutCollapse('${w.id}')">
+                        <div class="workout-header-left">
+                            <span class="collapse-icon">${collapseIcon}</span>
+                            <span class="workout-name">🏷️ ${escapeHtml(w.name || 'Тренировка')}</span>
+                        </div>
+                        <div>
+                            <span style="color:#A0A6B2;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
+                            <button class="delete-icon" onclick="event.stopPropagation(); deleteWorkout('${w.id}')">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="exercises-container ${isCollapsed ? 'collapsed' : ''}">
+                        ${(w.exercises || []).map(ex => `
+                            <div class="exercise-item">
+                                <div class="exercise-header">
+                                    <span class="exercise-name">💪 ${escapeHtml(ex.name)} (${ex.muscleGroup})</span>
+                                    <div>
+                                        <button class="edit-icon" onclick="editExerciseInWorkout('${w.id}','${ex.id}')">✏️</button>
+                                        <button class="delete-icon" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button>
+                                    </div>
+                                </div>
+                                <div class="sets-list">${(ex.sets || []).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
+                            </div>
+                        `).join('')}
+                        <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:10px; width:100%;" onclick="addExerciseToWorkout('${w.id}')">➕ Добавить упражнение</button>
+                        <button class="small-btn" style="background:#2A303E; margin-top:8px; width:100%;" onclick="editWorkoutNameDate('${w.id}')">✏️ Изменить название/дату</button>
                     </div>
                 </div>
-                ${(w.exercises || []).map(ex => `
-                    <div class="exercise-item">
-                        <div class="exercise-header">
-                            <span class="exercise-name">💪 ${escapeHtml(ex.name)} (${ex.muscleGroup})</span>
-                            <div>
-                                <button class="edit-icon" onclick="editExerciseInWorkout('${w.id}','${ex.id}')">✏️</button>
-                                <button class="delete-icon" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button>
-                            </div>
-                        </div>
-                        <div class="sets-list">${(ex.sets || []).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
-                    </div>
-                `).join('')}
-                <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:10px; width:100%;" onclick="addExerciseToWorkout('${w.id}')">➕ Добавить упражнение</button>
-                <button class="small-btn" style="background:#2A303E; margin-top:8px; width:100%;" onclick="editWorkoutNameDate('${w.id}')">✏️ Изменить название/дату</button>
-            </div>
-        `).join('');
-        container.innerHTML += `<button class="add-btn blue" onclick="openAddWorkoutModal()">➕ Новая тренировка</button>`;
+            `;
+        }).join('');
     }
+
+    window.toggleWorkoutCollapse = (id) => {
+        collapsedWorkouts[id] = !collapsedWorkouts[id];
+        saveAll();
+        renderWorkoutsContent();
+    };
 
     function openExerciseLibrary() {
         let exercisesHtml = (exerciseLibrary || []).map(ex => `
@@ -1057,6 +1119,7 @@
                 </div>
             </div>
         `).join('');
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h2>📚 Библиотека упражнений</h2>
@@ -1068,6 +1131,7 @@
     }
 
     function addNewExerciseToLibrary() {
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новое упражнение</h3>
@@ -1094,6 +1158,7 @@
     }
 
     function editExerciseInLibrary(id) {
+        saveScrollPosition();
         const ex = exerciseLibrary.find(e => e.id === id);
         showModal(`
             <div class="modal-card">
@@ -1134,6 +1199,7 @@
     }
 
     function openAddWorkoutModal() {
+        saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новая тренировка</h3>
@@ -1156,6 +1222,7 @@
         saveAll();
         closeModal();
         renderWorkoutsContent();
+        showToast('✅ Тренировка создана');
     }
 
     function deleteWorkout(id) {
@@ -1167,6 +1234,7 @@
     }
 
     function editWorkoutNameDate(id) {
+        saveScrollPosition();
         const w = workouts.find(w => w.id === id);
         showModal(`
             <div class="modal-card">
@@ -1197,6 +1265,7 @@
     let currentSets = [];
     
     function addExerciseToWorkout(workoutId) {
+        saveScrollPosition();
         let options = (exerciseLibrary || []).map(ex => `<option value="${ex.id}" data-muscle="${ex.muscleGroup}">${ex.name} (${ex.muscleGroup})</option>`).join('');
         options += `<option value="new">➕ Новое упражнение...</option>`;
         showModal(`
@@ -1223,14 +1292,14 @@
         addSetField();
     }
 
-    function toggleNewExerciseField() {
+    window.toggleNewExerciseField = () => {
         const val = document.getElementById('exSelect')?.value;
         const el = document.getElementById('newExerciseFields');
         if(el) el.style.display = val === 'new' ? 'block' : 'none';
-    }
+    };
 
-    function addSetField() { currentSets.push({ weight: '', reps: '' }); renderSetsList(); }
-    function removeSetField(idx) { currentSets.splice(idx, 1); renderSetsList(); }
+    window.addSetField = () => { currentSets.push({ weight: '', reps: '' }); renderSetsList(); };
+    window.removeSetField = (idx) => { currentSets.splice(idx, 1); renderSetsList(); };
     
     function renderSetsList() {
         const container = document.getElementById('setsList');
@@ -1264,9 +1333,11 @@
         saveAll();
         closeModal();
         renderWorkoutsContent();
+        showToast(`✅ Упражнение "${name}" добавлено`);
     }
 
     function editExerciseInWorkout(workoutId, exerciseId) {
+        saveScrollPosition();
         const workout = workouts.find(w => w.id === workoutId);
         const exercise = workout?.exercises.find(e => e.id === exerciseId);
         if(!exercise) return;
@@ -1296,16 +1367,18 @@
             saveAll();
             closeModal();
             renderWorkoutsContent();
+            showToast('✅ Упражнение обновлено');
         }
     }
 
     function deleteExerciseFromWorkout(workoutId, exerciseId) {
-        if(confirm('Удалить упражнение?')) {
+        if(confirm('Удалить упражнение из тренировки?')) {
             const workout = workouts.find(w => w.id === workoutId);
             if(workout) {
                 workout.exercises = workout.exercises.filter(e => e.id !== exerciseId);
                 saveAll();
                 renderWorkoutsContent();
+                showToast('🗑️ Упражнение удалено');
             }
         }
     }
