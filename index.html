@@ -5,1393 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Fitness Tracker</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background-color: #0F1115;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
-        .start-screen {
-            max-width: 600px;
-            width: 100%;
-            background: #151922;
-            border-radius: 48px;
-            padding: 60px 40px;
-            text-align: center;
-            border: 1px solid #252B36;
-        }
-
-        .hero-icon { font-size: 80px; margin-bottom: 24px; }
-        .start-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFFFFF, #C7CDD8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 16px;
-        }
-        .start-sub { color: #C7CDD8; font-size: 1rem; margin-bottom: 48px; opacity: 0.7; }
-        
-        .start-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            margin-bottom: 40px;
-        }
-        
-        .start-btn {
-            padding: 20px 24px;
-            border: none;
-            border-radius: 60px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        .start-btn.bads { background: #2A5F3A; color: white; }
-        .start-btn.workouts { background: #1E3A5F; color: white; }
-        .start-btn.instruction { background: #2A303E; color: #C7CDD8; border: 1px solid #3A4050; }
-        .start-btn:active { transform: scale(0.97); }
-        
-        .contact-section { padding-top: 24px; border-top: 1px solid #252B36; }
-        .contact-label { font-size: 0.75rem; color: #6E7683; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #202531;
-            padding: 12px 24px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: #C7CDD8;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        .version { font-size: 0.65rem; color: #4A505E; margin-top: 24px; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-card {
-            background: #151922;
-            width: 94%;
-            max-width: 550px;
-            border-radius: 44px;
-            padding: 32px 28px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid #252B36;
-        }
-        .modal-card h2 { color: white; text-align: center; font-size: 1.8rem; margin-bottom: 28px; }
-        .modal-card h3 { color: #7cb342; font-size: 1.3rem; margin: 20px 0 15px; }
-        .modal-card p { color: #C7CDD8; font-size: 0.95rem; margin: 8px 0; line-height: 1.4; }
-        .modal-card label { 
-            color: white; 
-            display: block; 
-            margin: 18px 0 8px; 
-            font-weight: 600;
-            font-size: 1rem;
-        }
-        .modal-card input, .modal-card select { 
-            width: 100%; 
-            padding: 16px; 
-            margin: 5px 0; 
-            border: 1px solid #252B36; 
-            border-radius: 32px; 
-            background: #202531; 
-            color: white; 
-            font-size: 1rem;
-        }
-        .modal-card input::placeholder { color: #8A90A0; }
-        
-        .instruction-list {
-            list-style: none;
-            padding: 0;
-        }
-        .instruction-list li {
-            color: #C7CDD8;
-            padding: 10px 0;
-            border-bottom: 1px solid #2A303E;
-            font-size: 0.9rem;
-        }
-        .instruction-list li strong { color: #7cb342; }
-        
-        .app-container {
-            max-width: 600px;
-            width: 100%;
-            background: #0F1115;
-            border-radius: 40px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 85vh;
-            border: 1px solid #252B36;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            background: #151922;
-            border-bottom: 1px solid #252B36;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .back-btn {
-            background: #202531;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #C7CDD8;
-            font-size: 1rem;
-        }
-        .section-title { font-size: 1.5rem; font-weight: 700; flex: 1; color: white; }
-        .action-btn {
-            background: #2A5F3A;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .action-btn.orange { background: #ff9800; }
-        .action-btn.blue { background: #1E3A5F; }
-        .action-btn.green { background: #7cb342; }
-
-        .section-content { flex: 1; overflow-y: auto; padding: 16px; }
-        
-        .supply-card, .workout-card {
-            background: #202531;
-            border-radius: 24px;
-            padding: 18px;
-            margin-bottom: 12px;
-        }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px; }
-        .card-title { font-weight: 700; font-size: 1.1rem; color: white; }
-        .supply-stock { color: #4CAF50; font-weight: 700; font-size: 1.1rem; }
-        
-        .workout-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 5px 0;
-        }
-        .workout-header-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-        .collapse-icon {
-            font-size: 1.2rem;
-            color: #7cb342;
-            cursor: pointer;
-            user-select: none;
-        }
-        .exercises-container {
-            margin-top: 12px;
-            transition: all 0.2s ease;
-        }
-        .exercises-container.collapsed {
-            display: none;
-        }
-        
-        .exercise-item {
-            background: #151922;
-            border-radius: 20px;
-            padding: 14px;
-            margin-top: 12px;
-        }
-        .exercise-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .exercise-name { font-weight: 600; color: white; font-size: 1rem; }
-        .sets-list { font-size: 0.8rem; color: #C7CDD8; margin-top: 6px; }
-        
-        .history-item {
-            background: #202531;
-            border-radius: 20px;
-            padding: 14px;
-            margin-bottom: 10px;
-        }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .history-name { color: white; font-weight: 600; font-size: 1rem; }
-        .history-detail { font-size: 0.85rem; color: #C7CDD8; margin: 5px 0; }
-        .history-date { font-size: 0.7rem; color: #6E7683; margin-top: 5px; }
-        
-        .add-btn {
-            background: #2A5F3A;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 60px;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 12px;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        .add-btn.blue { background: #1E3A5F; }
-        .small-btn {
-            background: #2A303E;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            color: #C7CDD8;
-            margin-left: 8px;
-            font-weight: 500;
-        }
-        .danger-btn { background: #3A1E1E; color: #E57373; }
-        
-        .filter-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-row input { flex: 1; padding: 14px; border: 1px solid #252B36; border-radius: 30px; background: #151922; color: white; font-size: 1rem; }
-        .filter-row button { padding: 14px 20px; border-radius: 30px; border: none; background: #202531; color: #C7CDD8; cursor: pointer; font-size: 1rem; }
-        
-        .empty-state { text-align: center; padding: 50px; color: #6E7683; font-size: 1rem; }
-        
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2A5F3A;
-            color: white;
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-size: 0.9rem;
-            z-index: 2000;
-            animation: fadeOut 3s ease forwards;
-        }
-        @keyframes fadeOut {
-            0% { opacity: 1; bottom: 30px; }
-            70% { opacity: 1; }
-            100% { opacity: 0; bottom: 100px; visibility: hidden; }
-        }
-        
-        .edit-icon, .delete-icon {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 25px;
-        }
-        .edit-icon { color: #7cb342; }
-        .delete-icon { color: #E57373; }
-        
-        .set-row {
-            display: flex;
-            gap: 10px;
-            margin: 12px 0;
-            align-items: center;
-        }
-        .set-row input {
-            flex: 1;
-            padding: 14px;
-            border: 1px solid #252B36;
-            border-radius: 28px;
-            background: #202531;
-            color: white;
-            font-size: 0.95rem;
-        }
-        .set-row input::placeholder { color: #8A90A0; }
-        .remove-item {
-            background: #3A1E1E;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 18px;
-            cursor: pointer;
-            color: #E57373;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .group-item-selected {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2A5F3A;
-            padding: 14px 16px;
-            border-radius: 28px;
-            margin-bottom: 10px;
-            color: white;
-            font-size: 1rem;
-        }
-        .group-item-available {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2A303E;
-            padding: 14px 16px;
-            border-radius: 28px;
-            margin-bottom: 10px;
-            color: white;
-            font-size: 1rem;
-        }
-        .group-btn-add {
-            background: #1E3A5F;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .group-btn-remove {
-            background: #3A1E1E;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #E57373;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .workout-name {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: white;
-        }
-        
-        .last-info {
-            font-size: 0.75rem;
-            color: #7cb342;
-            margin-top: 4px;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+        body{background:#0F1115;display:flex;justify-content:center;padding:16px}
+        .start-screen{max-width:600px;width:100%;background:#151922;border-radius:48px;padding:48px 32px;text-align:center;border:1px solid #252B36}
+        .hero-icon{font-size:70px;margin-bottom:20px}
+        .start-title{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,#C7CDD8);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .start-sub{color:#C7CDD8;margin-bottom:32px}
+        .start-buttons{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+        .start-btn{padding:16px;border-radius:60px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
+        .start-btn.bads{background:#2A5F3A;color:#fff}
+        .start-btn.workouts{background:#1E3A5F;color:#fff}
+        .start-btn.instruction{background:#2A303E;color:#C7CDD8}
+        .start-btn.admin{background:#5D3A1A;color:#FFB347}
+        .contact-section{padding-top:20px;border-top:1px solid #252B36}
+        .contact-label{font-size:0.7rem;color:#6E7683}
+        .contact-link{display:inline-flex;align-items:center;gap:8px;background:#202531;padding:10px 20px;border-radius:40px;text-decoration:none;color:#C7CDD8;font-weight:600}
+        .version{font-size:0.6rem;color:#4A505E;margin-top:16px}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:1000}
+        .modal-card{background:#151922;width:92%;max-width:500px;border-radius:36px;padding:24px;border:1px solid #252B36}
+        .modal-card h2{color:#fff;text-align:center;margin-bottom:16px}
+        .admin-btn{background:#2A5F3A;color:#fff;border:none;padding:14px;border-radius:40px;font-weight:600;width:100%;margin-top:12px;cursor:pointer}
+        .admin-btn.danger{background:#8B3A3A}
+        .admin-btn.warning{background:#8B6B3A}
+        .app-container{max-width:600px;width:100%;background:#0F1115;border-radius:40px;overflow:hidden;display:flex;flex-direction:column;min-height:85vh;border:1px solid #252B36}
+        .section-header{display:flex;align-items:center;padding:14px 18px;background:#151922;border-bottom:1px solid #252B36;gap:8px;flex-wrap:wrap}
+        .back-btn{background:#202531;border:none;padding:10px 18px;border-radius:40px;font-weight:600;cursor:pointer;color:#C7CDD8}
+        .section-title{font-size:1.4rem;font-weight:700;flex:1;color:#fff}
+        .action-btn{background:#2A5F3A;color:#fff;border:none;padding:8px 12px;border-radius:30px;font-size:0.75rem;font-weight:600;cursor:pointer}
+        .action-btn.orange{background:#ff9800}
+        .action-btn.blue{background:#1E3A5F}
+        .action-btn.green{background:#7cb342}
+        .section-content{flex:1;overflow-y:auto;padding:16px}
+        .supply-card,.workout-card{background:#202531;border-radius:24px;padding:16px;margin-bottom:12px}
+        .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+        .card-title{font-weight:700;color:#fff}
+        .supply-stock{color:#4CAF50;font-weight:700}
+        .workout-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:5px 0}
+        .workout-header-left{display:flex;align-items:center;gap:8px;flex:1}
+        .collapse-icon{font-size:1.1rem;color:#7cb342}
+        .workout-name{font-weight:700;color:#fff}
+        .exercises-container{margin-top:12px}
+        .exercises-container.collapsed{display:none}
+        .exercise-item{background:#151922;border-radius:18px;padding:12px;margin-top:10px}
+        .exercise-header{display:flex;justify-content:space-between;margin-bottom:8px}
+        .exercise-name{font-weight:600;color:#fff}
+        .sets-list{font-size:0.75rem;color:#C7CDD8}
+        .history-item{background:#202531;border-radius:18px;padding:12px;margin-bottom:10px}
+        .history-header{display:flex;justify-content:space-between;margin-bottom:6px}
+        .history-name{color:#fff;font-weight:600}
+        .history-detail{font-size:0.8rem;color:#C7CDD8}
+        .history-date{font-size:0.65rem;color:#6E7683;margin-top:4px}
+        .add-btn{background:#2A5F3A;color:#fff;padding:14px;border-radius:60px;font-weight:700;width:100%;margin-top:12px;cursor:pointer}
+        .add-btn.blue{background:#1E3A5F}
+        .small-btn{background:#2A303E;border:none;padding:8px 16px;border-radius:30px;font-size:0.8rem;cursor:pointer;color:#C7CDD8;margin-left:6px}
+        .danger-btn{background:#3A1E1E;color:#E57373}
+        .filter-row{display:flex;gap:8px;margin-bottom:16px}
+        .filter-row input{flex:1;padding:12px;border:1px solid #252B36;border-radius:28px;background:#151922;color:#fff}
+        .filter-row button{padding:12px 18px;border-radius:28px;border:none;background:#202531;color:#C7CDD8;cursor:pointer}
+        .empty-state{text-align:center;padding:40px;color:#6E7683}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2A5F3A;color:#fff;padding:12px 24px;border-radius:60px;font-size:0.85rem;z-index:2000;animation:fadeOut 3s forwards}
+        @keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0;visibility:hidden}}
+        .edit-icon,.delete-icon{background:none;border:none;font-size:1.1rem;cursor:pointer;padding:4px 8px}
+        .edit-icon{color:#7cb342}
+        .delete-icon{color:#E57373}
+        .set-row{display:flex;gap:8px;margin:10px 0}
+        .set-row input{flex:1;padding:12px;border-radius:26px;background:#202531;border:1px solid #252B36;color:#fff}
+        .remove-item{background:#3A1E1E;border:none;border-radius:28px;padding:8px 14px;color:#E57373}
+        .group-item-selected,.group-item-available{display:flex;justify-content:space-between;padding:12px;border-radius:24px;margin-bottom:8px;color:#fff}
+        .group-item-selected{background:#2A5F3A}
+        .group-item-available{background:#2A303E}
+        .group-btn-add,.group-btn-remove{padding:6px 16px;border-radius:30px;border:none;font-weight:600}
+        .group-btn-add{background:#1E3A5F;color:#fff}
+        .group-btn-remove{background:#3A1E1E;color:#E57373}
+        .last-info{font-size:0.7rem;color:#7cb342;margin-top:4px}
     </style>
 </head>
-<body>
-<div id="app"></div>
-
+<body><div id="app"></div>
 <script>
-    // ========== ДАННЫЕ ==========
-    let supplements = [];
-    let historyLog = [];
-    let workouts = [];
-    let exerciseLibrary = [];
-    let collapsedWorkouts = {};
-
-    function saveAll() {
-        localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
-        localStorage.setItem('fitness_history', JSON.stringify(historyLog));
-        localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
-        localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
-        localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
+    let supplements=[], historyLog=[], workouts=[], exerciseLibrary=[], collapsedWorkouts={};
+    function saveAll(){
+        localStorage.setItem('fitness_supplements',JSON.stringify(supplements));
+        localStorage.setItem('fitness_history',JSON.stringify(historyLog));
+        localStorage.setItem('fitness_workouts',JSON.stringify(workouts));
+        localStorage.setItem('fitness_exercise_library',JSON.stringify(exerciseLibrary));
+        localStorage.setItem('fitness_collapsed',JSON.stringify(collapsedWorkouts));
     }
-
-    function loadAll() {
-        supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
-        historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
-        workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
-        exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
-        collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
-        
-        const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
-        
-        if(isFirstLaunch && exerciseLibrary.length === 0) {
-            localStorage.setItem('fitness_first_launch', 'done');
-            
-            exerciseLibrary = [
-                { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
-                { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
-                { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
-            ];
-            
-            workouts = [{
-                id: 'demo1',
-                name: 'Первая тренировка',
-                date: new Date().toISOString().slice(0, 10),
-                exercises: [
-                    { id: 'demoex1', name: 'Жим лёжа', muscleGroup: 'Грудь', sets: [{ weight: 60, reps: 10 }, { weight: 65, reps: 8 }] },
-                    { id: 'demoex2', name: 'Приседания', muscleGroup: 'Ноги', sets: [{ weight: 80, reps: 8 }, { weight: 85, reps: 6 }] }
-                ]
-            }];
-            
+    function loadAll(){
+        supplements=JSON.parse(localStorage.getItem('fitness_supplements')||'[]');
+        historyLog=JSON.parse(localStorage.getItem('fitness_history')||'[]');
+        workouts=JSON.parse(localStorage.getItem('fitness_workouts')||'[]');
+        exerciseLibrary=JSON.parse(localStorage.getItem('fitness_exercise_library')||'[]');
+        collapsedWorkouts=JSON.parse(localStorage.getItem('fitness_collapsed')||'{}');
+        if(!localStorage.getItem('fitness_first_launch')&&exerciseLibrary.length===0){
+            localStorage.setItem('fitness_first_launch','1');
+            exerciseLibrary=[{id:'ex1',name:'Жим лёжа',muscleGroup:'Грудь'},{id:'ex2',name:'Приседания',muscleGroup:'Ноги'},{id:'ex3',name:'Тяга вертикальная',muscleGroup:'Спина'}];
+            workouts=[{id:'demo1',name:'Первая тренировка',date:new Date().toISOString().slice(0,10),exercises:[{id:'demoex1',name:'Жим лёжа',muscleGroup:'Грудь',sets:[{weight:60,reps:10},{weight:65,reps:8}]},{id:'demoex2',name:'Приседания',muscleGroup:'Ноги',sets:[{weight:80,reps:8},{weight:85,reps:6}]}]}];
             saveAll();
         }
     }
-
-    function showToast(msg) {
-        let toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerText = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
-    function escapeHtml(str) {
-        if(!str) return '';
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-    }
-
-    let currentModalCallback = null;
-    let scrollPosition = 0;
-
-    function showModal(html, onClose) {
-        let modal = document.getElementById('dynamicModal');
-        if(!modal) {
-            modal = document.createElement('div');
-            modal.id = 'dynamicModal';
-            modal.className = 'modal';
-            document.body.appendChild(modal);
-        }
-        modal.innerHTML = html;
-        modal.style.display = 'flex';
-        currentModalCallback = onClose || null;
-        modal.onclick = (e) => { if(e.target === modal) closeModal(); };
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('dynamicModal');
-        if(modal) modal.style.display = 'none';
-        if(currentModalCallback) currentModalCallback();
-        currentModalCallback = null;
-        const content = document.querySelector('.section-content');
-        if(content && scrollPosition) {
-            content.scrollTop = scrollPosition;
-            scrollPosition = 0;
-        }
-    }
-
-    function saveScrollPosition() {
-        const content = document.querySelector('.section-content');
-        if(content) scrollPosition = content.scrollTop;
-    }
-
-    // ========== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕГО ПОДХОДА ==========
-function getLastExerciseData(exerciseName) {
-    // Ищем все тренировки, сортируем по дате (новые сверху)
-    const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    for (let workout of sortedWorkouts) {
-        const exercise = workout.exercises.find(ex => ex.name === exerciseName);
-        if (exercise && exercise.sets && exercise.sets.length > 0) {
-            // Находим лучший подход в этой тренировке
-            let bestSet = null;
-            for (let set of exercise.sets) {
-                if (bestSet === null) {
-                    bestSet = set;
-                } else if (set.weight > bestSet.weight) {
-                    bestSet = set;
-                } else if (set.weight === bestSet.weight && set.reps > bestSet.reps) {
-                    bestSet = set;
-                }
-            }
-            return { weight: bestSet.weight, reps: bestSet.reps };
-        }
-    }
-    return null;
-}
-    // ========== ИНСТРУКЦИЯ ==========
-    function showInstruction() {
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h2>📖 Инструкция</h2>
-                <h3>💊 БАДы</h3>
-                <ul class="instruction-list">
-                    <li><strong>➕ Добавить БАД</strong> — ввести название, единицу, количество</li>
-                    <li><strong>✏️ Редактировать БАД</strong> — нажать ✏️ у карточки</li>
-                    <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов → записать все сразу</li>
-                </ul>
-                <h3>🏋️ Тренировки</h3>
-                <ul class="instruction-list">
-                    <li><strong>➕ Новая тренировка</strong> — кнопка в шапке</li>
-                    <li><strong>▶️▼ Свернуть/развернуть</strong> — нажмите на иконку</li>
-                    <li><strong>➕ Упражнение</strong> — сначала выберите группу мышц, затем упражнение</li>
-                    <li><strong>📊 Последний вес</strong> — автоматически показывается при выборе упражнения</li>
-                    <li><strong>📋 Копирование подхода</strong> — новый подход копирует предыдущий</li>
-                </ul>
-                <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong></p>
-                <button class="add-btn" onclick="closeModal()" style="margin-top: 20px;">Закрыть</button>
-            </div>
-        `);
-    }
-
-    // ========== СТАРТОВЫЙ ЭКРАН ==========
-    function renderStartScreen() {
-        document.getElementById('app').innerHTML = `
-            <div class="start-screen">
-                <div class="hero-icon">💪</div>
-                <div class="start-title">Fitness Tracker</div>
-                <div class="start-sub">Учёт БАДов и тренировок</div>
-                <div class="start-buttons">
-                    <button class="start-btn bads" onclick="showSection('bads')">💊 БАДы</button>
-                    <button class="start-btn workouts" onclick="showSection('workouts')">🏋️ Тренировки</button>
-                    <button class="start-btn instruction" onclick="showInstruction()">📖 Инструкция</button>
-                </div>
-                <div class="contact-section">
-                    <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
-                    <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
-                </div>
-                <div class="version">v3.3 — умный выбор упражнений</div>
-            </div>
-        `;
-    }
-
-    function showSection(section) {
-        if(section === 'bads') renderBadsSection();
-        else if(section === 'workouts') renderWorkoutsSection();
-    }
-
-    function goBack() { renderStartScreen(); }
-
-    // ========== БЭКАП ==========
-    function exportBackup() {
-        try {
-            const now = new Date();
-            const backupData = {
-                version: '3.3',
-                date: now.toISOString(),
-                supplements, historyLog, workouts, exerciseLibrary, collapsedWorkouts
-            };
-            const jsonStr = JSON.stringify(backupData, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const link = document.createElement('a');
-                link.href = event.target.result;
-                link.download = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                showToast('📦 Бэкап сохранён!');
-            };
-            reader.readAsDataURL(blob);
-        } catch(e) { alert('Ошибка бэкапа: ' + e.message); }
-    }
-
-    function importBackup() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.style.display = 'none';
-        document.body.appendChild(input);
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            if(!file) { document.body.removeChild(input); return; }
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    if (data.supplements !== undefined) supplements = data.supplements;
-                    if (data.historyLog !== undefined) historyLog = data.historyLog;
-                    if (data.workouts !== undefined) workouts = data.workouts;
-                    if (data.exerciseLibrary !== undefined) exerciseLibrary = data.exerciseLibrary;
-                    if (data.collapsedWorkouts !== undefined) collapsedWorkouts = data.collapsedWorkouts;
-                    saveAll();
-                    showToast('✅ Данные восстановлены!');
-                    if (document.getElementById('badsContent')) renderBadsContent();
-                    if (document.getElementById('workoutsContent')) renderWorkoutsContent();
-                } catch(err) { alert('Ошибка: неверный формат файла'); }
-                document.body.removeChild(input);
-            };
-            reader.readAsText(file, 'UTF-8');
-        };
-        input.click();
-    }
-
-    function exportToCSV(type, startDate, endDate) {
-        let data = [];
-        if(type === 'bads') {
-            let entries = historyLog.filter(h => h.type === 'consume');
-            if(startDate) entries = entries.filter(e => e.date.split('T')[0] >= startDate);
-            if(endDate) entries = entries.filter(e => e.date.split('T')[0] <= endDate);
-            data = entries.map(e => ({ 'Дата': new Date(e.date).toLocaleString(), 'БАД': e.suppName, 'Принято': e.amount, 'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' }));
-        } else {
-            let filtered = [...workouts];
-            if(startDate) filtered = filtered.filter(w => w.date >= startDate);
-            if(endDate) filtered = filtered.filter(w => w.date <= endDate);
-            for(let w of filtered) {
-                for(let ex of (w.exercises || [])) {
-                    for(let set of (ex.sets || [])) {
-                        data.push({ 'Дата': w.date, 'Тренировка': w.name, 'Упражнение': ex.name, 'Группа мышц': ex.muscleGroup, 'Вес (кг)': set.weight, 'Повторы': set.reps });
-                    }
-                }
-            }
-        }
-        if(!data.length) { alert("Нет данных"); return; }
-        const headers = Object.keys(data[0]);
-        const csvRows = [headers.join(',')];
-        for(const row of data) {
-            const values = headers.map(h => { let v = row[h] || ''; if(typeof v === 'string') v = v.replace(/"/g, '""'); return `"${v}"`; });
-            csvRows.push(values.join(','));
-        }
-        const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${type}_${startDate || 'все'}_${endDate || 'все'}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        showToast('📊 CSV скачан!');
-    }
-
-    let currentExportType = '';
-    function openExportModal(type) {
-        currentExportType = type;
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h3>📎 Выгрузка данных</h3>
-                <label>📅 С даты:</label>
-                <input type="date" id="exportStartDate">
-                <label>📅 По дату:</label>
-                <input type="date" id="exportEndDate">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="doExport()">📊 Выгрузить CSV</button>
-                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    window.doExport = () => {
-        const start = document.getElementById('exportStartDate')?.value;
-        const end = document.getElementById('exportEndDate')?.value;
-        exportToCSV(currentExportType, start, end);
-        closeModal();
-    };
-
-    // ========== БАДЫ (сокращённо) ==========
-    function renderBadsSection() {
-        document.getElementById('app').innerHTML = `
-            <div class="app-container">
-                <div class="section-header">
-                    <button class="back-btn" onclick="goBack()">← Назад</button>
-                    <div class="section-title">💊 БАДы</div>
-                    <button class="action-btn orange" onclick="openGroupConsumeModal()">💊 Приём</button>
-                    <button class="action-btn" onclick="openExportModal('bads')">📎 Export</button>
-                    <button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button>
-                    <button class="action-btn blue" onclick="importBackup()">📂 Импорт</button>
-                </div>
-                <div class="section-content" id="badsContent"></div>
-            </div>
-        `;
-        renderBadsContent();
-    }
-
-    function renderBadsContent() {
-        const container = document.getElementById('badsContent');
-        let supplementsHtml = supplements.map(sup => `
-            <div class="supply-card">
-                <div class="card-header">
-                    <span class="card-title">${escapeHtml(sup.name)}</span>
-                    <div>
-                        <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
-                        <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        
-        let historyHtml = historyLog.filter(h => h.type === 'consume').map(h => `
-            <div class="history-item">
-                <div class="history-header">
-                    <span class="history-name">${escapeHtml(h.suppName)}</span>
-                    <div>
-                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntryById('${h.id}')">🗑️</button>
-                    </div>
-                </div>
-                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
-                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
-            </div>
-        `).join('');
-        
-        container.innerHTML = `
-            <div class="filter-row">
-                <input type="date" id="badsFilterDate">
-                <button onclick="filterBadsHistory()">🔍</button>
-                <button onclick="clearBadsFilter()">✖️</button>
-            </div>
-            <div style="margin-bottom:25px;">
-                <div style="color:white; margin-bottom:12px;">📦 Мои БАДы</div>
-                ${supplementsHtml || '<div class="empty-state">Нет БАДов</div>'}
-                <button class="add-btn" onclick="openAddSuppModal()">➕ Добавить БАД</button>
-            </div>
-            <div>
-                <div style="color:white; margin-bottom:12px;">📜 История приёмов</div>
-                <div id="historyList">${historyHtml || '<div class="empty-state">Нет записей</div>'}</div>
-            </div>
-        `;
-    }
-
-    function editSupplement(id) {
-        saveScrollPosition();
-        const supp = supplements.find(s => s.id === id);
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать БАД</h3>
-                <label>Название:</label>
-                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
-                <label>Единица:</label>
-                <select id="editSuppUnit">
-                    <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы</option>
-                    <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки</option>
-                </select>
-                <label>Количество:</label>
-                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateSupplement(id) {
-        const name = document.getElementById('editSuppName')?.value;
-        const unit = document.getElementById('editSuppUnit')?.value;
-        const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
-        const supp = supplements.find(s => s.id === id);
-        if(supp && name && !isNaN(quantity) && quantity >= 0) {
-            supp.name = name; supp.unit = unit; supp.quantity = quantity;
-            saveAll(); closeModal(); renderBadsContent();
-            showToast('✅ БАД обновлён');
-        }
-    }
-
-    window.deleteSupplementFromList = (id) => {
-        if(confirm('Удалить БАД?')) {
-            historyLog = historyLog.filter(h => h.suppId !== id);
-            supplements = supplements.filter(s => s.id !== id);
-            saveAll(); renderBadsContent();
-        }
-    };
-
-    window.openAddSuppModal = () => {
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h3>✨ Добавить БАД</h3>
-                <label>Название:</label>
-                <input type="text" id="suppName" placeholder="Например: Витамин D">
-                <label>Единица:</label>
-                <select id="suppUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select>
-                <label>Количество:</label>
-                <input type="number" id="suppAmount" placeholder="Количество" step="any">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    };
-
-    window.addSupplement = () => {
-        const name = document.getElementById('suppName')?.value;
-        const unit = document.getElementById('suppUnit')?.value;
-        const amount = parseFloat(document.getElementById('suppAmount')?.value);
-        if(!name || isNaN(amount) || amount <= 0) return alert("Ошибка");
-        let existing = supplements.find(s => s.name === name && s.unit === unit);
-        if(existing) existing.quantity += amount;
-        else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
-        saveAll(); closeModal(); renderBadsContent();
-    };
-
-    function editHistoryEntry(entryId) {
-        saveScrollPosition();
-        const entry = historyLog.find(h => h.id === entryId);
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать приём</h3>
-                <label>Количество:</label>
-                <input type="number" id="editHistoryAmount" value="${entry.amount}" step="any">
-                <label>Дата:</label>
-                <input type="datetime-local" id="editHistoryDate" value="${entry.date.slice(0,16)}">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateHistoryEntry('${entryId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateHistoryEntry(entryId) {
-        const entry = historyLog.find(h => h.id === entryId);
-        if(!entry) return;
-        const newAmount = parseFloat(document.getElementById('editHistoryAmount')?.value);
-        const newDate = document.getElementById('editHistoryDate')?.value;
-        if(isNaN(newAmount) || newAmount <= 0) return alert("Некорректное количество");
-        const supp = supplements.find(s => s.id === entry.suppId);
-        if(supp) {
-            supp.quantity += entry.amount;
-            if(supp.quantity < newAmount) {
-                supp.quantity -= entry.amount;
-                alert(`Недостаточно! Доступно: ${supp.quantity}`);
-                return;
-            }
-            supp.quantity -= newAmount;
-        }
-        entry.amount = newAmount;
-        entry.date = new Date(newDate).toISOString();
-        saveAll(); closeModal(); renderBadsContent();
-    }
-
-    window.deleteHistoryEntryById = (entryId) => {
-        if(!confirm('Удалить запись?')) return;
-        const entry = historyLog.find(h => h.id === entryId);
-        if(entry) {
-            const supp = supplements.find(s => s.id === entry.suppId);
-            if(supp) supp.quantity += entry.amount;
-            historyLog = historyLog.filter(h => h.id !== entryId);
-            saveAll(); renderBadsContent();
-        }
-    };
-
-    function filterBadsHistory() {
-        const filterDate = document.getElementById('badsFilterDate')?.value;
-        const listDiv = document.getElementById('historyList');
-        let filtered = historyLog.filter(h => h.type === 'consume');
-        if(filterDate) filtered = filtered.filter(h => h.date.split('T')[0] === filterDate);
-        listDiv.innerHTML = filtered.map(h => `
-            <div class="history-item">
-                <div class="history-header">
-                    <span class="history-name">${escapeHtml(h.suppName)}</span>
-                    <div>
-                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntryById('${h.id}')">🗑️</button>
-                    </div>
-                </div>
-                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
-                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
-            </div>
-        `).join('') || '<div class="empty-state">Нет записей</div>';
-    }
-
-    function clearBadsFilter() {
-        if(document.getElementById('badsFilterDate')) document.getElementById('badsFilterDate').value = '';
-        filterBadsHistory();
-    }
-
-    // ========== ГРУППОВОЙ ПРИЁМ БАДОВ ==========
-    let selectedBads = [];
-
-    function openGroupConsumeModal() {
-        if(supplements.length === 0) { alert("Сначала добавьте БАДы"); return; }
-        selectedBads = [];
-        renderGroupConsumeModal();
-    }
-
-    function renderGroupConsumeModal() {
-        let availableBads = supplements.filter(s => !selectedBads.find(sb => sb.id === s.id));
-        let selectedHtml = selectedBads.map(s => `
-            <div class="group-item-selected">
-                <span>${escapeHtml(s.name)} — ${s.amount} ${s.unit === 'г' ? 'г' : 'таб'}</span>
-                <button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️</button>
-            </div>
-        `).join('');
-        let availableHtml = availableBads.map(s => `
-            <div class="group-item-available">
-                <span>${escapeHtml(s.name)} (${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'})</span>
-                <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
-            </div>
-        `).join('');
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h2>💊 Приём БАДов</h2>
-                <label>📅 Дата приёма:</label>
-                <input type="datetime-local" id="groupConsumeDate" value="${new Date().toISOString().slice(0,16)}">
-                <div style="margin:15px 0;"><div style="color:#7cb342; margin-bottom:8px;">✅ Выбранные (${selectedBads.length}):</div>
-                <div style="max-height:150px; overflow-y:auto;">${selectedHtml || '<div class="empty-state">Ничего не выбрано</div>'}</div></div>
-                <div style="margin:15px 0;"><div style="color:#1E3A5F; margin-bottom:8px;">📦 Доступные:</div>
-                <div style="max-height:200px; overflow-y:auto;">${availableHtml || '<div class="empty-state">Нет доступных</div>'}</div></div>
-                <div style="display:flex; gap:15px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="saveGroupConsume()">💾 Записать всё</button>
-                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function addToGroup(id) {
-        const supp = supplements.find(s => s.id === id);
-        if(!supp) return;
-        let amount = prompt(`Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`, "1");
-        amount = parseFloat(amount);
-        if(isNaN(amount) || amount <= 0) return;
-        if(supp.quantity < amount) { alert(`Недостаточно! Доступно: ${supp.quantity}`); return; }
-        selectedBads.push({ ...supp, amount: amount });
-        renderGroupConsumeModal();
-    }
-
-    function removeFromGroup(id) {
-        selectedBads = selectedBads.filter(s => s.id !== id);
-        renderGroupConsumeModal();
-    }
-
-    function saveGroupConsume() {
-        if(selectedBads.length === 0) { alert("Добавьте хотя бы один БАД"); return; }
-        const date = document.getElementById('groupConsumeDate')?.value;
-        for(let item of selectedBads) {
-            const supp = supplements.find(s => s.id === item.id);
-            if(supp) {
-                supp.quantity -= item.amount;
-                historyLog.push({ id: Date.now().toString() + Math.random(), type: 'consume', suppId: supp.id, suppName: supp.name, amount: item.amount, unit: supp.unit, date: new Date(date).toISOString() });
-            }
-        }
-        saveAll(); closeModal(); renderBadsContent();
-        showToast(`✅ Записано ${selectedBads.length} БАДов`);
-    }
-
-    // ========== ТРЕНИРОВКИ ==========
-    function renderWorkoutsSection() {
-        document.getElementById('app').innerHTML = `
-            <div class="app-container">
-                <div class="section-header">
-                    <button class="back-btn" onclick="goBack()">← Назад</button>
-                    <div class="section-title">🏋️ Тренировки</div>
-                    <button class="action-btn blue" onclick="openAddWorkoutModal()">➕ Новая</button>
-                    <button class="action-btn" onclick="openExportModal('workouts')">📎 Export</button>
-                    <button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button>
-                    <button class="action-btn blue" onclick="importBackup()">📂 Импорт</button>
-                    <button class="action-btn blue" onclick="openExerciseLibrary()">📚 Упр.</button>
-                </div>
-                <div class="section-content" id="workoutsContent"></div>
-            </div>
-        `;
-        renderWorkoutsContent();
-    }
-
-    function renderWorkoutsContent() {
-        const container = document.getElementById('workoutsContent');
-        if(!workouts.length) {
-            container.innerHTML = `<div class="empty-state">🏋️ Нет тренировок</div>`;
-            return;
-        }
-        const sorted = [...workouts].sort((a,b) => new Date(b.date) - new Date(a.date));
-        container.innerHTML = sorted.map(w => {
-            const isCollapsed = collapsedWorkouts[w.id] === true;
-            const collapseIcon = isCollapsed ? '▶️' : '▼';
-            return `
-                <div class="workout-card">
-                    <div class="workout-header" onclick="toggleWorkoutCollapse('${w.id}')">
-                        <div class="workout-header-left">
-                            <span class="collapse-icon">${collapseIcon}</span>
-                            <span class="workout-name">🏷️ ${escapeHtml(w.name || 'Тренировка')}</span>
-                        </div>
-                        <div>
-                            <span style="color:#A0A6B2;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
-                            <button class="delete-icon" onclick="event.stopPropagation(); deleteWorkout('${w.id}')">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="exercises-container ${isCollapsed ? 'collapsed' : ''}">
-                        ${(w.exercises || []).map(ex => `
-                            <div class="exercise-item">
-                                <div class="exercise-header">
-                                    <span class="exercise-name">💪 ${escapeHtml(ex.name)} (${ex.muscleGroup})</span>
-                                    <div>
-                                        <button class="edit-icon" onclick="editExerciseInWorkout('${w.id}','${ex.id}')">✏️</button>
-                                        <button class="delete-icon" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button>
-                                    </div>
-                                </div>
-                                <div class="sets-list">${(ex.sets || []).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
-                            </div>
-                        `).join('')}
-                        <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:10px; width:100%;" onclick="addExerciseToWorkout('${w.id}')">➕ Добавить упражнение</button>
-                        <button class="small-btn" style="background:#2A303E; margin-top:8px; width:100%;" onclick="editWorkoutNameDate('${w.id}')">✏️ Изменить название/дату</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    window.toggleWorkoutCollapse = (id) => {
-        collapsedWorkouts[id] = !collapsedWorkouts[id];
-        saveAll();
-        renderWorkoutsContent();
-    };
-
-    function openExerciseLibrary() {
-        // Получаем уникальные группы мышц
-        const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
-        let groupsHtml = muscleGroups.map(group => `
-            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
-        `).join('');
-        
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h2>📚 Библиотека упражнений</h2>
-                <div style="margin-bottom:15px;">
-                    <label>🔍 Фильтр по группе:</label>
-                    <select id="filterMuscleGroup" onchange="filterExerciseLibrary()">
-                        <option value="all">Все группы</option>
-                        ${groupsHtml}
-                    </select>
-                </div>
-                <div id="exercisesList" style="max-height:350px; overflow-y:auto;">
-                    ${renderExercisesList('all')}
-                </div>
-                <button class="add-btn" style="background:#1E3A5F; margin-top:15px;" onclick="addNewExerciseToLibrary()">➕ Добавить упражнение</button>
-                <button class="small-btn danger-btn" style="margin-top:15px; width:100%;" onclick="closeModal()">Закрыть</button>
-            </div>
-        `);
-    }
-
-    function renderExercisesList(filterGroup) {
-        let filtered = filterGroup === 'all' ? exerciseLibrary : exerciseLibrary.filter(ex => ex.muscleGroup === filterGroup);
-        return filtered.map(ex => `
-            <div class="supply-card" style="margin-bottom:12px;">
-                <div class="card-header">
-                    <span class="card-title">${escapeHtml(ex.name)} (${escapeHtml(ex.muscleGroup)})</span>
-                    <div>
-                        <button class="edit-icon" onclick="editExerciseInLibrary('${ex.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteExerciseFromLibrary('${ex.id}')">🗑️</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    window.filterExerciseLibrary = () => {
-        const filter = document.getElementById('filterMuscleGroup')?.value || 'all';
-        const container = document.getElementById('exercisesList');
-        if(container) container.innerHTML = renderExercisesList(filter);
-    };
-
-    function addNewExerciseToLibrary() {
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h3>➕ Новое упражнение</h3>
-                <label>Название:</label>
-                <input type="text" id="newExName" placeholder="Например: Жим лёжа">
-                <label>Группа мышц:</label>
-                <input type="text" id="newExMuscle" placeholder="Например: Грудь">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveNewExercise()">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function saveNewExercise() {
-        const name = document.getElementById('newExName')?.value;
-        const muscle = document.getElementById('newExMuscle')?.value;
-        if(!name || !muscle) return alert("Заполните поля");
-        exerciseLibrary.push({ id: Date.now().toString(), name, muscleGroup: muscle });
-        saveAll();
-        closeModal();
-        openExerciseLibrary();
-    }
-
-    function editExerciseInLibrary(id) {
-        saveScrollPosition();
-        const ex = exerciseLibrary.find(e => e.id === id);
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать</h3>
-                <label>Название:</label>
-                <input type="text" id="editExName" value="${escapeHtml(ex.name)}">
-                <label>Группа мышц:</label>
-                <input type="text" id="editExMuscle" value="${escapeHtml(ex.muscleGroup)}">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInLibrary('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateExerciseInLibrary(id) {
-        const name = document.getElementById('editExName')?.value;
-        const muscle = document.getElementById('editExMuscle')?.value;
-        const ex = exerciseLibrary.find(e => e.id === id);
-        if(ex && name && muscle) {
-            ex.name = name; ex.muscleGroup = muscle;
-            saveAll(); closeModal(); openExerciseLibrary();
-        }
-    }
-
-    function deleteExerciseFromLibrary(id) {
-        if(confirm('Удалить упражнение?')) {
-            exerciseLibrary = exerciseLibrary.filter(e => e.id !== id);
-            workouts.forEach(w => { w.exercises = w.exercises.filter(e => e.id !== id); });
-            saveAll();
-            openExerciseLibrary();
-            renderWorkoutsContent();
-        }
-    }
-
-    function openAddWorkoutModal() {
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h3>➕ Новая тренировка</h3>
-                <label>Название:</label>
-                <input type="text" id="workoutName" placeholder="Например: Силовая">
-                <label>Дата:</label>
-                <input type="date" id="workoutDate" value="${new Date().toISOString().slice(0,10)}">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#1E3A5F; color:white; flex:1;" onclick="createWorkout()">Создать</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function createWorkout() {
-        const name = document.getElementById('workoutName')?.value || 'Тренировка';
-        const date = document.getElementById('workoutDate')?.value;
-        workouts.push({ id: Date.now().toString(), name, date, exercises: [] });
-        saveAll();
-        closeModal();
-        renderWorkoutsContent();
-        showToast('✅ Тренировка создана');
-    }
-
-    function deleteWorkout(id) {
-        if(confirm('Удалить тренировку?')) {
-            workouts = workouts.filter(w => w.id !== id);
-            saveAll();
-            renderWorkoutsContent();
-        }
-    }
-
-    function editWorkoutNameDate(id) {
-        saveScrollPosition();
-        const w = workouts.find(w => w.id === id);
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать</h3>
-                <label>Название:</label>
-                <input type="text" id="editWorkoutName" value="${escapeHtml(w.name)}">
-                <label>Дата:</label>
-                <input type="date" id="editWorkoutDate" value="${w.date}">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateWorkout('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateWorkout(id) {
-        const w = workouts.find(w => w.id === id);
-        if(w) {
-            w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка';
-            w.date = document.getElementById('editWorkoutDate')?.value;
-            saveAll(); closeModal(); renderWorkoutsContent();
-        }
-    }
-
-    let currentSets = [];
-    let currentExerciseName = '';
-    
-    function addExerciseToWorkout(workoutId) {
-        // Получаем уникальные группы мышц из библиотеки
-        const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
-        let groupsHtml = muscleGroups.map(group => `
-            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
-        `).join('');
-        
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h3>🏋️ Добавить упражнение</h3>
-                <label>1. Выберите группу мышц:</label>
-                <select id="muscleGroupSelect" onchange="updateExerciseSelect()">
-                    <option value="">-- Выберите группу --</option>
-                    ${groupsHtml}
-                </select>
-                
-                <label>2. Выберите упражнение:</label>
-                <select id="exerciseSelect" onchange="onExerciseSelected()" disabled>
-                    <option value="">-- Сначала выберите группу --</option>
-                </select>
-                
-                <div id="lastInfo" class="last-info" style="display:none;"></div>
-                
-                <div id="setsContainer">
-                    <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
-                    <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetFieldWithCopy()">+ Добавить подход (копировать последний)</button>
-                </div>
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveExerciseToWorkout('${workoutId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-        currentSets = [];
-        currentExerciseName = '';
-        addSetField();
-    }
-
-    window.updateExerciseSelect = () => {
-        const group = document.getElementById('muscleGroupSelect')?.value;
-        const exerciseSelect = document.getElementById('exerciseSelect');
-        if(!group) {
-            exerciseSelect.innerHTML = '<option value="">-- Сначала выберите группу --</option>';
-            exerciseSelect.disabled = true;
-            return;
-        }
-        
-        const exercises = exerciseLibrary.filter(ex => ex.muscleGroup === group);
-        exerciseSelect.innerHTML = '<option value="">-- Выберите упражнение --</option>' + 
-            exercises.map(ex => `<option value="${ex.id}" data-name="${escapeHtml(ex.name)}">${escapeHtml(ex.name)}</option>`).join('');
-        exerciseSelect.disabled = false;
-    };
-
-    window.onExerciseSelected = () => {
-        const select = document.getElementById('exerciseSelect');
-        const selectedOption = select.options[select.selectedIndex];
-        const exerciseName = selectedOption?.getAttribute('data-name');
-        const lastInfoDiv = document.getElementById('lastInfo');
-        
-        if(exerciseName) {
-            const lastData = getLastExerciseData(exerciseName);
-            if(lastData) {
-                lastInfoDiv.style.display = 'block';
-                lastInfoDiv.innerHTML = `📊 Последний раз: ${lastData.weight} кг × ${lastData.reps} повт`;
-                // Предлагаем заполнить первый подход последними данными
-                if(currentSets.length > 0 && currentSets[0].weight === '') {
-                    currentSets[0].weight = lastData.weight;
-                    currentSets[0].reps = lastData.reps;
-                    renderSetsList();
-                }
-            } else {
-                lastInfoDiv.style.display = 'none';
-            }
-            currentExerciseName = exerciseName;
-        } else {
-            lastInfoDiv.style.display = 'none';
-        }
-    };
-
-    window.addSetFieldWithCopy = () => {
-        let lastWeight = '', lastReps = '';
-        if(currentSets.length > 0) {
-            const last = currentSets[currentSets.length - 1];
-            lastWeight = last.weight;
-            lastReps = last.reps;
-        }
-        currentSets.push({ weight: lastWeight, reps: lastReps });
-        renderSetsList();
-    };
-
-    window.addSetField = () => { currentSets.push({ weight: '', reps: '' }); renderSetsList(); };
-    window.removeSetField = (idx) => { currentSets.splice(idx, 1); renderSetsList(); };
-    
-    function renderSetsList() {
-        const container = document.getElementById('setsList');
-        if(!container) return;
-        container.innerHTML = currentSets.map((set, idx) => `
-            <div class="set-row">
-                <input type="number" placeholder="Вес (кг)" value="${set.weight}" onchange="currentSets[${idx}].weight = this.value">
-                <input type="number" placeholder="Повторы" value="${set.reps}" onchange="currentSets[${idx}].reps = this.value">
-                <button class="remove-item" onclick="removeSetField(${idx})">✖️</button>
-            </div>
-        `).join('');
-    }
-
-    function saveExerciseToWorkout(workoutId) {
-        const exerciseSelect = document.getElementById('exerciseSelect');
-        const selectedOption = exerciseSelect.options[exerciseSelect.selectedIndex];
-        const exerciseName = selectedOption?.getAttribute('data-name');
-        const exerciseId = exerciseSelect.value;
-        
-        if(!exerciseId || !exerciseName) {
-            alert("Выберите упражнение");
-            return;
-        }
-        
-        const ex = exerciseLibrary.find(e => e.id === exerciseId);
-        if(!ex) return;
-        
-        const sets = currentSets.filter(s => s.weight && s.reps).map(s => ({ weight: parseFloat(s.weight), reps: parseInt(s.reps) }));
-        if(sets.length === 0) return alert("Добавьте хотя бы один подход");
-        
-        const workout = workouts.find(w => w.id === workoutId);
-        workout.exercises.push({ id: Date.now().toString(), name: ex.name, muscleGroup: ex.muscleGroup, sets });
-        saveAll();
-        closeModal();
-        renderWorkoutsContent();
-        showToast(`✅ "${ex.name}" добавлено`);
-    }
-
-    function editExerciseInWorkout(workoutId, exerciseId) {
-        saveScrollPosition();
-        const workout = workouts.find(w => w.id === workoutId);
-        const exercise = workout?.exercises.find(e => e.id === exerciseId);
-        if(!exercise) return;
-        currentSets = [...(exercise.sets || [])];
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать упражнение</h3>
-                <div id="setsContainer">
-                    <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
-                    <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetFieldWithCopy()">+ Добавить подход (копировать последний)</button>
-                </div>
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInWorkout('${workoutId}','${exerciseId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-        renderSetsList();
-    }
-
-    function updateExerciseInWorkout(workoutId, exerciseId) {
-        const workout = workouts.find(w => w.id === workoutId);
-        const exercise = workout?.exercises.find(e => e.id === exerciseId);
-        if(exercise) {
-            exercise.sets = currentSets.filter(s => s.weight && s.reps).map(s => ({ weight: parseFloat(s.weight), reps: parseInt(s.reps) }));
-            saveAll();
-            closeModal();
-            renderWorkoutsContent();
-            showToast('✅ Упражнение обновлено');
-        }
-    }
-
-    function deleteExerciseFromWorkout(workoutId, exerciseId) {
-        if(confirm('Удалить упражнение из тренировки?')) {
-            const workout = workouts.find(w => w.id === workoutId);
-            if(workout) {
-                workout.exercises = workout.exercises.filter(e => e.id !== exerciseId);
-                saveAll();
-                renderWorkoutsContent();
-                showToast('🗑️ Упражнение удалено');
-            }
-        }
-    }
-
-    loadAll();
-    renderStartScreen();
+    function showToast(m){let t=document.createElement('div');t.className='toast';t.innerText=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
+    function escapeHtml(s){if(!s)return '';return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+    let modalCallback=null,scrollPos=0;
+    function showModal(html,onClose){let m=document.getElementById('dynamicModal');if(!m){m=document.createElement('div');m.id='dynamicModal';m.className='modal';document.body.appendChild(m);}m.innerHTML=html;m.style.display='flex';modalCallback=onClose||null;m.onclick=(e)=>{if(e.target===m)closeModal();};}
+    function closeModal(){let m=document.getElementById('dynamicModal');if(m)m.style.display='none';if(modalCallback)modalCallback();modalCallback=null;let c=document.querySelector('.section-content');if(c&&scrollPos)c.scrollTop=scrollPos;scrollPos=0;}
+    function saveScroll(){let c=document.querySelector('.section-content');if(c)scrollPos=c.scrollTop;}
+    // Admin functions
+    function openAdminPanel(){saveScroll();showModal(`<div class="modal-card"><h2>⚙️ Админ панель</h2><button class="admin-btn" onclick="adminFullBackup()">💾 Бэкап за всё время</button><button class="admin-btn warning" onclick="adminDeleteOldWorkouts()">🗑️ Удалить тренировки >6 мес</button><button class="admin-btn danger" onclick="adminDeleteOldHistory()">🗑️ Удалить историю БАДов >6 мес</button><p style="margin-top:20px;font-size:0.75rem;color:#E57373;">⚠️ Удаление необратимо. Сделайте бэкап!</p><button class="admin-btn" style="background:#2A303E;margin-top:15px;" onclick="closeModal()">Отмена</button></div>`);}
+    function adminFullBackup(){exportBackup();closeModal();}
+    function adminDeleteOldWorkouts(){let d=new Date();d.setMonth(d.getMonth()-6);let cut=d.toISOString().slice(0,10);let old=workouts.filter(w=>w.date<cut);if(old.length===0){showToast("Нет тренировок старше 6 месяцев");closeModal();return;}if(confirm(`Удалить ${old.length} тренировок?`)){workouts=workouts.filter(w=>w.date>=cut);saveAll();showToast(`✅ Удалено ${old.length} тренировок`);closeModal();if(document.getElementById('workoutsContent'))renderWorkoutsContent();}}
+    function adminDeleteOldHistory(){let d=new Date();d.setMonth(d.getMonth()-6);let cut=d.toISOString();let old=historyLog.filter(h=>h.type==='consume'&&h.date<cut);if(old.length===0){showToast("Нет записей старше 6 месяцев");closeModal();return;}if(confirm(`Удалить ${old.length} записей? Остатки БАДов пересчитаются.`)){historyLog=historyLog.filter(h=>h.type!=='consume'||h.date>=cut);for(let s of supplements)s.quantity=0;for(let e of historyLog){if(e.type==='consume'){let s=supplements.find(x=>x.id===e.suppId);if(s)s.quantity-=e.amount;}else if(e.type==='add'){let s=supplements.find(x=>x.id===e.suppId);if(s)s.quantity+=e.amount;}}saveAll();showToast(`✅ Удалено ${old.length} записей`);closeModal();if(document.getElementById('badsContent'))renderBadsContent();}}
+    // Backup/Export
+    function exportBackup(){try{let now=new Date();let data={version:'3.4',date:now.toISOString(),supplements,historyLog,workouts,exerciseLibrary,collapsedWorkouts};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let reader=new FileReader();reader.onload=function(e){let a=document.createElement('a');a.href=e.target.result;a.download=`fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('📦 Бэкап сохранён!');};reader.readAsDataURL(blob);}catch(e){alert('Ошибка бэкапа');}}
+    function importBackup(){let inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.style.display='none';document.body.appendChild(inp);inp.onchange=e=>{let f=e.target.files[0];if(!f){document.body.removeChild(inp);return;}let r=new FileReader();r.onload=ev=>{try{let d=JSON.parse(ev.target.result);if(d.supplements!==undefined)supplements=d.supplements;if(d.historyLog!==undefined)historyLog=d.historyLog;if(d.workouts!==undefined)workouts=d.workouts;if(d.exerciseLibrary!==undefined)exerciseLibrary=d.exerciseLibrary;if(d.collapsedWorkouts!==undefined)collapsedWorkouts=d.collapsedWorkouts;saveAll();showToast('✅ Восстановлено');if(document.getElementById('badsContent'))renderBadsContent();if(document.getElementById('workoutsContent'))renderWorkoutsContent();}catch(err){alert('Ошибка файла');}document.body.removeChild(inp);};r.readAsText(f,'UTF-8');};inp.click();}
+    function exportToCSV(type,start,end){let data=[];if(type==='bads'){let e=historyLog.filter(h=>h.type==='consume');if(start)e=e.filter(x=>x.date.split('T')[0]>=start);if(end)e=e.filter(x=>x.date.split('T')[0]<=end);data=e.map(h=>({'Дата':new Date(h.date).toLocaleString(),'БАД':h.suppName,'Принято':h.amount,'Единица':h.unit==='г'?'граммы':'таблетки'}));}else{let f=[...workouts];if(start)f=f.filter(w=>w.date>=start);if(end)f=f.filter(w=>w.date<=end);for(let w of f)for(let ex of w.exercises||[])for(let set of ex.sets||[])data.push({'Дата':w.date,'Тренировка':w.name,'Упражнение':ex.name,'Группа мышц':ex.muscleGroup,'Вес (кг)':set.weight,'Повторы':set.reps});}if(!data.length){alert('Нет данных');return;}let headers=Object.keys(data[0]);let rows=[headers.join(',')];for(let r of data){let vals=headers.map(h=>{let v=r[h]||'';if(typeof v==='string')v=v.replace(/"/g,'""');return`"${v}"`;});rows.push(vals.join(','));}let blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${type}_${start||'все'}_${end||'все'}.csv`;a.click();URL.revokeObjectURL(a.href);showToast('📊 CSV скачан');}
+    let currentExportType='';
+    function openExportModal(type){currentExportType=type;saveScroll();showModal(`<div class="modal-card"><h3>📎 Выгрузка</h3><input type="date" id="exportStart"><input type="date" id="exportEnd" style="margin-top:10px"><div style="display:flex;gap:10px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="doExport()">Выгрузить CSV</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function doExport(){let s=document.getElementById('exportStart')?.value,e=document.getElementById('exportEnd')?.value;exportToCSV(currentExportType,s,e);closeModal();}
+    // БАДы: полная версия с групповым приёмом
+    function renderBadsSection(){document.getElementById('app').innerHTML=`<div class="app-container"><div class="section-header"><button class="back-btn" onclick="goBack()">← Назад</button><div class="section-title">💊 БАДы</div><button class="action-btn orange" onclick="openGroupConsumeModal()">💊 Приём</button><button class="action-btn" onclick="openExportModal('bads')">📎 Export</button><button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button><button class="action-btn blue" onclick="importBackup()">📂 Импорт</button></div><div class="section-content" id="badsContent"></div></div>`;renderBadsContent();}
+    function renderBadsContent(){let c=document.getElementById('badsContent');let supps=supplements.map(s=>`<div class="supply-card"><div class="card-header"><span class="card-title">${escapeHtml(s.name)}</span><div><span class="supply-stock">${s.quantity} ${s.unit==='г'?'г':'таб'}</span><button class="edit-icon" onclick="editSupplement('${s.id}')">✏️</button><button class="delete-icon" onclick="delSupplement('${s.id}')">🗑️</button></div></div></div>`).join('');let hist=historyLog.filter(h=>h.type==='consume').map(h=>`<div class="history-item"><div class="history-header"><span class="history-name">${escapeHtml(h.suppName)}</span><div><button class="edit-icon" onclick="editHistory('${h.id}')">✏️</button><button class="delete-icon" onclick="delHistory('${h.id}')">🗑️</button></div></div><div class="history-detail">💊 ${h.amount} ${h.unit==='г'?'г':'таб'}</div><div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div></div>`).join('');c.innerHTML=`<div class="filter-row"><input type="date" id="badsFilter"><button onclick="filterHistory()">🔍</button><button onclick="clearFilter()">✖️</button></div><div style="margin-bottom:25px;"><div style="color:#fff">📦 Мои БАДы</div>${supps||'<div class="empty-state">Нет БАДов</div>'}<button class="add-btn" onclick="openAddSupp()">➕ Добавить БАД</button></div><div><div style="color:#fff">📜 История</div><div id="historyList">${hist||'<div class="empty-state">Нет записей</div>'}</div></div>`;}
+    function openAddSupp(){saveScroll();showModal(`<div class="modal-card"><h3>✨ Добавить БАД</h3><input type="text" id="supName" placeholder="Название"><select id="supUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select><input type="number" id="supAmount" placeholder="Количество"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="addSupplement()">Добавить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function addSupplement(){let n=document.getElementById('supName')?.value,u=document.getElementById('supUnit')?.value,a=parseFloat(document.getElementById('supAmount')?.value);if(!n||isNaN(a)||a<=0)return alert('Ошибка');let ex=supplements.find(s=>s.name===n&&s.unit===u);if(ex)ex.quantity+=a;else supplements.push({id:Date.now().toString(),name:n,unit:u,quantity:a});saveAll();closeModal();renderBadsContent();}
+    function editSupplement(id){let s=supplements.find(x=>x.id===id);if(!s)return;saveScroll();showModal(`<div class="modal-card"><h3>✏️ Редактировать</h3><input type="text" id="editName" value="${escapeHtml(s.name)}"><select id="editUnit"><option value="г" ${s.unit==='г'?'selected':''}>граммы</option><option value="таб" ${s.unit==='таб'?'selected':''}>таблетки</option></select><input type="number" id="editQty" value="${s.quantity}" step="any"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="updateSupplement('${id}')">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function updateSupplement(id){let s=supplements.find(x=>x.id===id);if(s){s.name=document.getElementById('editName')?.value;s.unit=document.getElementById('editUnit')?.value;s.quantity=parseFloat(document.getElementById('editQty')?.value);saveAll();closeModal();renderBadsContent();showToast('✅ Обновлено');}}
+    function delSupplement(id){if(confirm('Удалить БАД?')){historyLog=historyLog.filter(h=>h.suppId!==id);supplements=supplements.filter(s=>s.id!==id);saveAll();renderBadsContent();}}
+    function editHistory(eid){let e=historyLog.find(h=>h.id===eid);if(!e)return;saveScroll();showModal(`<div class="modal-card"><h3>✏️ Редактировать приём</h3><input type="number" id="histAmount" value="${e.amount}" step="any"><input type="datetime-local" id="histDate" value="${e.date.slice(0,16)}"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="updateHistory('${eid}')">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function updateHistory(eid){let e=historyLog.find(h=>h.id===eid);if(!e)return;let newAmt=parseFloat(document.getElementById('histAmount')?.value),newDate=document.getElementById('histDate')?.value;if(isNaN(newAmt)||newAmt<=0)return alert('Некорректно');let s=supplements.find(x=>x.id===e.suppId);if(s){s.quantity+=e.amount;if(s.quantity<newAmt){s.quantity-=e.amount;alert(`Недостаточно! Доступно: ${s.quantity}`);return;}s.quantity-=newAmt;}e.amount=newAmt;e.date=new Date(newDate).toISOString();saveAll();closeModal();renderBadsContent();}
+    function delHistory(eid){if(!confirm('Удалить запись?'))return;let e=historyLog.find(h=>h.id===eid);if(e){let s=supplements.find(x=>x.id===e.suppId);if(s)s.quantity+=e.amount;historyLog=historyLog.filter(h=>h.id!==eid);saveAll();renderBadsContent();}}
+    function filterHistory(){let f=document.getElementById('badsFilter')?.value;let list=document.getElementById('historyList');let flt=historyLog.filter(h=>h.type==='consume');if(f)flt=flt.filter(h=>h.date.split('T')[0]===f);list.innerHTML=flt.map(h=>`<div class="history-item"><div class="history-header"><span class="history-name">${escapeHtml(h.suppName)}</span><div><button class="edit-icon" onclick="editHistory('${h.id}')">✏️</button><button class="delete-icon" onclick="delHistory('${h.id}')">🗑️</button></div></div><div class="history-detail">💊 ${h.amount} ${h.unit==='г'?'г':'таб'}</div><div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div></div>`).join('')||'<div class="empty-state">Нет записей</div>';}
+    function clearFilter(){let inp=document.getElementById('badsFilter');if(inp)inp.value='';filterHistory();}
+    let selectedBads=[];
+    function openGroupConsumeModal(){if(!supplements.length){alert('Нет БАДов');return;}selectedBads=[];renderGroup();}
+    function renderGroup(){let avail=supplements.filter(s=>!selectedBads.find(sb=>sb.id===s.id));let selHtml=selectedBads.map(s=>`<div class="group-item-selected"><span>${escapeHtml(s.name)} — ${s.amount} ${s.unit==='г'?'г':'таб'}</span><button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️</button></div>`).join('');let availHtml=avail.map(s=>`<div class="group-item-available"><span>${escapeHtml(s.name)} (${s.quantity} ${s.unit==='г'?'г':'таб'})</span><button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button></div>`).join('');saveScroll();showModal(`<div class="modal-card"><h2>💊 Приём БАДов</h2><input type="datetime-local" id="groupDate" value="${new Date().toISOString().slice(0,16)}"><div style="margin:15px 0"><div style="color:#7cb342">✅ Выбранные (${selectedBads.length})</div><div style="max-height:150px;overflow:auto">${selHtml||'<div class="empty-state">Ничего</div>'}</div></div><div style="margin:15px 0"><div style="color:#1E3A5F">📦 Доступные</div><div style="max-height:200px;overflow:auto">${availHtml||'<div class="empty-state">Нет</div>'}</div></div><div style="display:flex;gap:12px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="saveGroupConsume()">💾 Записать всё</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function addToGroup(id){let s=supplements.find(x=>x.id===id);if(!s)return;let amt=prompt(`Сколько ${s.name}? (${s.unit==='г'?'грамм':'таблеток'})`,'1');amt=parseFloat(amt);if(isNaN(amt)||amt<=0)return;if(s.quantity<amt){alert(`Недостаточно! Доступно: ${s.quantity}`);return;}selectedBads.push({...s,amount:amt});renderGroup();}
+    function removeFromGroup(id){selectedBads=selectedBads.filter(s=>s.id!==id);renderGroup();}
+    function saveGroupConsume(){if(!selectedBads.length){alert('Добавьте БАД');return;}let date=document.getElementById('groupDate')?.value;for(let it of selectedBads){let s=supplements.find(x=>x.id===it.id);if(s){s.quantity-=it.amount;historyLog.push({id:Date.now()+''+Math.random(),type:'consume',suppId:s.id,suppName:s.name,amount:it.amount,unit:s.unit,date:new Date(date).toISOString()});}}saveAll();closeModal();renderBadsContent();showToast(`✅ Записано ${selectedBads.length} БАДов`);}
+    // Тренировки
+    function renderWorkoutsSection(){document.getElementById('app').innerHTML=`<div class="app-container"><div class="section-header"><button class="back-btn" onclick="goBack()">← Назад</button><div class="section-title">🏋️ Тренировки</div><button class="action-btn blue" onclick="openAddWorkoutModal()">➕ Новая</button><button class="action-btn" onclick="openExportModal('workouts')">📎 Export</button><button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button><button class="action-btn blue" onclick="importBackup()">📂 Импорт</button><button class="action-btn blue" onclick="openExerciseLibrary()">📚 Упр.</button></div><div class="section-content" id="workoutsContent"></div></div>`;renderWorkoutsContent();}
+    function renderWorkoutsContent(){let c=document.getElementById('workoutsContent');if(!workouts.length){c.innerHTML=`<div class="empty-state">Нет тренировок</div>`;return;}let sorted=[...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date));c.innerHTML=sorted.map(w=>{let isColl=collapsedWorkouts[w.id]===true;let icon=isColl?'▶️':'▼';return `<div class="workout-card"><div class="workout-header" onclick="toggleCollapse('${w.id}')"><div class="workout-header-left"><span class="collapse-icon">${icon}</span><span class="workout-name">🏷️ ${escapeHtml(w.name||'Тренировка')}</span></div><div><span style="color:#A0A6B2">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span><button class="delete-icon" onclick="event.stopPropagation();deleteWorkout('${w.id}')">🗑️</button></div></div><div class="exercises-container ${isColl?'collapsed':''}">${(w.exercises||[]).map(ex=>`<div class="exercise-item"><div class="exercise-header"><span class="exercise-name">💪 ${escapeHtml(ex.name)} (${ex.muscleGroup})</span><div><button class="edit-icon" onclick="editExerciseInWorkout('${w.id}','${ex.id}')">✏️</button><button class="delete-icon" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button></div></div><div class="sets-list">${(ex.sets||[]).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div></div>`).join('')}<button class="small-btn" style="background:#1E3A5F;color:#fff;margin-top:10px;width:100%" onclick="addExerciseToWorkout('${w.id}')">➕ Добавить упражнение</button><button class="small-btn" style="background:#2A303E;margin-top:8px;width:100%" onclick="editWorkoutNameDate('${w.id}')">✏️ Изменить название/дату</button></div></div>`;}).join('');}
+    function toggleCollapse(id){collapsedWorkouts[id]=!collapsedWorkouts[id];saveAll();renderWorkoutsContent();}
+    function openAddWorkoutModal(){saveScroll();showModal(`<div class="modal-card"><h3>➕ Новая тренировка</h3><input type="text" id="wName" placeholder="Название"><input type="date" id="wDate" value="${new Date().toISOString().slice(0,10)}"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#1E3A5F;color:#fff;flex:1" onclick="createWorkout()">Создать</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function createWorkout(){let n=document.getElementById('wName')?.value||'Тренировка';let d=document.getElementById('wDate')?.value;workouts.push({id:Date.now().toString(),name:n,date:d,exercises:[]});saveAll();closeModal();renderWorkoutsContent();showToast('✅ Создано');}
+    function deleteWorkout(id){if(confirm('Удалить тренировку?')){workouts=workouts.filter(w=>w.id!==id);saveAll();renderWorkoutsContent();}}
+    function editWorkoutNameDate(id){let w=workouts.find(w=>w.id===id);if(!w)return;saveScroll();showModal(`<div class="modal-card"><h3>✏️ Редактировать</h3><input type="text" id="editWName" value="${escapeHtml(w.name)}"><input type="date" id="editWDate" value="${w.date}"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="updateWorkout('${id}')">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function updateWorkout(id){let w=workouts.find(w=>w.id===id);if(w){w.name=document.getElementById('editWName')?.value||'Тренировка';w.date=document.getElementById('editWDate')?.value;saveAll();closeModal();renderWorkoutsContent();}}
+    function openExerciseLibrary(){let groups=[...new Set(exerciseLibrary.map(ex=>ex.muscleGroup))];let groupsHtml=groups.map(g=>`<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('');saveScroll();showModal(`<div class="modal-card"><h2>📚 Упражнения</h2><div><label>🔍 Группа:</label><select id="filterGroup" onchange="filterLib()"><option value="all">Все</option>${groupsHtml}</select></div><div id="exList" style="max-height:300px;overflow:auto">${renderExList('all')}</div><button class="add-btn" style="background:#1E3A5F;margin-top:15px" onclick="addNewExercise()">➕ Добавить</button><button class="small-btn danger-btn" style="margin-top:15px;width:100%" onclick="closeModal()">Закрыть</button></div>`);}
+    function renderExList(filter){let arr=filter==='all'?exerciseLibrary:exerciseLibrary.filter(ex=>ex.muscleGroup===filter);return arr.map(ex=>`<div class="supply-card"><div class="card-header"><span class="card-title">${escapeHtml(ex.name)} (${escapeHtml(ex.muscleGroup)})</span><div><button class="edit-icon" onclick="editExLib('${ex.id}')">✏️</button><button class="delete-icon" onclick="delExLib('${ex.id}')">🗑️</button></div></div></div>`).join('');}
+    function filterLib(){let f=document.getElementById('filterGroup')?.value||'all';let cont=document.getElementById('exList');if(cont)cont.innerHTML=renderExList(f);}
+    function addNewExercise(){saveScroll();showModal(`<div class="modal-card"><h3>➕ Новое упражнение</h3><input type="text" id="exName" placeholder="Название"><input type="text" id="exMuscle" placeholder="Группа мышц"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="saveNewExercise()">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function saveNewExercise(){let n=document.getElementById('exName')?.value,m=document.getElementById('exMuscle')?.value;if(!n||!m)return alert('Заполните поля');exerciseLibrary.push({id:Date.now().toString(),name:n,muscleGroup:m});saveAll();closeModal();openExerciseLibrary();}
+    function editExLib(id){let ex=exerciseLibrary.find(e=>e.id===id);if(!ex)return;saveScroll();showModal(`<div class="modal-card"><h3>✏️ Редактировать</h3><input type="text" id="editExName" value="${escapeHtml(ex.name)}"><input type="text" id="editExMuscle" value="${escapeHtml(ex.muscleGroup)}"><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="updateExLib('${id}')">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);}
+    function updateExLib(id){let n=document.getElementById('editExName')?.value,m=document.getElementById('editExMuscle')?.value;let ex=exerciseLibrary.find(e=>e.id===id);if(ex&&n&&m){ex.name=n;ex.muscleGroup=m;saveAll();closeModal();openExerciseLibrary();}}
+    function delExLib(id){if(confirm('Удалить упражнение?')){exerciseLibrary=exerciseLibrary.filter(e=>e.id!==id);workouts.forEach(w=>w.exercises=w.exercises.filter(e=>e.id!==id));saveAll();openExerciseLibrary();renderWorkoutsContent();}}
+    function getLastData(exName){let sorted=[...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date));for(let w of sorted){let ex=w.exercises.find(e=>e.name===exName);if(ex&&ex.sets.length){let best=null;for(let s of ex.sets){if(!best||s.weight>best.weight||(s.weight===best.weight&&s.reps>best.reps))best=s;}return best;}}return null;}
+    let currentSets=[],currentWorkoutId='';
+    function addExerciseToWorkout(wid){currentWorkoutId=wid;let groups=[...new Set(exerciseLibrary.map(ex=>ex.muscleGroup))];let groupsHtml=groups.map(g=>`<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join('');saveScroll();showModal(`<div class="modal-card"><h3>🏋️ Добавить упражнение</h3><label>1. Группа мышц</label><select id="muscleGroupSel" onchange="updateExSelect()"><option value="">-- Выберите --</option>${groupsHtml}</select><label>2. Упражнение</label><select id="exerciseSel" disabled onchange="onExSelect()"></select><div id="lastInfo" class="last-info" style="display:none"></div><div id="setsCont"><div>🏋️ Подходы</div><div id="setsList"></div><button class="small-btn" onclick="addSetWithCopy()">+ Копировать последний</button></div><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="saveExToWorkout()">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);currentSets=[];addSetField();}
+    function updateExSelect(){let group=document.getElementById('muscleGroupSel')?.value;let exSel=document.getElementById('exerciseSel');if(!group){exSel.innerHTML='<option>-- Сначала выберите группу --</option>';exSel.disabled=true;return;}let exs=exerciseLibrary.filter(ex=>ex.muscleGroup===group);exSel.innerHTML='<option value="">-- Выберите --</option>'+exs.map(ex=>`<option value="${ex.id}" data-name="${escapeHtml(ex.name)}">${escapeHtml(ex.name)}</option>`).join('');exSel.disabled=false;}
+    function onExSelect(){let sel=document.getElementById('exerciseSel');let opt=sel.options[sel.selectedIndex];let name=opt?.getAttribute('data-name');let info=document.getElementById('lastInfo');if(name){let last=getLastData(name);if(last){info.style.display='block';info.innerHTML=`📊 Последний раз: ${last.weight} кг × ${last.reps} повт`;if(currentSets.length&&currentSets[0].weight===''){currentSets[0].weight=last.weight;currentSets[0].reps=last.reps;renderSets();}}else info.style.display='none';}else info.style.display='none';}
+    function addSetWithCopy(){let lastW='',lastR='';if(currentSets.length){let last=currentSets[currentSets.length-1];lastW=last.weight;lastR=last.reps;}currentSets.push({weight:lastW,reps:lastR});renderSets();}
+    function addSetField(){currentSets.push({weight:'',reps:''});renderSets();}
+    function removeSetField(idx){currentSets.splice(idx,1);renderSets();}
+    function renderSets(){let c=document.getElementById('setsList');if(!c)return;c.innerHTML=currentSets.map((s,idx)=>`<div class="set-row"><input type="number" placeholder="Вес (кг)" value="${s.weight}" onchange="currentSets[${idx}].weight=this.value"><input type="number" placeholder="Повторы" value="${s.reps}" onchange="currentSets[${idx}].reps=this.value"><button class="remove-item" onclick="removeSetField(${idx})">✖️</button></div>`).join('');}
+    function saveExToWorkout(){let sel=document.getElementById('exerciseSel');let opt=sel.options[sel.selectedIndex];let exId=sel.value;let exName=opt?.getAttribute('data-name');if(!exId||!exName)return alert('Выберите упражнение');let exLib=exerciseLibrary.find(e=>e.id===exId);if(!exLib)return;let sets=currentSets.filter(s=>s.weight&&s.reps).map(s=>({weight:parseFloat(s.weight),reps:parseInt(s.reps)}));if(!sets.length)return alert('Добавьте подходы');let w=workouts.find(w=>w.id===currentWorkoutId);if(w){w.exercises.push({id:Date.now().toString(),name:exLib.name,muscleGroup:exLib.muscleGroup,sets});saveAll();closeModal();renderWorkoutsContent();showToast(`✅ ${exLib.name} добавлено`);}}
+    function editExerciseInWorkout(wid,eid){let w=workouts.find(w=>w.id===wid);let ex=w?.exercises.find(e=>e.id===eid);if(!ex)return;currentSets=[...(ex.sets||[])];currentWorkoutId=wid;saveScroll();showModal(`<div class="modal-card"><h3>✏️ Редактировать</h3><div id="setsCont"><div>🏋️ Подходы</div><div id="setsList"></div><button class="small-btn" onclick="addSetWithCopy()">+ Копировать последний</button></div><div style="display:flex;gap:12px;margin-top:20px"><button class="small-btn" style="background:#2A5F3A;color:#fff;flex:1" onclick="updateExInWorkout('${wid}','${eid}')">Сохранить</button><button class="small-btn danger-btn" style="flex:1" onclick="closeModal()">Отмена</button></div></div>`);renderSets();}
+    function updateExInWorkout(wid,eid){let w=workouts.find(w=>w.id===wid);let ex=w?.exercises.find(e=>e.id===eid);if(ex){ex.sets=currentSets.filter(s=>s.weight&&s.reps).map(s=>({weight:parseFloat(s.weight),reps:parseInt(s.reps)}));saveAll();closeModal();renderWorkoutsContent();showToast('✅ Обновлено');}}
+    function deleteExerciseFromWorkout(wid,eid){if(confirm('Удалить упражнение?')){let w=workouts.find(w=>w.id===wid);if(w){w.exercises=w.exercises.filter(e=>e.id!==eid);saveAll();renderWorkoutsContent();}}}
+    // Старт
+    function renderStartScreen(){document.getElementById('app').innerHTML=`<div class="start-screen"><div class="hero-icon">💪</div><div class="start-title">Fitness Tracker</div><div class="start-sub">Учёт БАДов и тренировок</div><div class="start-buttons"><button class="start-btn bads" onclick="showSection('bads')">💊 БАДы</button><button class="start-btn workouts" onclick="showSection('workouts')">🏋️ Тренировки</button><button class="start-btn instruction" onclick="showInstruction()">📖 Инструкция</button><button class="start-btn admin" onclick="openAdminPanel()">⚙️ Админ панель</button></div><div class="contact-section"><div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div><a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a></div><div class="version">v3.4 — Админ панель + удаление старых данных</div></div>`;}
+    function showSection(s){if(s==='bads')renderBadsSection();else if(s==='workouts')renderWorkoutsSection();}
+    function goBack(){renderStartScreen();}
+    function showInstruction(){saveScroll();showModal(`<div class="modal-card"><h2>📖 Инструкция</h2><p><strong>💊 БАДы</strong> — добавление, приём, редактирование истории.</p><p><strong>🏋️ Тренировки</strong> — создание, упражнения с подходами, сворачивание.</p><p><strong>💾 Бэкап</strong> — полное сохранение всех данных.</p><p><strong>⚙️ Админ</strong> — удаление старых тренировок/истории.</p><p style="margin-top:16px">📬 Вопросы: @Rusrus4</p><button class="add-btn" onclick="closeModal()">Закрыть</button></div>`);}
+    loadAll();renderStartScreen();
 </script>
 </body>
 </html>
