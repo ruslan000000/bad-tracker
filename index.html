@@ -21,7 +21,6 @@
             padding: 16px;
         }
 
-        /* СТАРТОВЫЙ ЭКРАН */
         .start-screen {
             max-width: 500px;
             width: 100%;
@@ -29,15 +28,10 @@
             border-radius: 48px;
             padding: 48px 28px 40px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             border: 1px solid #252B36;
         }
 
-        .hero-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
+        .hero-icon { font-size: 64px; margin-bottom: 16px; }
         .start-title {
             font-size: 2rem;
             font-weight: 800;
@@ -46,23 +40,9 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
         }
-
-        .start-sub {
-            color: #C7CDD8;
-            font-size: 0.85rem;
-            margin-bottom: 40px;
-            opacity: 0.7;
-        }
-
-        .start-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 40px;
-        }
-
+        .start-sub { color: #C7CDD8; font-size: 0.85rem; margin-bottom: 40px; opacity: 0.7; }
+        .start-buttons { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
         .start-btn {
             padding: 18px 20px;
             border: none;
@@ -70,42 +50,17 @@
             font-size: 1.15rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
         }
-
-        .start-btn.bads {
-            background: #2A5F3A;
-            color: white;
-            box-shadow: 0 4px 12px rgba(42, 95, 58, 0.3);
-        }
-
-        .start-btn.workouts {
-            background: #1E3A5F;
-            color: white;
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-        }
-
-        .start-btn:active {
-            transform: scale(0.97);
-        }
-
-        .contact-section {
-            padding-top: 24px;
-            border-top: 1px solid #252B36;
-        }
-
-        .contact-label {
-            font-size: 0.7rem;
-            color: #6E7683;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
+        .start-btn.bads { background: #2A5F3A; color: white; }
+        .start-btn.workouts { background: #1E3A5F; color: white; }
+        .start-btn:active { transform: scale(0.97); }
+        
+        .contact-section { padding-top: 24px; border-top: 1px solid #252B36; }
+        .contact-label { font-size: 0.7rem; color: #6E7683; margin-bottom: 12px; text-transform: uppercase; }
         .contact-link {
             display: inline-flex;
             align-items: center;
@@ -117,21 +72,9 @@
             color: #C7CDD8;
             font-weight: 600;
             font-size: 0.85rem;
-            transition: 0.2s;
         }
+        .version { font-size: 0.6rem; color: #4A505E; margin-top: 20px; }
 
-        .contact-link:active {
-            background: #2A303E;
-            transform: scale(0.97);
-        }
-
-        .version {
-            font-size: 0.6rem;
-            color: #4A505E;
-            margin-top: 20px;
-        }
-
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
         .app-container {
             max-width: 600px;
             width: 100%;
@@ -144,17 +87,15 @@
             border: 1px solid #252B36;
         }
 
-        /* ШАПКА */
         .section-header {
             display: flex;
             align-items: center;
             padding: 16px 20px;
             background: #151922;
             border-bottom: 1px solid #252B36;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
         }
-
         .back-btn {
             background: #202531;
             border: none;
@@ -163,123 +104,53 @@
             font-weight: 600;
             cursor: pointer;
             color: #C7CDD8;
-            font-size: 0.85rem;
         }
-
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            flex: 1;
-            color: white;
-        }
-
-        .export-btn {
+        .section-title { font-size: 1.3rem; font-weight: 700; flex: 1; color: white; }
+        .export-btn, .import-btn, .backup-btn {
             background: #2A5F3A;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 30px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
         }
+        .import-btn { background: #1E3A5F; }
+        .backup-btn { background: #7cb342; }
 
-        .edit-library-btn {
-            background: #1E3A5F;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* КОНТЕНТ */
-        .section-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-
-        /* КАРТОЧКИ */
+        .section-content { flex: 1; overflow-y: auto; padding: 16px; }
+        
         .supply-card, .workout-card, .exercise-library-card {
             background: #202531;
             border-radius: 24px;
             padding: 16px;
             margin-bottom: 12px;
         }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-        }
-
-        .supply-stock {
-            color: #4CAF50;
-            font-weight: 700;
-        }
-
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+        .card-title { font-weight: 700; font-size: 1rem; color: white; }
+        .supply-stock { color: #4CAF50; font-weight: 700; }
+        
         .exercise-item {
             background: #151922;
             border-radius: 16px;
             padding: 12px;
             margin-top: 10px;
         }
-
-        .exercise-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .exercise-name {
-            font-weight: 600;
-            color: white;
-        }
-
-        .sets-list {
-            font-size: 0.75rem;
-            color: #A0A6B2;
-            margin-top: 6px;
-        }
-
-        /* ИСТОРИЯ */
+        .exercise-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .exercise-name { font-weight: 600; color: white; }
+        .sets-list { font-size: 0.75rem; color: #A0A6B2; margin-top: 6px; }
+        
         .history-item {
             background: #202531;
             border-radius: 16px;
             padding: 12px;
             margin-bottom: 8px;
         }
-
-        .history-name {
-            color: white;
-            font-weight: 600;
-        }
-
-        .history-detail {
-            font-size: 0.8rem;
-            color: #A0A6B2;
-        }
-
-        .history-date {
-            font-size: 0.65rem;
-            color: #6E7683;
-            margin-top: 4px;
-        }
-
-        /* КНОПКИ */
+        .history-name { color: white; font-weight: 600; }
+        .history-detail { font-size: 0.8rem; color: #A0A6B2; }
+        .history-date { font-size: 0.65rem; color: #6E7683; margin-top: 4px; }
+        
         .add-btn {
             background: #2A5F3A;
             color: white;
@@ -291,11 +162,7 @@
             margin-top: 12px;
             cursor: pointer;
         }
-
-        .add-btn.blue {
-            background: #1E3A5F;
-        }
-
+        .add-btn.blue { background: #1E3A5F; }
         .small-btn {
             background: #2A303E;
             border: none;
@@ -306,57 +173,24 @@
             color: #C7CDD8;
             margin-left: 6px;
         }
-
-        .danger-btn {
-            background: #3A1E1E;
-            color: #E57373;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .filter-row input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #252B36;
-            border-radius: 28px;
-            background: #151922;
-            color: white;
-        }
-
-        .filter-row button {
-            padding: 10px 16px;
-            border-radius: 28px;
-            border: none;
-            background: #202531;
-            color: #C7CDD8;
-            cursor: pointer;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6E7683;
-        }
-
-        /* МОДАЛКИ */
+        .danger-btn { background: #3A1E1E; color: #E57373; }
+        
+        .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .filter-row input { flex: 1; padding: 12px; border: 1px solid #252B36; border-radius: 28px; background: #151922; color: white; }
+        .filter-row button { padding: 10px 16px; border-radius: 28px; border: none; background: #202531; color: #C7CDD8; cursor: pointer; }
+        
+        .empty-state { text-align: center; padding: 40px; color: #6E7683; }
+        
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-
         .modal-card {
             background: #151922;
             width: 92%;
@@ -367,13 +201,7 @@
             overflow-y: auto;
             border: 1px solid #252B36;
         }
-
-        .modal-card h3 {
-            color: white;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
+        .modal-card h3 { color: white; text-align: center; margin-bottom: 16px; }
         .modal-card input, .modal-card select {
             width: 100%;
             padding: 12px;
@@ -383,56 +211,54 @@
             background: #202531;
             color: white;
         }
-
-        .set-row {
-            display: flex;
-            gap: 8px;
-            margin: 8px 0;
-            align-items: center;
-        }
-
-        .set-row input {
-            flex: 1;
-            margin: 0;
-        }
-
-        .remove-set {
-            background: #3A1E1E;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 12px;
-            cursor: pointer;
-            color: #E57373;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .small-btn.confirm {
+        .set-row { display: flex; gap: 8px; margin: 8px 0; align-items: center; }
+        .set-row input { flex: 1; margin: 0; }
+        .remove-set { background: #3A1E1E; border: none; border-radius: 20px; padding: 8px 12px; cursor: pointer; color: #E57373; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 16px; }
+        .small-btn.confirm { background: #2A5F3A; color: white; }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #2A5F3A;
             color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            z-index: 2000;
+            animation: fadeOut 3s ease forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; bottom: 30px; }
+            70% { opacity: 1; }
+            100% { opacity: 0; bottom: 100px; visibility: hidden; }
         }
     </style>
 </head>
 <body>
 <div id="app"></div>
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script>
     // ========== ДАННЫЕ ==========
     let supplements = [];
     let historyLog = [];
     let workouts = [];
     let exerciseLibrary = [];
+    let workoutCounter = 0;
 
     function saveAll() {
         localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
         localStorage.setItem('fitness_history', JSON.stringify(historyLog));
         localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
         localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
+        
+        workoutCounter++;
+        if(workoutCounter >= 5) {
+            workoutCounter = 0;
+            autoBackup();
+        }
     }
 
     function loadAll() {
@@ -441,14 +267,108 @@
         workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
         exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
         
-        if(exerciseLibrary.length === 0) {
+        // Демо-данные добавляются ТОЛЬКО если библиотека пуста И это первый запуск
+        const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
+        
+        if(isFirstLaunch && exerciseLibrary.length === 0) {
+            // Отметка, что первый запуск прошёл
+            localStorage.setItem('fitness_first_launch', 'done');
+            
             exerciseLibrary = [
                 { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
                 { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
                 { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
             ];
+            
+            // Добавляем одну демо-тренировку
+            workouts = [{
+                id: 'demo1',
+                name: 'Первая тренировка',
+                date: new Date().toISOString().slice(0, 10),
+                exercises: [
+                    {
+                        id: 'demoex1',
+                        name: 'Жим лёжа',
+                        muscleGroup: 'Грудь',
+                        sets: [{ weight: 60, reps: 10 }, { weight: 65, reps: 8 }]
+                    },
+                    {
+                        id: 'demoex2',
+                        name: 'Приседания',
+                        muscleGroup: 'Ноги',
+                        sets: [{ weight: 80, reps: 8 }, { weight: 85, reps: 6 }]
+                    }
+                ]
+            }];
+            
             saveAll();
         }
+    }
+
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function autoBackup() {
+        const backup = {
+            supplements, historyLog, workouts, exerciseLibrary,
+            date: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fitness_backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('💾 Авто-бэкап сохранён!');
+    }
+
+    function exportBackup() {
+        const backup = {
+            supplements, historyLog, workouts, exerciseLibrary,
+            date: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fitness_full_backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📦 Полный бэкап создан!');
+    }
+
+    function importBackup() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if(data.supplements) supplements = data.supplements;
+                    if(data.historyLog) historyLog = data.historyLog;
+                    if(data.workouts) workouts = data.workouts;
+                    if(data.exerciseLibrary) exerciseLibrary = data.exerciseLibrary;
+                    saveAll();
+                    showToast('✅ Данные восстановлены!');
+                    if(document.getElementById('badsContent')) renderBadsContent();
+                    if(document.getElementById('workoutsContent')) renderWorkoutsContent();
+                } catch(err) {
+                    alert('Ошибка при импорте: неверный файл');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     }
 
     function escapeHtml(str) {
@@ -496,7 +416,7 @@
                         <span>✈️</span> @Rusrus4 (Telegram)
                     </a>
                 </div>
-                <div class="version">v2.0 — GymShark dark edition</div>
+                <div class="version">v2.2 — демо-данные только при первом запуске</div>
             </div>
         `;
     }
@@ -515,7 +435,9 @@
                 <div class="section-header">
                     <button class="back-btn" onclick="goBack()">← Назад</button>
                     <div class="section-title">💊 БАДы</div>
-                    <button class="export-btn" onclick="openExportModal('bads')">📎 Excel</button>
+                    <button class="export-btn" onclick="openExportModal('bads')">📎 Export</button>
+                    <button class="backup-btn" onclick="exportBackup()">💾 Бэкап</button>
+                    <button class="import-btn" onclick="importBackup()">📂 Импорт</button>
                 </div>
                 <div class="section-content" id="badsContent"></div>
             </div>
@@ -651,8 +573,10 @@
                 <div class="section-header">
                     <button class="back-btn" onclick="goBack()">← Назад</button>
                     <div class="section-title">🏋️ Тренировки</div>
-                    <button class="export-btn" onclick="openExportModal('workouts')">📎 Excel</button>
-                    <button class="edit-library-btn" onclick="openExerciseLibrary()">📚 Упражнения</button>
+                    <button class="export-btn" onclick="openExportModal('workouts')">📎 Export</button>
+                    <button class="backup-btn" onclick="exportBackup()">💾 Бэкап</button>
+                    <button class="import-btn" onclick="importBackup()">📂 Импорт</button>
+                    <button class="import-btn" style="background:#1E3A5F;" onclick="openExerciseLibrary()">📚 Упр.</button>
                 </div>
                 <div class="section-content" id="workoutsContent"></div>
             </div>
@@ -676,7 +600,7 @@
                         <button class="small-btn danger-btn" onclick="deleteWorkout('${w.id}')">🗑️</button>
                     </div>
                 </div>
-                ${w.exercises.map(ex => `
+                ${(w.exercises || []).map(ex => `
                     <div class="exercise-item">
                         <div class="exercise-header">
                             <span class="exercise-name">💪 ${escapeHtml(ex.name)}</span>
@@ -685,7 +609,7 @@
                                 <button class="small-btn danger-btn" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button>
                             </div>
                         </div>
-                        <div class="sets-list">${ex.sets.map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
+                        <div class="sets-list">${(ex.sets || []).map((s,i)=>`${i+1} подход: ${s.weight}кг × ${s.reps} повт`).join(' · ')}</div>
                     </div>
                 `).join('')}
                 <button class="small-btn" style="background:#1E3A5F; color:white; margin-top:8px;" onclick="addExerciseToWorkout('${w.id}')">➕ Упражнение</button>
@@ -695,9 +619,8 @@
         container.innerHTML += `<button class="add-btn blue" onclick="openAddWorkoutModal()">➕ Новая тренировка</button>`;
     }
 
-    // Библиотека упражнений
     function openExerciseLibrary() {
-        let exercisesHtml = exerciseLibrary.map(ex => `
+        let exercisesHtml = (exerciseLibrary || []).map(ex => `
             <div class="exercise-library-card">
                 <div class="card-header">
                     <span class="card-title">${escapeHtml(ex.name)} <span style="color:#A0A6B2; font-size:0.75rem;">(${escapeHtml(ex.muscleGroup)})</span></span>
@@ -708,7 +631,6 @@
                 </div>
             </div>
         `).join('');
-        
         showModal(`
             <div class="modal-card">
                 <h3>📚 Библиотека упражнений</h3>
@@ -764,24 +686,23 @@
         const name = document.getElementById('editExName')?.value;
         const muscle = document.getElementById('editExMuscle')?.value;
         const ex = exerciseLibrary.find(e => e.id === id);
-        if(ex && name && muscle) {
-            ex.name = name;
-            ex.muscleGroup = muscle;
-            saveAll();
-            closeModal();
-            openExerciseLibrary();
-        }
+        if(ex && name && muscle) { ex.name = name; ex.muscleGroup = muscle; saveAll(); closeModal(); openExerciseLibrary(); }
     };
 
     window.deleteExerciseFromLibrary = (id) => {
-        if(confirm('Удалить упражнение?')) {
-            exerciseLibrary = exerciseLibrary.filter(e => e.id !== id);
-            saveAll();
+        if(confirm('Удалить упражнение из библиотеки?')) { 
+            exerciseLibrary = exerciseLibrary.filter(e => e.id !== id); 
+            saveAll(); 
             openExerciseLibrary();
+            // Обновляем тренировки, удаляя это упражнение из них
+            workouts.forEach(w => {
+                w.exercises = w.exercises.filter(ex => ex.id !== id);
+            });
+            saveAll();
+            renderWorkoutsContent();
         }
     };
 
-    // Работа с тренировками
     window.openAddWorkoutModal = () => {
         showModal(`
             <div class="modal-card">
@@ -806,11 +727,7 @@
     };
 
     window.deleteWorkout = (id) => {
-        if(confirm('Удалить тренировку?')) {
-            workouts = workouts.filter(w => w.id !== id);
-            saveAll();
-            renderWorkoutsContent();
-        }
+        if(confirm('Удалить тренировку?')) { workouts = workouts.filter(w => w.id !== id); saveAll(); renderWorkoutsContent(); }
     };
 
     window.editWorkoutNameDate = (id) => {
@@ -830,19 +747,13 @@
 
     window.updateWorkout = (id) => {
         const w = workouts.find(w => w.id === id);
-        if(w) {
-            w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка';
-            w.date = document.getElementById('editWorkoutDate')?.value;
-            saveAll();
-            closeModal();
-            renderWorkoutsContent();
-        }
+        if(w) { w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка'; w.date = document.getElementById('editWorkoutDate')?.value; saveAll(); closeModal(); renderWorkoutsContent(); }
     };
 
     let currentSets = [];
-
+    
     window.addExerciseToWorkout = (workoutId) => {
-        let options = exerciseLibrary.map(ex => `<option value="${ex.id}" data-muscle="${ex.muscleGroup}">${ex.name} (${ex.muscleGroup})</option>`).join();
+        let options = (exerciseLibrary || []).map(ex => `<option value="${ex.id}" data-muscle="${ex.muscleGroup}">${ex.name} (${ex.muscleGroup})</option>`).join('');
         options += `<option value="new">➕ Новое упражнение...</option>`;
         showModal(`
             <div class="modal-card">
@@ -873,16 +784,9 @@
         if(el) el.style.display = val === 'new' ? 'block' : 'none';
     };
 
-    window.addSetField = () => {
-        currentSets.push({ weight: '', reps: '' });
-        renderSetsList();
-    };
-
-    window.removeSetField = (idx) => {
-        currentSets.splice(idx, 1);
-        renderSetsList();
-    };
-
+    window.addSetField = () => { currentSets.push({ weight: '', reps: '' }); renderSetsList(); };
+    window.removeSetField = (idx) => { currentSets.splice(idx, 1); renderSetsList(); };
+    
     function renderSetsList() {
         const container = document.getElementById('setsList');
         if(!container) return;
@@ -922,11 +826,10 @@
         const workout = workouts.find(w => w.id === workoutId);
         const exercise = workout?.exercises.find(e => e.id === exerciseId);
         if(!exercise) return;
-        currentSets = [...exercise.sets];
+        currentSets = [...(exercise.sets || [])];
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать упражнение</h3>
-                <div><strong style="color:white;">${escapeHtml(exercise.name)}</strong></div>
                 <div id="setsContainer">
                     <div style="color:white; margin:8px 0;">Подходы:</div>
                     <div id="setsList"></div>
@@ -955,60 +858,98 @@
     window.deleteExerciseFromWorkout = (workoutId, exerciseId) => {
         if(confirm('Удалить упражнение из тренировки?')) {
             const workout = workouts.find(w => w.id === workoutId);
-            if(workout) {
-                workout.exercises = workout.exercises.filter(e => e.id !== exerciseId);
-                saveAll();
-                renderWorkoutsContent();
-            }
+            if(workout) { workout.exercises = workout.exercises.filter(e => e.id !== exerciseId); saveAll(); renderWorkoutsContent(); }
         }
     };
 
-    // ========== ЭКСПОРТ EXCEL ==========
+    // ========== ЭКСПОРТ (работает на телефонах) ==========
     let currentExportType = '';
+    
     function openExportModal(type) {
         currentExportType = type;
         showModal(`
             <div class="modal-card">
-                <h3>📎 Выгрузка в Excel</h3>
+                <h3>📎 Выгрузка данных</h3>
                 <label style="color:#C7CDD8;">С даты:</label>
                 <input type="date" id="exportStartDate">
                 <label style="color:#C7CDD8;">По дату:</label>
                 <input type="date" id="exportEndDate">
                 <div class="modal-buttons">
-                    <button class="small-btn confirm" onclick="exportToExcel()">Выгрузить</button>
+                    <button class="small-btn confirm" onclick="exportToCSV()">📊 Выгрузить CSV</button>
                     <button class="small-btn danger-btn" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
     }
 
-    window.exportToExcel = () => {
+    window.exportToCSV = () => {
         const startDate = document.getElementById('exportStartDate')?.value;
         const endDate = document.getElementById('exportEndDate')?.value;
         let data = [];
+        
         if(currentExportType === 'bads') {
             let entries = historyLog.filter(h => h.type === 'consume');
             if(startDate) entries = entries.filter(e => e.date.split('T')[0] >= startDate);
             if(endDate) entries = entries.filter(e => e.date.split('T')[0] <= endDate);
-            data = entries.map(e => ({ 'Дата': new Date(e.date).toLocaleString(), 'БАД': e.suppName, 'Принято': e.amount, 'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' }));
+            data = entries.map(e => ({ 
+                'Дата': new Date(e.date).toLocaleString(), 
+                'БАД': e.suppName, 
+                'Принято': e.amount, 
+                'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' 
+            }));
         } else {
             let filtered = [...workouts];
             if(startDate) filtered = filtered.filter(w => w.date >= startDate);
             if(endDate) filtered = filtered.filter(w => w.date <= endDate);
             for(let w of filtered) {
-                for(let ex of w.exercises) {
-                    for(let set of ex.sets) {
-                        data.push({ 'Дата': w.date, 'Тренировка': w.name, 'Упражнение': ex.name, 'Группа мышц': ex.muscleGroup, 'Вес (кг)': set.weight, 'Повторы': set.reps });
+                for(let ex of (w.exercises || [])) {
+                    for(let set of (ex.sets || [])) {
+                        data.push({ 
+                            'Дата': w.date, 
+                            'Тренировка': w.name || 'Без названия', 
+                            'Упражнение': ex.name, 
+                            'Группа мышц': ex.muscleGroup, 
+                            'Вес (кг)': set.weight, 
+                            'Повторы': set.reps 
+                        });
                     }
                 }
             }
         }
-        if(!data.length) { alert("Нет данных"); closeModal(); return; }
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, currentExportType === 'bads' ? 'БАДы' : 'Тренировки');
-        XLSX.writeFile(wb, `${currentExportType}_${startDate || 'все'}_${endDate || 'все'}.xlsx`);
+        
+        if(!data.length) { 
+            alert("Нет данных за выбранный период"); 
+            closeModal(); 
+            return; 
+        }
+        
+        // Создаём CSV
+        const headers = Object.keys(data[0]);
+        const csvRows = [];
+        csvRows.push(headers.join(','));
+        for(const row of data) {
+            const values = headers.map(header => {
+                let val = row[header] || '';
+                if(typeof val === 'string') val = val.replace(/"/g, '""');
+                return `"${val}"`;
+            });
+            csvRows.push(values.join(','));
+        }
+        const csvString = csvRows.join('\n');
+        
+        // Скачивание файла
+        const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', `${currentExportType}_${startDate || 'все'}_${endDate || 'все'}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
         closeModal();
+        showToast('📊 Файл CSV скачан! Откройте в Excel или Google Sheets');
     };
 
     loadAll();
