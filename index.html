@@ -485,20 +485,29 @@
     }
 
     // ========== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕГО ПОДХОДА ==========
-    function getLastExerciseData(exerciseName) {
-        // Ищем все тренировки, сортируем по дате (новые сверху)
-        const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        for (let workout of sortedWorkouts) {
-            const exercise = workout.exercises.find(ex => ex.name === exerciseName);
-            if (exercise && exercise.sets && exercise.sets.length > 0) {
-                const lastSet = exercise.sets[exercise.sets.length - 1];
-                return { weight: lastSet.weight, reps: lastSet.reps };
+function getLastExerciseData(exerciseName) {
+    // Ищем все тренировки, сортируем по дате (новые сверху)
+    const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    for (let workout of sortedWorkouts) {
+        const exercise = workout.exercises.find(ex => ex.name === exerciseName);
+        if (exercise && exercise.sets && exercise.sets.length > 0) {
+            // Находим лучший подход в этой тренировке
+            let bestSet = null;
+            for (let set of exercise.sets) {
+                if (bestSet === null) {
+                    bestSet = set;
+                } else if (set.weight > bestSet.weight) {
+                    bestSet = set;
+                } else if (set.weight === bestSet.weight && set.reps > bestSet.reps) {
+                    bestSet = set;
+                }
             }
+            return { weight: bestSet.weight, reps: bestSet.reps };
         }
-        return null;
     }
-
+    return null;
+}
     // ========== ИНСТРУКЦИЯ ==========
     function showInstruction() {
         saveScrollPosition();
