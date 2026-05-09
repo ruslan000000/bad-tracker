@@ -445,53 +445,83 @@ function autoBackup() {
         console.log("backup error", e);
     }
 }
-function saveAll() {
+async function saveAll() {
+    const state = {
+        supplements,
+        historyLog,
+        workouts,
+        exerciseLibrary,
+        collapsedWorkouts
+    };
+
+    // 1. localStorage (быстро)
+    localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
+    localStorage.setItem('fitness_history', JSON.stringify(historyLog));
+    localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
+    localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
+    localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
+
+    // 2. IndexedDB (надёжно)
     try {
-        localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
-        localStorage.setItem('fitness_history', JSON.stringify(historyLog));
-        localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
-        localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
-        localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
-
-        autoBackup(); // 🔥 ВАЖНО
-
-    } catch(e) {
-        console.log("save error", e);
+        await saveToIndexedDB(state);
+    } catch (e) {
+        console.log("IndexedDB save error:", e);
     }
 }
 
-    function loadAll() {
-        supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
-        historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
-        workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
-        exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
-        collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
-        
-        const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
-        
-        if(isFirstLaunch && exerciseLibrary.length === 0) {
-            localStorage.setItem('fitness_first_launch', 'done');
-            
-            exerciseLibrary = [
-                { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
-                { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
-                { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
-            ];
-            
-            workouts = [{
-                id: 'demo1',
-                name: 'Первая тренировка',
-                date: new Date().toISOString().slice(0, 10),
-                exercises: [
-                    { id: 'demoex1', name: 'Жим лёжа', muscleGroup: 'Грудь', sets: [{ weight: 60, reps: 10 }, { weight: 65, reps: 8 }] },
-                    { id: 'demoex2', name: 'Приседания', muscleGroup: 'Ноги', sets: [{ weight: 80, reps: 8 }, { weight: 85, reps: 6 }] }
-                ]
-            }];
-            
-            saveAll();
+    
+    async function loadAll() {
+
+    // 1. сначала localStorage
+    supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
+    historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
+    workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
+    exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
+    collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
+
+    // 2. если пусто → пробуем IndexedDB
+    const isEmpty = supplements.length === 0 &&
+                    workouts.length === 0 &&
+                    historyLog.length === 0;
+
+    if (isEmpty) {
+        try {
+            const dbData = await loadFromIndexedDB();
+
+            if (dbData) {
+                supplements = dbData.supplements || [];
+                historyLog = dbData.historyLog || [];
+                workouts = dbData.workouts || [];
+                exerciseLibrary = dbData.exerciseLibrary || [];
+                collapsedWorkouts = dbData.collapsedWorkouts || {};
+            }
+        } catch (e) {
+            console.log("IndexedDB load error:", e);
         }
     }
 
+    // 3. первый запуск (как у тебя было)
+    const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
+
+    if (isFirstLaunch && exerciseLibrary.length === 0) {
+        localStorage.setItem('fitness_first_launch', 'done');
+
+        exerciseLibrary = [
+            { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
+            { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
+            { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
+        ];
+
+        workouts = [{
+            id: 'demo1',
+            name: 'Первая тренировка',
+            date: new Date().toISOString().slice(0, 10),
+            exercises: []
+        }];
+
+        await saveAll();
+    }
+}
     function showToast(msg) {
         let toast = document.createElement('div');
         toast.className = 'toast';
@@ -1458,9 +1488,47 @@ ${localStorage.getItem("fitness_backup_date")
             }
         }
     }
+// ========== NEAR-REAL APP STORAGE LAYER ==========
+const DB_NAME = "fitness_db";
+const DB_STORE = "state";
 
-    loadAll();
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(DB_STORE)) {
+                db.createObjectStore(DB_STORE);
+            }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveToIndexedDB(data) {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, "readwrite");
+    const store = tx.objectStore(DB_STORE);
+    store.put(data, "app_state");
+}
+
+async function loadFromIndexedDB() {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, "readonly");
+    const store = tx.objectStore(DB_STORE);
+
+    return new Promise((resolve) => {
+        const req = store.get("app_state");
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+    });
+}
+    loadAll().then(() => {
     renderStartScreen();
+});
     if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js");
