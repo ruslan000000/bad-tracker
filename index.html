@@ -529,7 +529,11 @@ async function saveAll() {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
-
+function vibrate(pattern = 30) {
+    if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+    }
+}
     function escapeHtml(str) {
         if(!str) return '';
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
@@ -910,7 +914,8 @@ ${localStorage.getItem("fitness_backup_date")
         let existing = supplements.find(s => s.name === name && s.unit === unit);
         if(existing) existing.quantity += amount;
         else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
-        saveAll(); closeModal(); renderBadsContent();
+        saveAll(); closeModal(); renderBadsContent();vibrate(40);
+showToast("✅ БАД добавлен");
     };
 
     function editHistoryEntry(entryId) {
