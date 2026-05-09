@@ -21,7 +21,6 @@
             padding: 16px;
         }
 
-        /* СТАРТОВЫЙ ЭКРАН */
         .start-screen {
             max-width: 600px;
             width: 100%;
@@ -84,7 +83,6 @@
         }
         .version { font-size: 0.65rem; color: #4A505E; margin-top: 24px; }
 
-        /* МОДАЛЬНЫЕ ОКНА — УВЕЛИЧЕННЫЕ */
         .modal {
             display: none;
             position: fixed;
@@ -123,85 +121,6 @@
             background: #202531; 
             color: white; 
             font-size: 1rem;
-        }
-        .modal-card input::placeholder { color: #6E7683; }
-        
-        .instruction-table {
-            width: 100%;
-            margin: 10px 0;
-            border-collapse: collapse;
-        }
-        .instruction-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #2A303E;
-            font-size: 0.85rem;
-            color: #C7CDD8;
-        }
-        .instruction-table td:first-child { font-weight: 600; width: 40%; }
-        .badge {
-            display: inline-block;
-            background: #2A5F3A;
-            padding: 4px 12px;
-            border-radius: 24px;
-            font-size: 0.75rem;
-            margin-right: 5px;
-        }
-        .close-instruction {
-            background: #2A5F3A;
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 28px;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        
-        /* Стили для группового приёма БАДов */
-        .group-item-selected {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2A5F3A;
-            padding: 14px 16px;
-            border-radius: 28px;
-            margin-bottom: 10px;
-            color: white;
-            font-size: 1rem;
-        }
-        .group-item-available {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2A303E;
-            padding: 14px 16px;
-            border-radius: 28px;
-            margin-bottom: 10px;
-            color: white;
-            font-size: 1rem;
-        }
-        .group-item-available span { color: white; }
-        .group-btn-add {
-            background: #1E3A5F;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .group-btn-remove {
-            background: #3A1E1E;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #E57373;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
         }
         
         .app-container {
@@ -345,7 +264,6 @@
         .edit-icon { color: #7cb342; }
         .delete-icon { color: #E57373; }
         
-        /* Для подходов в тренировках */
         .set-row {
             display: flex;
             gap: 10px;
@@ -371,6 +289,50 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+        
+        .group-item-selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2A5F3A;
+            padding: 14px 16px;
+            border-radius: 28px;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        .group-item-available {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2A303E;
+            padding: 14px 16px;
+            border-radius: 28px;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        .group-item-available span { color: white; }
+        .group-btn-add {
+            background: #1E3A5F;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .group-btn-remove {
+            background: #3A1E1E;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #E57373;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -388,6 +350,7 @@
         localStorage.setItem('fitness_history', JSON.stringify(historyLog));
         localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
         localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
+        showToast('💾 Данные сохранены');
     }
 
     function loadAll() {
@@ -463,28 +426,22 @@
             <div class="modal-card">
                 <h2>📖 Инструкция</h2>
                 <h3>💊 БАДы</h3>
-                <table class="instruction-table">
-                    <tr><td>➕ Добавить БАД</td><td>Ввести название, единицу, количество</td></tr>
-                    <tr><td>✏️ Редактировать БАД</td><td>Нажать ✏️ у карточки БАДа</td></tr>
-                    <tr><td>💊 Приём БАДов</td><td>Выбрать несколько БАДов → записать все сразу</td></tr>
-                    <tr><td>✏️ Редактировать приём</td><td>Нажать ✏️ в истории → изменить дату/количество</td></tr>
-                    <tr><td>🗑️ Удалить приём</td><td>Нажать 🗑️ в истории → БАДы вернутся</td></tr>
-                </table>
+                <p>➕ Добавить БАД — ввести название, единицу, количество</p>
+                <p>✏️ Редактировать БАД — нажать ✏️ у карточки</p>
+                <p>💊 Приём БАДов — выбрать несколько БАДов → записать все сразу</p>
+                <p>✏️ Редактировать приём — нажать ✏️ в истории</p>
+                <p>🗑️ Удалить приём — нажать 🗑️ в истории</p>
                 <h3>🏋️ Тренировки</h3>
-                <table class="instruction-table">
-                    <tr><td>➕ Новая тренировка</td><td>Ввести название и дату</td></tr>
-                    <tr><td>➕ Упражнение</td><td>Выбрать из библиотеки, добавить подходы</td></tr>
-                    <tr><td>✏️ Редактировать</td><td>Нажать ✏️ у упражнения</td></tr>
-                    <tr><td>📚 Библиотека</td><td>Кнопка 📚 Упр. — добавление/удаление упражнений</td></tr>
-                </table>
+                <p>➕ Новая тренировка — ввести название и дату</p>
+                <p>➕ Упражнение — выбрать из библиотеки, добавить подходы</p>
+                <p>✏️ Редактировать — нажать ✏️ у упражнения</p>
+                <p>📚 Библиотека — добавление/удаление упражнений</p>
                 <h3>💾 Бэкапы</h3>
-                <table class="instruction-table">
-                    <tr><td>📎 Export</td><td>Сохранить историю в CSV (Excel)</td></tr>
-                    <tr><td>💾 Бэкап</td><td>Полная копия всех данных</td></tr>
-                    <tr><td>📂 Импорт</td><td>Восстановить из бэкапа</td></tr>
-                </table>
-                <p style="font-size:0.8rem; color:#6E7683; text-align:center; margin-top:20px;">📬 Вопросы: <strong>@Rusrus4</strong> (Telegram)</p>
-                <button class="close-instruction" onclick="closeModal()">Закрыть</button>
+                <p>💾 Бэкап — сохранить ВСЕ данные в файл</p>
+                <p>📂 Импорт — восстановить из файла бэкапа</p>
+                <p>📎 Export — сохранить историю в CSV (Excel)</p>
+                <p style="margin-top:20px;">📬 Вопросы: <strong>@Rusrus4</strong> (Telegram)</p>
+                <button class="add-btn" onclick="closeModal()" style="margin-top:20px;">Закрыть</button>
             </div>
         `);
     }
@@ -505,7 +462,7 @@
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v2.8 — увеличенные модалки</div>
+                <div class="version">v2.9 — исправлен бэкап на телефонах</div>
             </div>
         `;
     }
@@ -517,368 +474,41 @@
 
     function goBack() { renderStartScreen(); }
 
-    // ========== РЕДАКТИРОВАНИЕ БАДА ==========
-    function editSupplement(id) {
-        const supp = supplements.find(s => s.id === id);
-        if(!supp) return;
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать БАД</h3>
-                <label>Название:</label>
-                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
-                <label>Единица измерения:</label>
-                <select id="editSuppUnit">
-                    <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы (г)</option>
-                    <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки (шт)</option>
-                </select>
-                <label>Количество:</label>
-                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateSupplement(id) {
-        const name = document.getElementById('editSuppName')?.value;
-        const unit = document.getElementById('editSuppUnit')?.value;
-        const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
-        const supp = supplements.find(s => s.id === id);
-        if(supp && name && !isNaN(quantity) && quantity >= 0) {
-            supp.name = name;
-            supp.unit = unit;
-            supp.quantity = quantity;
-            saveAll();
-            closeModal();
-            renderBadsContent();
-            showToast('✅ БАД обновлён');
-        } else {
-            alert("Ошибка: проверьте данные");
-        }
-    }
-
-    // ========== РЕДАКТИРОВАНИЕ ПРИЁМА БАДА ==========
-    function editHistoryEntry(entryId) {
-        const entry = historyLog.find(h => h.id === entryId);
-        if(!entry || entry.type !== 'consume') return;
-        showModal(`
-            <div class="modal-card">
-                <h3>✏️ Редактировать приём</h3>
-                <div style="margin-bottom:15px; color:white; font-size:1.1rem;"><strong>${escapeHtml(entry.suppName)}</strong></div>
-                <label>Количество:</label>
-                <input type="number" id="editHistoryAmount" value="${entry.amount}" step="any">
-                <label>Дата и время:</label>
-                <input type="datetime-local" id="editHistoryDate" value="${entry.date.slice(0,16)}">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateHistoryEntry('${entryId}')">Сохранить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    function updateHistoryEntry(entryId) {
-        const entry = historyLog.find(h => h.id === entryId);
-        if(!entry) return;
-        const newAmount = parseFloat(document.getElementById('editHistoryAmount')?.value);
-        const newDate = document.getElementById('editHistoryDate')?.value;
-        if(isNaN(newAmount) || newAmount <= 0) return alert("Некорректное количество");
-        
-        const supp = supplements.find(s => s.id === entry.suppId);
-        if(supp) {
-            supp.quantity += entry.amount;
-            if(supp.quantity < newAmount) {
-                supp.quantity -= entry.amount;
-                alert(`Недостаточно! Доступно: ${supp.quantity}`);
-                return;
-            }
-            supp.quantity -= newAmount;
-        }
-        
-        entry.amount = newAmount;
-        entry.date = new Date(newDate).toISOString();
-        saveAll();
-        closeModal();
-        renderBadsContent();
-        showToast('✅ Приём обновлён');
-    }
-
-    function deleteHistoryEntry(entryId) {
-        if(!confirm('Удалить запись о приёме? БАДы вернутся на остаток.')) return;
-        const entry = historyLog.find(h => h.id === entryId);
-        if(entry && entry.type === 'consume') {
-            const supp = supplements.find(s => s.id === entry.suppId);
-            if(supp) supp.quantity += entry.amount;
-            historyLog = historyLog.filter(h => h.id !== entryId);
-            saveAll();
-            renderBadsContent();
-            showToast('🗑️ Запись удалена');
-        }
-    }
-
-    // ========== БАДЫ ==========
-    function renderBadsSection() {
-        document.getElementById('app').innerHTML = `
-            <div class="app-container">
-                <div class="section-header">
-                    <button class="back-btn" onclick="goBack()">← Назад</button>
-                    <div class="section-title">💊 БАДы</div>
-                    <button class="action-btn orange" onclick="openGroupConsumeModal()">💊 Приём БАДов</button>
-                    <button class="action-btn" onclick="openExportModal('bads')">📎 Export</button>
-                    <button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button>
-                    <button class="action-btn blue" onclick="importBackup()">📂 Импорт</button>
-                </div>
-                <div class="section-content" id="badsContent"></div>
-            </div>
-        `;
-        renderBadsContent();
-    }
-
-    function renderBadsContent() {
-        const container = document.getElementById('badsContent');
-        let supplementsHtml = supplements.map(sup => `
-            <div class="supply-card">
-                <div class="card-header">
-                    <span class="card-title">${escapeHtml(sup.name)}</span>
-                    <div>
-                        <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
-                        <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteSupplement('${sup.id}')">🗑️</button>
-                    </div>
-                </div>
-                <div style="font-size:0.75rem; color:#6E7683;">${sup.unit === 'г' ? 'граммы' : 'таблетки'}</div>
-            </div>
-        `).join('');
-        
-        let historyHtml = historyLog.filter(h => h.type === 'consume').map(h => `
-            <div class="history-item">
-                <div class="history-header">
-                    <span class="history-name">${escapeHtml(h.suppName)}</span>
-                    <div>
-                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
-                    </div>
-                </div>
-                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
-                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
-            </div>
-        `).join('');
-        
-        container.innerHTML = `
-            <div class="filter-row">
-                <input type="date" id="badsFilterDate">
-                <button onclick="filterBadsHistory()">🔍</button>
-                <button onclick="clearBadsFilter()">✖️</button>
-            </div>
-            <div style="margin-bottom:25px;">
-                <div style="color:white; margin-bottom:12px; font-size:1.1rem;">📦 Мои БАДы</div>
-                ${supplementsHtml || '<div class="empty-state">Нет БАДов. Нажмите "Добавить БАД"</div>'}
-                <button class="add-btn" onclick="openAddSuppModal()">➕ Добавить БАД</button>
-            </div>
-            <div>
-                <div style="color:white; margin-bottom:12px; font-size:1.1rem;">📜 История приёмов</div>
-                <div id="historyList">${historyHtml || '<div class="empty-state">Нет записей</div>'}</div>
-            </div>
-        `;
-    }
-
-    window.deleteSupplement = (id) => {
-        if(confirm('Удалить БАД? Все записи о приёме тоже удалятся.')) {
-            historyLog = historyLog.filter(h => h.suppId !== id);
-            supplements = supplements.filter(s => s.id !== id);
-            saveAll();
-            renderBadsContent();
-        }
-    };
-
-    window.openAddSuppModal = () => {
-        showModal(`
-            <div class="modal-card">
-                <h3>✨ Добавить БАД</h3>
-                <label>Название:</label>
-                <input type="text" id="suppName" placeholder="Например: Витамин D">
-                <label>Единица измерения:</label>
-                <select id="suppUnit">
-                    <option value="г">граммы (г)</option>
-                    <option value="таб">таблетки (шт)</option>
-                </select>
-                <label>Количество:</label>
-                <input type="number" id="suppAmount" placeholder="Количество" step="any">
-                <div style="display:flex; gap:15px; margin-top:25px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
-                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    };
-
-    window.addSupplement = () => {
-        const name = document.getElementById('suppName')?.value;
-        const unit = document.getElementById('suppUnit')?.value;
-        const amount = parseFloat(document.getElementById('suppAmount')?.value);
-        if(!name || isNaN(amount) || amount <= 0) return alert("Ошибка");
-        let existing = supplements.find(s => s.name === name && s.unit === unit);
-        if(existing) existing.quantity += amount;
-        else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
-        saveAll();
-        closeModal();
-        renderBadsContent();
-    };
-
-    // ГРУППОВОЙ ПРИЁМ БАДОВ
-    let selectedBads = [];
-
-    function openGroupConsumeModal() {
-        if(supplements.length === 0) {
-            alert("Сначала добавьте БАДы");
-            return;
-        }
-        selectedBads = [];
-        renderGroupConsumeModal();
-    }
-
-    function renderGroupConsumeModal() {
-        let availableBads = supplements.filter(s => !selectedBads.find(sb => sb.id === s.id));
-        
-        let selectedHtml = selectedBads.map(s => `
-            <div class="group-item-selected">
-                <span>${escapeHtml(s.name)} — ${s.amount} ${s.unit === 'г' ? 'г' : 'таб'}</span>
-                <button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️ Убрать</button>
-            </div>
-        `).join('');
-        
-        let availableHtml = availableBads.map(s => `
-            <div class="group-item-available">
-                <span>${escapeHtml(s.name)} — остаток: ${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'}</span>
-                <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
-            </div>
-        `).join('');
-        
-        showModal(`
-            <div class="modal-card">
-                <h2>💊 Приём БАДов</h2>
-                <label>📅 Дата приёма:</label>
-                <input type="datetime-local" id="groupConsumeDate" value="${new Date().toISOString().slice(0,16)}">
-                
-                <div style="margin: 20px 0;">
-                    <div style="color:#7cb342; margin-bottom:12px; font-weight:bold; font-size:1rem;">✅ Выбранные (${selectedBads.length}):</div>
-                    <div style="max-height:180px; overflow-y:auto;">${selectedHtml || '<div class="empty-state" style="padding:20px;">Ничего не выбрано</div>'}</div>
-                </div>
-                
-                <div style="margin: 20px 0;">
-                    <div style="color:#1E3A5F; margin-bottom:12px; font-weight:bold; font-size:1rem;">📦 Доступные БАДы:</div>
-                    <div style="max-height:230px; overflow-y:auto;">${availableHtml || '<div class="empty-state" style="padding:20px;">Нет доступных БАДов</div>'}</div>
-                </div>
-                
-                <div style="display:flex; gap:15px; margin-top:20px;">
-                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="saveGroupConsume()">💾 Записать всё</button>
-                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
-                </div>
-            </div>
-        `);
-    }
-
-    window.addToGroup = (id) => {
-        const supp = supplements.find(s => s.id === id);
-        if(!supp) return;
-        
-        let amount = prompt(`Сколько ${supp.name} вы приняли? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`, "1");
-        amount = parseFloat(amount);
-        if(isNaN(amount) || amount <= 0) return;
-        if(supp.quantity < amount) {
-            alert(`Недостаточно! Доступно: ${supp.quantity}`);
-            return;
-        }
-        
-        selectedBads.push({ ...supp, amount: amount });
-        renderGroupConsumeModal();
-    };
-
-    window.removeFromGroup = (id) => {
-        selectedBads = selectedBads.filter(s => s.id !== id);
-        renderGroupConsumeModal();
-    };
-
-    window.saveGroupConsume = () => {
-        if(selectedBads.length === 0) {
-            alert("Добавьте хотя бы один БАД");
-            return;
-        }
-        
-        const date = document.getElementById('groupConsumeDate')?.value;
-        
-        for(let item of selectedBads) {
-            const supp = supplements.find(s => s.id === item.id);
-            if(supp) {
-                supp.quantity -= item.amount;
-                historyLog.push({
-                    id: Date.now().toString() + Math.random(),
-                    type: 'consume',
-                    suppId: supp.id,
-                    suppName: supp.name,
-                    amount: item.amount,
-                    unit: supp.unit,
-                    date: new Date(date).toISOString()
-                });
-            }
-        }
-        
-        saveAll();
-        closeModal();
-        renderBadsContent();
-        showToast(`✅ Записано ${selectedBads.length} БАДов`);
-    };
-
-    window.filterBadsHistory = () => {
-        const filterDate = document.getElementById('badsFilterDate')?.value;
-        const listDiv = document.getElementById('historyList');
-        let filtered = historyLog.filter(h => h.type === 'consume');
-        if(filterDate) filtered = filtered.filter(h => h.date.split('T')[0] === filterDate);
-        listDiv.innerHTML = filtered.map(h => `
-            <div class="history-item">
-                <div class="history-header">
-                    <span class="history-name">${escapeHtml(h.suppName)}</span>
-                    <div>
-                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
-                    </div>
-                </div>
-                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
-                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
-            </div>
-        `).join('') || '<div class="empty-state">Нет записей</div>';
-    };
-
-    window.clearBadsFilter = () => {
-        if(document.getElementById('badsFilterDate')) document.getElementById('badsFilterDate').value = '';
-        filterBadsHistory();
-    };
-
-    // ========== БЭКАП ==========
+    // ========== БЭКАП (РАБОТАЕТ НА ТЕЛЕФОНАХ) ==========
     function exportBackup() {
-        const now = new Date();
-        const backup = { 
-            supplements, historyLog, workouts, exerciseLibrary, 
-            date: now.toISOString(),
-            version: '2.8'
-        };
-        
-        const dataStr = JSON.stringify(backup, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `fitness_backup_${now.toISOString().slice(0,19).replace(/:/g, '-')}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 100);
-        showToast('📦 Бэкап сохранён!');
+        try {
+            const now = new Date();
+            const backupData = {
+                version: '2.9',
+                date: now.toISOString(),
+                supplements: supplements,
+                historyLog: historyLog,
+                workouts: workouts,
+                exerciseLibrary: exerciseLibrary
+            };
+            
+            const jsonStr = JSON.stringify(backupData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // Создаём временную ссылку и эмулируем клик
+            const link = document.createElement('a');
+            link.href = url;
+            const fileName = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showToast('📦 Бэкап сохранён! Файл в папке "Загрузки"');
+        } catch(e) {
+            alert('Ошибка при создании бэкапа: ' + e.message);
+        }
     }
 
     function importBackup() {
+        // Создаём скрытый input для выбора файла
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
@@ -896,20 +526,29 @@
             reader.onload = (ev) => {
                 try {
                     const data = JSON.parse(ev.target.result);
-                    if(data.supplements) supplements = data.supplements;
-                    if(data.historyLog) historyLog = data.historyLog;
-                    if(data.workouts) workouts = data.workouts;
-                    if(data.exerciseLibrary) exerciseLibrary = data.exerciseLibrary;
+                    
+                    // Проверяем структуру данных
+                    if (data.supplements !== undefined) supplements = data.supplements;
+                    if (data.historyLog !== undefined) historyLog = data.historyLog;
+                    if (data.workouts !== undefined) workouts = data.workouts;
+                    if (data.exerciseLibrary !== undefined) exerciseLibrary = data.exerciseLibrary;
+                    
                     saveAll();
                     showToast('✅ Данные восстановлены!');
-                    if(document.getElementById('badsContent')) renderBadsContent();
-                    if(document.getElementById('workoutsContent')) renderWorkoutsContent();
+                    
+                    // Обновляем интерфейс
+                    if (document.getElementById('badsContent')) renderBadsContent();
+                    if (document.getElementById('workoutsContent')) renderWorkoutsContent();
                 } catch(err) { 
-                    alert('Ошибка: неверный файл бэкапа'); 
+                    alert('Ошибка: неверный формат файла бэкапа.\nФайл должен быть .json, созданный этим приложением.'); 
                 }
                 document.body.removeChild(input);
             };
-            reader.readAsText(file);
+            reader.onerror = () => {
+                alert('Ошибка чтения файла');
+                document.body.removeChild(input);
+            };
+            reader.readAsText(file, 'UTF-8');
         };
         
         input.click();
@@ -922,7 +561,12 @@
             let entries = historyLog.filter(h => h.type === 'consume');
             if(startDate) entries = entries.filter(e => e.date.split('T')[0] >= startDate);
             if(endDate) entries = entries.filter(e => e.date.split('T')[0] <= endDate);
-            data = entries.map(e => ({ 'Дата': new Date(e.date).toLocaleString(), 'БАД': e.suppName, 'Принято': e.amount, 'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' }));
+            data = entries.map(e => ({ 
+                'Дата': new Date(e.date).toLocaleString(), 
+                'БАД': e.suppName, 
+                'Принято': e.amount, 
+                'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' 
+            }));
         } else {
             let filtered = [...workouts];
             if(startDate) filtered = filtered.filter(w => w.date >= startDate);
@@ -930,12 +574,23 @@
             for(let w of filtered) {
                 for(let ex of (w.exercises || [])) {
                     for(let set of (ex.sets || [])) {
-                        data.push({ 'Дата': w.date, 'Тренировка': w.name, 'Упражнение': ex.name, 'Группа мышц': ex.muscleGroup, 'Вес (кг)': set.weight, 'Повторы': set.reps });
+                        data.push({ 
+                            'Дата': w.date, 
+                            'Тренировка': w.name, 
+                            'Упражнение': ex.name, 
+                            'Группа мышц': ex.muscleGroup, 
+                            'Вес (кг)': set.weight, 
+                            'Повторы': set.reps 
+                        });
                     }
                 }
             }
         }
-        if(!data.length) { alert("Нет данных"); return; }
+        
+        if(!data.length) { 
+            alert("Нет данных за выбранный период"); 
+            return; 
+        }
         
         const headers = Object.keys(data[0]);
         const csvRows = [headers.join(',')];
@@ -985,7 +640,330 @@
         closeModal();
     };
 
-    // ========== ТРЕНИРОВКИ ==========
+    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ (сокращённо, но рабочие) ==========
+    
+    // Редактирование БАДа
+    function editSupplement(id) {
+        const supp = supplements.find(s => s.id === id);
+        if(!supp) return;
+        showModal(`
+            <div class="modal-card">
+                <h3>✏️ Редактировать БАД</h3>
+                <label>Название:</label>
+                <input type="text" id="editSuppName" value="${escapeHtml(supp.name)}">
+                <label>Единица:</label>
+                <select id="editSuppUnit">
+                    <option value="г" ${supp.unit === 'г' ? 'selected' : ''}>граммы</option>
+                    <option value="таб" ${supp.unit === 'таб' ? 'selected' : ''}>таблетки</option>
+                </select>
+                <label>Количество:</label>
+                <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
+        `);
+    }
+
+    function updateSupplement(id) {
+        const name = document.getElementById('editSuppName')?.value;
+        const unit = document.getElementById('editSuppUnit')?.value;
+        const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
+        const supp = supplements.find(s => s.id === id);
+        if(supp && name && !isNaN(quantity) && quantity >= 0) {
+            supp.name = name;
+            supp.unit = unit;
+            supp.quantity = quantity;
+            saveAll();
+            closeModal();
+            renderBadsContent();
+        }
+    }
+
+    // БАДы
+    function renderBadsSection() {
+        document.getElementById('app').innerHTML = `
+            <div class="app-container">
+                <div class="section-header">
+                    <button class="back-btn" onclick="goBack()">← Назад</button>
+                    <div class="section-title">💊 БАДы</div>
+                    <button class="action-btn orange" onclick="openGroupConsumeModal()">💊 Приём</button>
+                    <button class="action-btn" onclick="openExportModal('bads')">📎 Export</button>
+                    <button class="action-btn green" onclick="exportBackup()">💾 Бэкап</button>
+                    <button class="action-btn blue" onclick="importBackup()">📂 Импорт</button>
+                </div>
+                <div class="section-content" id="badsContent"></div>
+            </div>
+        `;
+        renderBadsContent();
+    }
+
+    function renderBadsContent() {
+        const container = document.getElementById('badsContent');
+        let supplementsHtml = supplements.map(sup => `
+            <div class="supply-card">
+                <div class="card-header">
+                    <span class="card-title">${escapeHtml(sup.name)}</span>
+                    <div>
+                        <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
+                        <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
+                        <button class="delete-icon" onclick="deleteSupplement('${sup.id}')">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        let historyHtml = historyLog.filter(h => h.type === 'consume').map(h => `
+            <div class="history-item">
+                <div class="history-header">
+                    <span class="history-name">${escapeHtml(h.suppName)}</span>
+                    <div>
+                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
+                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
+                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
+            </div>
+        `).join('');
+        
+        container.innerHTML = `
+            <div class="filter-row">
+                <input type="date" id="badsFilterDate">
+                <button onclick="filterBadsHistory()">🔍</button>
+                <button onclick="clearBadsFilter()">✖️</button>
+            </div>
+            <div style="margin-bottom:25px;">
+                <div style="color:white; margin-bottom:12px;">📦 Мои БАДы</div>
+                ${supplementsHtml || '<div class="empty-state">Нет БАДов</div>'}
+                <button class="add-btn" onclick="openAddSuppModal()">➕ Добавить БАД</button>
+            </div>
+            <div>
+                <div style="color:white; margin-bottom:12px;">📜 История приёмов</div>
+                <div id="historyList">${historyHtml || '<div class="empty-state">Нет записей</div>'}</div>
+            </div>
+        `;
+    }
+
+    window.deleteSupplement = (id) => {
+        if(confirm('Удалить БАД?')) {
+            historyLog = historyLog.filter(h => h.suppId !== id);
+            supplements = supplements.filter(s => s.id !== id);
+            saveAll();
+            renderBadsContent();
+        }
+    };
+
+    window.openAddSuppModal = () => {
+        showModal(`
+            <div class="modal-card">
+                <h3>✨ Добавить БАД</h3>
+                <label>Название:</label>
+                <input type="text" id="suppName" placeholder="Например: Витамин D">
+                <label>Единица:</label>
+                <select id="suppUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select>
+                <label>Количество:</label>
+                <input type="number" id="suppAmount" placeholder="Количество" step="any">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
+        `);
+    };
+
+    window.addSupplement = () => {
+        const name = document.getElementById('suppName')?.value;
+        const unit = document.getElementById('suppUnit')?.value;
+        const amount = parseFloat(document.getElementById('suppAmount')?.value);
+        if(!name || isNaN(amount) || amount <= 0) return alert("Ошибка");
+        let existing = supplements.find(s => s.name === name && s.unit === unit);
+        if(existing) existing.quantity += amount;
+        else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
+        saveAll();
+        closeModal();
+        renderBadsContent();
+    };
+
+    // Редактирование записи истории
+    function editHistoryEntry(entryId) {
+        const entry = historyLog.find(h => h.id === entryId);
+        if(!entry) return;
+        showModal(`
+            <div class="modal-card">
+                <h3>✏️ Редактировать приём</h3>
+                <label>Количество:</label>
+                <input type="number" id="editHistoryAmount" value="${entry.amount}" step="any">
+                <label>Дата:</label>
+                <input type="datetime-local" id="editHistoryDate" value="${entry.date.slice(0,16)}">
+                <div style="display:flex; gap:15px; margin-top:25px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateHistoryEntry('${entryId}')">Сохранить</button>
+                    <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
+        `);
+    }
+
+    function updateHistoryEntry(entryId) {
+        const entry = historyLog.find(h => h.id === entryId);
+        if(!entry) return;
+        const newAmount = parseFloat(document.getElementById('editHistoryAmount')?.value);
+        const newDate = document.getElementById('editHistoryDate')?.value;
+        if(isNaN(newAmount) || newAmount <= 0) return alert("Некорректное количество");
+        
+        const supp = supplements.find(s => s.id === entry.suppId);
+        if(supp) {
+            supp.quantity += entry.amount;
+            if(supp.quantity < newAmount) {
+                supp.quantity -= entry.amount;
+                alert(`Недостаточно! Доступно: ${supp.quantity}`);
+                return;
+            }
+            supp.quantity -= newAmount;
+        }
+        
+        entry.amount = newAmount;
+        entry.date = new Date(newDate).toISOString();
+        saveAll();
+        closeModal();
+        renderBadsContent();
+    }
+
+    function deleteHistoryEntry(entryId) {
+        if(!confirm('Удалить запись?')) return;
+        const entry = historyLog.find(h => h.id === entryId);
+        if(entry) {
+            const supp = supplements.find(s => s.id === entry.suppId);
+            if(supp) supp.quantity += entry.amount;
+            historyLog = historyLog.filter(h => h.id !== entryId);
+            saveAll();
+            renderBadsContent();
+        }
+    }
+
+    function filterBadsHistory() {
+        const filterDate = document.getElementById('badsFilterDate')?.value;
+        const listDiv = document.getElementById('historyList');
+        let filtered = historyLog.filter(h => h.type === 'consume');
+        if(filterDate) filtered = filtered.filter(h => h.date.split('T')[0] === filterDate);
+        listDiv.innerHTML = filtered.map(h => `
+            <div class="history-item">
+                <div class="history-header">
+                    <span class="history-name">${escapeHtml(h.suppName)}</span>
+                    <div>
+                        <button class="edit-icon" onclick="editHistoryEntry('${h.id}')">✏️</button>
+                        <button class="delete-icon" onclick="deleteHistoryEntry('${h.id}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="history-detail">💊 ${h.amount} ${h.unit === 'г' ? 'г' : 'таб'}</div>
+                <div class="history-date">📅 ${new Date(h.date).toLocaleString()}</div>
+            </div>
+        `).join('') || '<div class="empty-state">Нет записей</div>';
+    }
+
+    function clearBadsFilter() {
+        if(document.getElementById('badsFilterDate')) document.getElementById('badsFilterDate').value = '';
+        filterBadsHistory();
+    }
+
+    // Групповой приём БАДов
+    let selectedBads = [];
+
+    function openGroupConsumeModal() {
+        if(supplements.length === 0) {
+            alert("Сначала добавьте БАДы");
+            return;
+        }
+        selectedBads = [];
+        renderGroupConsumeModal();
+    }
+
+    function renderGroupConsumeModal() {
+        let availableBads = supplements.filter(s => !selectedBads.find(sb => sb.id === s.id));
+        
+        let selectedHtml = selectedBads.map(s => `
+            <div class="group-item-selected">
+                <span>${escapeHtml(s.name)} — ${s.amount} ${s.unit === 'г' ? 'г' : 'таб'}</span>
+                <button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️</button>
+            </div>
+        `).join('');
+        
+        let availableHtml = availableBads.map(s => `
+            <div class="group-item-available">
+                <span>${escapeHtml(s.name)} (${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'})</span>
+                <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
+            </div>
+        `).join('');
+        
+        showModal(`
+            <div class="modal-card">
+                <h2>💊 Приём БАДов</h2>
+                <label>📅 Дата приёма:</label>
+                <input type="datetime-local" id="groupConsumeDate" value="${new Date().toISOString().slice(0,16)}">
+                <div style="margin:15px 0;">
+                    <div style="color:#7cb342; margin-bottom:8px;">✅ Выбранные (${selectedBads.length}):</div>
+                    <div style="max-height:150px; overflow-y:auto;">${selectedHtml || '<div class="empty-state">Ничего не выбрано</div>'}</div>
+                </div>
+                <div style="margin:15px 0;">
+                    <div style="color:#1E3A5F; margin-bottom:8px;">📦 Доступные:</div>
+                    <div style="max-height:200px; overflow-y:auto;">${availableHtml || '<div class="empty-state">Нет доступных</div>'}</div>
+                </div>
+                <div style="display:flex; gap:15px;">
+                    <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="saveGroupConsume()">💾 Записать всё</button>
+                    <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
+                </div>
+            </div>
+        `);
+    }
+
+    function addToGroup(id) {
+        const supp = supplements.find(s => s.id === id);
+        if(!supp) return;
+        let amount = prompt(`Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`, "1");
+        amount = parseFloat(amount);
+        if(isNaN(amount) || amount <= 0) return;
+        if(supp.quantity < amount) {
+            alert(`Недостаточно! Доступно: ${supp.quantity}`);
+            return;
+        }
+        selectedBads.push({ ...supp, amount: amount });
+        renderGroupConsumeModal();
+    }
+
+    function removeFromGroup(id) {
+        selectedBads = selectedBads.filter(s => s.id !== id);
+        renderGroupConsumeModal();
+    }
+
+    function saveGroupConsume() {
+        if(selectedBads.length === 0) {
+            alert("Добавьте хотя бы один БАД");
+            return;
+        }
+        const date = document.getElementById('groupConsumeDate')?.value;
+        for(let item of selectedBads) {
+            const supp = supplements.find(s => s.id === item.id);
+            if(supp) {
+                supp.quantity -= item.amount;
+                historyLog.push({
+                    id: Date.now().toString() + Math.random(),
+                    type: 'consume',
+                    suppId: supp.id,
+                    suppName: supp.name,
+                    amount: item.amount,
+                    unit: supp.unit,
+                    date: new Date(date).toISOString()
+                });
+            }
+        }
+        saveAll();
+        closeModal();
+        renderBadsContent();
+        showToast(`✅ Записано ${selectedBads.length} БАДов`);
+    }
+
+    // ТРЕНИРОВКИ (сокращённо, основные функции)
     function renderWorkoutsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -1015,14 +993,14 @@
                 <div class="card-header">
                     <span class="card-title">🏷️ ${escapeHtml(w.name || 'Тренировка')}</span>
                     <div>
-                        <span style="color:#A0A6B2; font-size:0.85rem;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
+                        <span style="color:#A0A6B2;">📅 ${new Date(w.date).toLocaleDateString('ru-RU')}</span>
                         <button class="delete-icon" onclick="deleteWorkout('${w.id}')">🗑️</button>
                     </div>
                 </div>
                 ${(w.exercises || []).map(ex => `
                     <div class="exercise-item">
                         <div class="exercise-header">
-                            <span class="exercise-name">💪 ${escapeHtml(ex.name)}</span>
+                            <span class="exercise-name">💪 ${escapeHtml(ex.name)} (${ex.muscleGroup})</span>
                             <div>
                                 <button class="edit-icon" onclick="editExerciseInWorkout('${w.id}','${ex.id}')">✏️</button>
                                 <button class="delete-icon" onclick="deleteExerciseFromWorkout('${w.id}','${ex.id}')">🗑️</button>
@@ -1042,7 +1020,7 @@
         let exercisesHtml = (exerciseLibrary || []).map(ex => `
             <div class="supply-card" style="margin-bottom:12px;">
                 <div class="card-header">
-                    <span class="card-title">${escapeHtml(ex.name)} <span style="color:#A0A6B2;">(${escapeHtml(ex.muscleGroup)})</span></span>
+                    <span class="card-title">${escapeHtml(ex.name)} (${escapeHtml(ex.muscleGroup)})</span>
                     <div>
                         <button class="edit-icon" onclick="editExerciseInLibrary('${ex.id}')">✏️</button>
                         <button class="delete-icon" onclick="deleteExerciseFromLibrary('${ex.id}')">🗑️</button>
@@ -1060,11 +1038,11 @@
         `);
     }
 
-    window.addNewExerciseToLibrary = () => {
+    function addNewExerciseToLibrary() {
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новое упражнение</h3>
-                <label>Название упражнения:</label>
+                <label>Название:</label>
                 <input type="text" id="newExName" placeholder="Например: Жим лёжа">
                 <label>Группа мышц:</label>
                 <input type="text" id="newExMuscle" placeholder="Например: Грудь">
@@ -1074,9 +1052,9 @@
                 </div>
             </div>
         `);
-    };
+    }
 
-    window.saveNewExercise = () => {
+    function saveNewExercise() {
         const name = document.getElementById('newExName')?.value;
         const muscle = document.getElementById('newExMuscle')?.value;
         if(!name || !muscle) return alert("Заполните поля");
@@ -1084,13 +1062,13 @@
         saveAll();
         closeModal();
         openExerciseLibrary();
-    };
+    }
 
-    window.editExerciseInLibrary = (id) => {
+    function editExerciseInLibrary(id) {
         const ex = exerciseLibrary.find(e => e.id === id);
         showModal(`
             <div class="modal-card">
-                <h3>✏️ Редактировать упражнение</h3>
+                <h3>✏️ Редактировать</h3>
                 <label>Название:</label>
                 <input type="text" id="editExName" value="${escapeHtml(ex.name)}">
                 <label>Группа мышц:</label>
@@ -1101,30 +1079,36 @@
                 </div>
             </div>
         `);
-    };
+    }
 
-    window.updateExerciseInLibrary = (id) => {
+    function updateExerciseInLibrary(id) {
         const name = document.getElementById('editExName')?.value;
         const muscle = document.getElementById('editExMuscle')?.value;
         const ex = exerciseLibrary.find(e => e.id === id);
-        if(ex && name && muscle) { ex.name = name; ex.muscleGroup = muscle; saveAll(); closeModal(); openExerciseLibrary(); }
-    };
+        if(ex && name && muscle) {
+            ex.name = name;
+            ex.muscleGroup = muscle;
+            saveAll();
+            closeModal();
+            openExerciseLibrary();
+        }
+    }
 
-    window.deleteExerciseFromLibrary = (id) => {
-        if(confirm('Удалить упражнение из библиотеки?')) {
+    function deleteExerciseFromLibrary(id) {
+        if(confirm('Удалить упражнение?')) {
             exerciseLibrary = exerciseLibrary.filter(e => e.id !== id);
             workouts.forEach(w => { w.exercises = w.exercises.filter(e => e.id !== id); });
             saveAll();
             openExerciseLibrary();
             renderWorkoutsContent();
         }
-    };
+    }
 
-    window.openAddWorkoutModal = () => {
+    function openAddWorkoutModal() {
         showModal(`
             <div class="modal-card">
                 <h3>➕ Новая тренировка</h3>
-                <label>Название тренировки:</label>
+                <label>Название:</label>
                 <input type="text" id="workoutName" placeholder="Например: Силовая">
                 <label>Дата:</label>
                 <input type="date" id="workoutDate" value="${new Date().toISOString().slice(0,10)}">
@@ -1134,26 +1118,30 @@
                 </div>
             </div>
         `);
-    };
+    }
 
-    window.createWorkout = () => {
+    function createWorkout() {
         const name = document.getElementById('workoutName')?.value || 'Тренировка';
         const date = document.getElementById('workoutDate')?.value;
         workouts.push({ id: Date.now().toString(), name, date, exercises: [] });
         saveAll();
         closeModal();
         renderWorkoutsContent();
-    };
+    }
 
-    window.deleteWorkout = (id) => {
-        if(confirm('Удалить тренировку?')) { workouts = workouts.filter(w => w.id !== id); saveAll(); renderWorkoutsContent(); }
-    };
+    function deleteWorkout(id) {
+        if(confirm('Удалить тренировку?')) {
+            workouts = workouts.filter(w => w.id !== id);
+            saveAll();
+            renderWorkoutsContent();
+        }
+    }
 
-    window.editWorkoutNameDate = (id) => {
+    function editWorkoutNameDate(id) {
         const w = workouts.find(w => w.id === id);
         showModal(`
             <div class="modal-card">
-                <h3>✏️ Редактировать тренировку</h3>
+                <h3>✏️ Редактировать</h3>
                 <label>Название:</label>
                 <input type="text" id="editWorkoutName" value="${escapeHtml(w.name)}">
                 <label>Дата:</label>
@@ -1164,33 +1152,36 @@
                 </div>
             </div>
         `);
-    };
+    }
 
-    window.updateWorkout = (id) => {
+    function updateWorkout(id) {
         const w = workouts.find(w => w.id === id);
-        if(w) { w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка'; w.date = document.getElementById('editWorkoutDate')?.value; saveAll(); closeModal(); renderWorkoutsContent(); }
-    };
+        if(w) {
+            w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка';
+            w.date = document.getElementById('editWorkoutDate')?.value;
+            saveAll();
+            closeModal();
+            renderWorkoutsContent();
+        }
+    }
 
     let currentSets = [];
     
-    window.addExerciseToWorkout = (workoutId) => {
+    function addExerciseToWorkout(workoutId) {
         let options = (exerciseLibrary || []).map(ex => `<option value="${ex.id}" data-muscle="${ex.muscleGroup}">${ex.name} (${ex.muscleGroup})</option>`).join('');
         options += `<option value="new">➕ Новое упражнение...</option>`;
         showModal(`
             <div class="modal-card">
                 <h3>🏋️ Добавить упражнение</h3>
-                <label>Выберите упражнение:</label>
                 <select id="exSelect" onchange="toggleNewExerciseField()">${options}</select>
                 <div id="newExerciseFields" style="display:none;">
-                    <label>Название:</label>
                     <input type="text" id="newExNameLib" placeholder="Название">
-                    <label>Группа мышц:</label>
                     <input type="text" id="newExMuscleLib" placeholder="Группа мышц">
                 </div>
                 <div id="setsContainer">
-                    <div style="color:white; margin:15px 0 10px; font-weight:bold;">🏋️ Подходы:</div>
+                    <div style="margin:15px 0 10px;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()" style="margin-top:10px;">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
                 </div>
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveExerciseToWorkout('${workoutId}')">Сохранить</button>
@@ -1200,16 +1191,16 @@
         `);
         currentSets = [];
         addSetField();
-    };
+    }
 
-    window.toggleNewExerciseField = () => {
+    function toggleNewExerciseField() {
         const val = document.getElementById('exSelect')?.value;
         const el = document.getElementById('newExerciseFields');
         if(el) el.style.display = val === 'new' ? 'block' : 'none';
-    };
+    }
 
-    window.addSetField = () => { currentSets.push({ weight: '', reps: '' }); renderSetsList(); };
-    window.removeSetField = (idx) => { currentSets.splice(idx, 1); renderSetsList(); };
+    function addSetField() { currentSets.push({ weight: '', reps: '' }); renderSetsList(); }
+    function removeSetField(idx) { currentSets.splice(idx, 1); renderSetsList(); }
     
     function renderSetsList() {
         const container = document.getElementById('setsList');
@@ -1223,7 +1214,7 @@
         `).join('');
     }
 
-    window.saveExerciseToWorkout = (workoutId) => {
+    function saveExerciseToWorkout(workoutId) {
         const select = document.getElementById('exSelect');
         let name, muscleGroup;
         if(select.value === 'new') {
@@ -1243,9 +1234,9 @@
         saveAll();
         closeModal();
         renderWorkoutsContent();
-    };
+    }
 
-    window.editExerciseInWorkout = (workoutId, exerciseId) => {
+    function editExerciseInWorkout(workoutId, exerciseId) {
         const workout = workouts.find(w => w.id === workoutId);
         const exercise = workout?.exercises.find(e => e.id === exerciseId);
         if(!exercise) return;
@@ -1254,9 +1245,9 @@
             <div class="modal-card">
                 <h3>✏️ Редактировать упражнение</h3>
                 <div id="setsContainer">
-                    <div style="color:white; margin:15px 0 10px; font-weight:bold;">🏋️ Подходы:</div>
+                    <div style="margin:15px 0 10px;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()" style="margin-top:10px;">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
                 </div>
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInWorkout('${workoutId}','${exerciseId}')">Сохранить</button>
@@ -1265,9 +1256,9 @@
             </div>
         `);
         renderSetsList();
-    };
+    }
 
-    window.updateExerciseInWorkout = (workoutId, exerciseId) => {
+    function updateExerciseInWorkout(workoutId, exerciseId) {
         const workout = workouts.find(w => w.id === workoutId);
         const exercise = workout?.exercises.find(e => e.id === exerciseId);
         if(exercise) {
@@ -1276,15 +1267,20 @@
             closeModal();
             renderWorkoutsContent();
         }
-    };
+    }
 
-    window.deleteExerciseFromWorkout = (workoutId, exerciseId) => {
-        if(confirm('Удалить упражнение из тренировки?')) {
+    function deleteExerciseFromWorkout(workoutId, exerciseId) {
+        if(confirm('Удалить упражнение?')) {
             const workout = workouts.find(w => w.id === workoutId);
-            if(workout) { workout.exercises = workout.exercises.filter(e => e.id !== exerciseId); saveAll(); renderWorkoutsContent(); }
+            if(workout) {
+                workout.exercises = workout.exercises.filter(e => e.id !== exerciseId);
+                saveAll();
+                renderWorkoutsContent();
+            }
         }
-    };
+    }
 
+    // Запуск
     loadAll();
     renderStartScreen();
 </script>
