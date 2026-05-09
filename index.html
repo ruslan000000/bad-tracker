@@ -373,11 +373,16 @@
             cursor: pointer;
         }
         
-        /* Состояния свернутых тренировок */
         .workout-name {
             font-weight: 700;
             font-size: 1.1rem;
             color: white;
+        }
+        
+        .last-info {
+            font-size: 0.75rem;
+            color: #7cb342;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -390,8 +395,6 @@
     let historyLog = [];
     let workouts = [];
     let exerciseLibrary = [];
-    
-    // Хранилище состояний свёрнутых тренировок
     let collapsedWorkouts = {};
 
     function saveAll() {
@@ -469,7 +472,6 @@
         if(modal) modal.style.display = 'none';
         if(currentModalCallback) currentModalCallback();
         currentModalCallback = null;
-        // Восстанавливаем позицию прокрутки после закрытия модалки
         const content = document.querySelector('.section-content');
         if(content && scrollPosition) {
             content.scrollTop = scrollPosition;
@@ -477,10 +479,24 @@
         }
     }
 
-    // Сохраняем позицию прокрутки перед открытием модалки
     function saveScrollPosition() {
         const content = document.querySelector('.section-content');
         if(content) scrollPosition = content.scrollTop;
+    }
+
+    // ========== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕГО ПОДХОДА ==========
+    function getLastExerciseData(exerciseName) {
+        // Ищем все тренировки, сортируем по дате (новые сверху)
+        const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        for (let workout of sortedWorkouts) {
+            const exercise = workout.exercises.find(ex => ex.name === exerciseName);
+            if (exercise && exercise.sets && exercise.sets.length > 0) {
+                const lastSet = exercise.sets[exercise.sets.length - 1];
+                return { weight: lastSet.weight, reps: lastSet.reps };
+            }
+        }
+        return null;
     }
 
     // ========== ИНСТРУКЦИЯ ==========
@@ -489,33 +505,21 @@
         showModal(`
             <div class="modal-card">
                 <h2>📖 Инструкция</h2>
-                
                 <h3>💊 БАДы</h3>
                 <ul class="instruction-list">
                     <li><strong>➕ Добавить БАД</strong> — ввести название, единицу, количество</li>
-                    <li><strong>✏️ Редактировать БАД</strong> — нажать ✏️ у карточки БАДа</li>
-                    <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов, указать количество, записать все сразу</li>
-                    <li><strong>✏️ Редактировать приём</strong> — нажать ✏️ в истории → изменить дату/количество</li>
-                    <li><strong>🗑️ Удалить приём</strong> — нажать 🗑️ в истории → БАДы вернутся на остаток</li>
+                    <li><strong>✏️ Редактировать БАД</strong> — нажать ✏️ у карточки</li>
+                    <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов → записать все сразу</li>
                 </ul>
-                
                 <h3>🏋️ Тренировки</h3>
                 <ul class="instruction-list">
-                    <li><strong>➕ Новая тренировка</strong> — кнопка в шапке ➕</li>
-                    <li><strong>▶️▼ Свернуть/развернуть</strong> — нажмите на иконку слева от названия</li>
-                    <li><strong>➕ Упражнение</strong> — выбрать из библиотеки или создать новое, добавить подходы</li>
-                    <li><strong>✏️ Редактировать упражнение</strong> — нажать ✏️ у упражнения → изменить подходы</li>
-                    <li><strong>📚 Библиотека упражнений</strong> — кнопка 📚 Упр.</li>
+                    <li><strong>➕ Новая тренировка</strong> — кнопка в шапке</li>
+                    <li><strong>▶️▼ Свернуть/развернуть</strong> — нажмите на иконку</li>
+                    <li><strong>➕ Упражнение</strong> — сначала выберите группу мышц, затем упражнение</li>
+                    <li><strong>📊 Последний вес</strong> — автоматически показывается при выборе упражнения</li>
+                    <li><strong>📋 Копирование подхода</strong> — новый подход копирует предыдущий</li>
                 </ul>
-                
-                <h3>💾 Бэкапы</h3>
-                <ul class="instruction-list">
-                    <li><strong>📎 Export</strong> — сохранить историю в CSV</li>
-                    <li><strong>💾 Бэкап</strong> — полная копия ВСЕХ данных</li>
-                    <li><strong>📂 Импорт</strong> — восстановить данные из файла бэкапа</li>
-                </ul>
-                
-                <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong> (Telegram)</p>
+                <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong></p>
                 <button class="add-btn" onclick="closeModal()" style="margin-top: 20px;">Закрыть</button>
             </div>
         `);
@@ -537,7 +541,7 @@
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">v3.2 — сворачивание тренировок + кнопка в шапке</div>
+                <div class="version">v3.3 — умный выбор упражнений</div>
             </div>
         `;
     }
@@ -554,33 +558,24 @@
         try {
             const now = new Date();
             const backupData = {
-                version: '3.2',
+                version: '3.3',
                 date: now.toISOString(),
-                supplements: supplements,
-                historyLog: historyLog,
-                workouts: workouts,
-                exerciseLibrary: exerciseLibrary,
-                collapsedWorkouts: collapsedWorkouts
+                supplements, historyLog, workouts, exerciseLibrary, collapsedWorkouts
             };
-            
             const jsonStr = JSON.stringify(backupData, null, 2);
             const blob = new Blob([jsonStr], { type: 'application/json' });
-            
             const reader = new FileReader();
             reader.onload = function(event) {
                 const link = document.createElement('a');
                 link.href = event.target.result;
-                const fileName = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
-                link.download = fileName;
+                link.download = `fitness_backup_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}-${now.getMinutes().toString().padStart(2,'0')}.json`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 showToast('📦 Бэкап сохранён!');
             };
             reader.readAsDataURL(blob);
-        } catch(e) {
-            alert('Ошибка при создании бэкапа: ' + e.message);
-        }
+        } catch(e) { alert('Ошибка бэкапа: ' + e.message); }
     }
 
     function importBackup() {
@@ -589,14 +584,9 @@
         input.accept = '.json';
         input.style.display = 'none';
         document.body.appendChild(input);
-        
         input.onchange = (e) => {
             const file = e.target.files[0];
-            if(!file) {
-                document.body.removeChild(input);
-                return;
-            }
-            
+            if(!file) { document.body.removeChild(input); return; }
             const reader = new FileReader();
             reader.onload = (ev) => {
                 try {
@@ -606,14 +596,11 @@
                     if (data.workouts !== undefined) workouts = data.workouts;
                     if (data.exerciseLibrary !== undefined) exerciseLibrary = data.exerciseLibrary;
                     if (data.collapsedWorkouts !== undefined) collapsedWorkouts = data.collapsedWorkouts;
-                    
                     saveAll();
                     showToast('✅ Данные восстановлены!');
                     if (document.getElementById('badsContent')) renderBadsContent();
                     if (document.getElementById('workoutsContent')) renderWorkoutsContent();
-                } catch(err) { 
-                    alert('Ошибка: неверный формат файла бэкапа.'); 
-                }
+                } catch(err) { alert('Ошибка: неверный формат файла'); }
                 document.body.removeChild(input);
             };
             reader.readAsText(file, 'UTF-8');
@@ -621,19 +608,13 @@
         input.click();
     }
 
-    // ========== ЭКСПОРТ CSV ==========
     function exportToCSV(type, startDate, endDate) {
         let data = [];
         if(type === 'bads') {
             let entries = historyLog.filter(h => h.type === 'consume');
             if(startDate) entries = entries.filter(e => e.date.split('T')[0] >= startDate);
             if(endDate) entries = entries.filter(e => e.date.split('T')[0] <= endDate);
-            data = entries.map(e => ({ 
-                'Дата': new Date(e.date).toLocaleString(), 
-                'БАД': e.suppName, 
-                'Принято': e.amount, 
-                'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' 
-            }));
+            data = entries.map(e => ({ 'Дата': new Date(e.date).toLocaleString(), 'БАД': e.suppName, 'Принято': e.amount, 'Единица': e.unit === 'г' ? 'граммы' : 'таблетки' }));
         } else {
             let filtered = [...workouts];
             if(startDate) filtered = filtered.filter(w => w.date >= startDate);
@@ -641,35 +622,18 @@
             for(let w of filtered) {
                 for(let ex of (w.exercises || [])) {
                     for(let set of (ex.sets || [])) {
-                        data.push({ 
-                            'Дата': w.date, 
-                            'Тренировка': w.name, 
-                            'Упражнение': ex.name, 
-                            'Группа мышц': ex.muscleGroup, 
-                            'Вес (кг)': set.weight, 
-                            'Повторы': set.reps 
-                        });
+                        data.push({ 'Дата': w.date, 'Тренировка': w.name, 'Упражнение': ex.name, 'Группа мышц': ex.muscleGroup, 'Вес (кг)': set.weight, 'Повторы': set.reps });
                     }
                 }
             }
         }
-        
-        if(!data.length) { 
-            alert("Нет данных за выбранный период"); 
-            return; 
-        }
-        
+        if(!data.length) { alert("Нет данных"); return; }
         const headers = Object.keys(data[0]);
         const csvRows = [headers.join(',')];
         for(const row of data) {
-            const values = headers.map(h => { 
-                let v = row[h] || ''; 
-                if(typeof v === 'string') v = v.replace(/"/g, '""'); 
-                return `"${v}"`; 
-            });
+            const values = headers.map(h => { let v = row[h] || ''; if(typeof v === 'string') v = v.replace(/"/g, '""'); return `"${v}"`; });
             csvRows.push(values.join(','));
         }
-        
         const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -708,14 +672,7 @@
         closeModal();
     };
 
-    // ========== ФУНКЦИИ ДЛЯ ТРЕНИРОВОК ==========
-    function toggleWorkoutCollapse(workoutId) {
-        collapsedWorkouts[workoutId] = !collapsedWorkouts[workoutId];
-        saveAll();
-        renderWorkoutsContent();
-    }
-
-    // ========== БАДЫ (сокращённо, но все функции есть) ==========
+    // ========== БАДЫ (сокращённо) ==========
     function renderBadsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -783,7 +740,6 @@
     function editSupplement(id) {
         saveScrollPosition();
         const supp = supplements.find(s => s.id === id);
-        if(!supp) return;
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать БАД</h3>
@@ -810,22 +766,17 @@
         const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
         const supp = supplements.find(s => s.id === id);
         if(supp && name && !isNaN(quantity) && quantity >= 0) {
-            supp.name = name;
-            supp.unit = unit;
-            supp.quantity = quantity;
-            saveAll();
-            closeModal();
-            renderBadsContent();
+            supp.name = name; supp.unit = unit; supp.quantity = quantity;
+            saveAll(); closeModal(); renderBadsContent();
             showToast('✅ БАД обновлён');
         }
     }
 
     window.deleteSupplementFromList = (id) => {
-        if(confirm('Удалить БАД? Все записи о приёме тоже удалятся.')) {
+        if(confirm('Удалить БАД?')) {
             historyLog = historyLog.filter(h => h.suppId !== id);
             supplements = supplements.filter(s => s.id !== id);
-            saveAll();
-            renderBadsContent();
+            saveAll(); renderBadsContent();
         }
     };
 
@@ -856,15 +807,12 @@
         let existing = supplements.find(s => s.name === name && s.unit === unit);
         if(existing) existing.quantity += amount;
         else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
-        saveAll();
-        closeModal();
-        renderBadsContent();
+        saveAll(); closeModal(); renderBadsContent();
     };
 
     function editHistoryEntry(entryId) {
         saveScrollPosition();
         const entry = historyLog.find(h => h.id === entryId);
-        if(!entry) return;
         showModal(`
             <div class="modal-card">
                 <h3>✏️ Редактировать приём</h3>
@@ -886,7 +834,6 @@
         const newAmount = parseFloat(document.getElementById('editHistoryAmount')?.value);
         const newDate = document.getElementById('editHistoryDate')?.value;
         if(isNaN(newAmount) || newAmount <= 0) return alert("Некорректное количество");
-        
         const supp = supplements.find(s => s.id === entry.suppId);
         if(supp) {
             supp.quantity += entry.amount;
@@ -897,12 +844,9 @@
             }
             supp.quantity -= newAmount;
         }
-        
         entry.amount = newAmount;
         entry.date = new Date(newDate).toISOString();
-        saveAll();
-        closeModal();
-        renderBadsContent();
+        saveAll(); closeModal(); renderBadsContent();
     }
 
     window.deleteHistoryEntryById = (entryId) => {
@@ -912,8 +856,7 @@
             const supp = supplements.find(s => s.id === entry.suppId);
             if(supp) supp.quantity += entry.amount;
             historyLog = historyLog.filter(h => h.id !== entryId);
-            saveAll();
-            renderBadsContent();
+            saveAll(); renderBadsContent();
         }
     };
 
@@ -946,45 +889,35 @@
     let selectedBads = [];
 
     function openGroupConsumeModal() {
-        if(supplements.length === 0) {
-            alert("Сначала добавьте БАДы");
-            return;
-        }
+        if(supplements.length === 0) { alert("Сначала добавьте БАДы"); return; }
         selectedBads = [];
         renderGroupConsumeModal();
     }
 
     function renderGroupConsumeModal() {
         let availableBads = supplements.filter(s => !selectedBads.find(sb => sb.id === s.id));
-        
         let selectedHtml = selectedBads.map(s => `
             <div class="group-item-selected">
                 <span>${escapeHtml(s.name)} — ${s.amount} ${s.unit === 'г' ? 'г' : 'таб'}</span>
                 <button class="group-btn-remove" onclick="removeFromGroup('${s.id}')">✖️</button>
             </div>
         `).join('');
-        
         let availableHtml = availableBads.map(s => `
             <div class="group-item-available">
                 <span>${escapeHtml(s.name)} (${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'})</span>
                 <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
             </div>
         `).join('');
-        
         saveScrollPosition();
         showModal(`
             <div class="modal-card">
                 <h2>💊 Приём БАДов</h2>
                 <label>📅 Дата приёма:</label>
                 <input type="datetime-local" id="groupConsumeDate" value="${new Date().toISOString().slice(0,16)}">
-                <div style="margin:15px 0;">
-                    <div style="color:#7cb342; margin-bottom:8px;">✅ Выбранные (${selectedBads.length}):</div>
-                    <div style="max-height:150px; overflow-y:auto;">${selectedHtml || '<div class="empty-state">Ничего не выбрано</div>'}</div>
-                </div>
-                <div style="margin:15px 0;">
-                    <div style="color:#1E3A5F; margin-bottom:8px;">📦 Доступные:</div>
-                    <div style="max-height:200px; overflow-y:auto;">${availableHtml || '<div class="empty-state">Нет доступных</div>'}</div>
-                </div>
+                <div style="margin:15px 0;"><div style="color:#7cb342; margin-bottom:8px;">✅ Выбранные (${selectedBads.length}):</div>
+                <div style="max-height:150px; overflow-y:auto;">${selectedHtml || '<div class="empty-state">Ничего не выбрано</div>'}</div></div>
+                <div style="margin:15px 0;"><div style="color:#1E3A5F; margin-bottom:8px;">📦 Доступные:</div>
+                <div style="max-height:200px; overflow-y:auto;">${availableHtml || '<div class="empty-state">Нет доступных</div>'}</div></div>
                 <div style="display:flex; gap:15px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1; padding:16px;" onclick="saveGroupConsume()">💾 Записать всё</button>
                     <button class="small-btn danger-btn" style="flex:1; padding:16px;" onclick="closeModal()">Отмена</button>
@@ -999,10 +932,7 @@
         let amount = prompt(`Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`, "1");
         amount = parseFloat(amount);
         if(isNaN(amount) || amount <= 0) return;
-        if(supp.quantity < amount) {
-            alert(`Недостаточно! Доступно: ${supp.quantity}`);
-            return;
-        }
+        if(supp.quantity < amount) { alert(`Недостаточно! Доступно: ${supp.quantity}`); return; }
         selectedBads.push({ ...supp, amount: amount });
         renderGroupConsumeModal();
     }
@@ -1013,29 +943,16 @@
     }
 
     function saveGroupConsume() {
-        if(selectedBads.length === 0) {
-            alert("Добавьте хотя бы один БАД");
-            return;
-        }
+        if(selectedBads.length === 0) { alert("Добавьте хотя бы один БАД"); return; }
         const date = document.getElementById('groupConsumeDate')?.value;
         for(let item of selectedBads) {
             const supp = supplements.find(s => s.id === item.id);
             if(supp) {
                 supp.quantity -= item.amount;
-                historyLog.push({
-                    id: Date.now().toString() + Math.random(),
-                    type: 'consume',
-                    suppId: supp.id,
-                    suppName: supp.name,
-                    amount: item.amount,
-                    unit: supp.unit,
-                    date: new Date(date).toISOString()
-                });
+                historyLog.push({ id: Date.now().toString() + Math.random(), type: 'consume', suppId: supp.id, suppName: supp.name, amount: item.amount, unit: supp.unit, date: new Date(date).toISOString() });
             }
         }
-        saveAll();
-        closeModal();
-        renderBadsContent();
+        saveAll(); closeModal(); renderBadsContent();
         showToast(`✅ Записано ${selectedBads.length} БАДов`);
     }
 
@@ -1108,7 +1025,35 @@
     };
 
     function openExerciseLibrary() {
-        let exercisesHtml = (exerciseLibrary || []).map(ex => `
+        // Получаем уникальные группы мышц
+        const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
+        let groupsHtml = muscleGroups.map(group => `
+            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
+        `).join('');
+        
+        saveScrollPosition();
+        showModal(`
+            <div class="modal-card">
+                <h2>📚 Библиотека упражнений</h2>
+                <div style="margin-bottom:15px;">
+                    <label>🔍 Фильтр по группе:</label>
+                    <select id="filterMuscleGroup" onchange="filterExerciseLibrary()">
+                        <option value="all">Все группы</option>
+                        ${groupsHtml}
+                    </select>
+                </div>
+                <div id="exercisesList" style="max-height:350px; overflow-y:auto;">
+                    ${renderExercisesList('all')}
+                </div>
+                <button class="add-btn" style="background:#1E3A5F; margin-top:15px;" onclick="addNewExerciseToLibrary()">➕ Добавить упражнение</button>
+                <button class="small-btn danger-btn" style="margin-top:15px; width:100%;" onclick="closeModal()">Закрыть</button>
+            </div>
+        `);
+    }
+
+    function renderExercisesList(filterGroup) {
+        let filtered = filterGroup === 'all' ? exerciseLibrary : exerciseLibrary.filter(ex => ex.muscleGroup === filterGroup);
+        return filtered.map(ex => `
             <div class="supply-card" style="margin-bottom:12px;">
                 <div class="card-header">
                     <span class="card-title">${escapeHtml(ex.name)} (${escapeHtml(ex.muscleGroup)})</span>
@@ -1119,16 +1064,13 @@
                 </div>
             </div>
         `).join('');
-        saveScrollPosition();
-        showModal(`
-            <div class="modal-card">
-                <h2>📚 Библиотека упражнений</h2>
-                <div style="max-height:350px; overflow-y:auto;">${exercisesHtml || '<div class="empty-state">Нет упражнений</div>'}</div>
-                <button class="add-btn" style="background:#1E3A5F; margin-top:15px;" onclick="addNewExerciseToLibrary()">➕ Добавить упражнение</button>
-                <button class="small-btn danger-btn" style="margin-top:15px; width:100%;" onclick="closeModal()">Закрыть</button>
-            </div>
-        `);
     }
+
+    window.filterExerciseLibrary = () => {
+        const filter = document.getElementById('filterMuscleGroup')?.value || 'all';
+        const container = document.getElementById('exercisesList');
+        if(container) container.innerHTML = renderExercisesList(filter);
+    };
 
     function addNewExerciseToLibrary() {
         saveScrollPosition();
@@ -1180,11 +1122,8 @@
         const muscle = document.getElementById('editExMuscle')?.value;
         const ex = exerciseLibrary.find(e => e.id === id);
         if(ex && name && muscle) {
-            ex.name = name;
-            ex.muscleGroup = muscle;
-            saveAll();
-            closeModal();
-            openExerciseLibrary();
+            ex.name = name; ex.muscleGroup = muscle;
+            saveAll(); closeModal(); openExerciseLibrary();
         }
     }
 
@@ -1256,31 +1195,41 @@
         if(w) {
             w.name = document.getElementById('editWorkoutName')?.value || 'Тренировка';
             w.date = document.getElementById('editWorkoutDate')?.value;
-            saveAll();
-            closeModal();
-            renderWorkoutsContent();
+            saveAll(); closeModal(); renderWorkoutsContent();
         }
     }
 
     let currentSets = [];
+    let currentExerciseName = '';
     
     function addExerciseToWorkout(workoutId) {
+        // Получаем уникальные группы мышц из библиотеки
+        const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
+        let groupsHtml = muscleGroups.map(group => `
+            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
+        `).join('');
+        
         saveScrollPosition();
-        let options = (exerciseLibrary || []).map(ex => `<option value="${ex.id}" data-muscle="${ex.muscleGroup}">${ex.name} (${ex.muscleGroup})</option>`).join('');
-        options += `<option value="new">➕ Новое упражнение...</option>`;
         showModal(`
             <div class="modal-card">
                 <h3>🏋️ Добавить упражнение</h3>
-                <label>Выберите упражнение:</label>
-                <select id="exSelect" onchange="toggleNewExerciseField()">${options}</select>
-                <div id="newExerciseFields" style="display:none;">
-                    <input type="text" id="newExNameLib" placeholder="Название">
-                    <input type="text" id="newExMuscleLib" placeholder="Группа мышц">
-                </div>
+                <label>1. Выберите группу мышц:</label>
+                <select id="muscleGroupSelect" onchange="updateExerciseSelect()">
+                    <option value="">-- Выберите группу --</option>
+                    ${groupsHtml}
+                </select>
+                
+                <label>2. Выберите упражнение:</label>
+                <select id="exerciseSelect" onchange="onExerciseSelected()" disabled>
+                    <option value="">-- Сначала выберите группу --</option>
+                </select>
+                
+                <div id="lastInfo" class="last-info" style="display:none;"></div>
+                
                 <div id="setsContainer">
                     <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetFieldWithCopy()">+ Добавить подход (копировать последний)</button>
                 </div>
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="saveExerciseToWorkout('${workoutId}')">Сохранить</button>
@@ -1289,13 +1238,60 @@
             </div>
         `);
         currentSets = [];
+        currentExerciseName = '';
         addSetField();
     }
 
-    window.toggleNewExerciseField = () => {
-        const val = document.getElementById('exSelect')?.value;
-        const el = document.getElementById('newExerciseFields');
-        if(el) el.style.display = val === 'new' ? 'block' : 'none';
+    window.updateExerciseSelect = () => {
+        const group = document.getElementById('muscleGroupSelect')?.value;
+        const exerciseSelect = document.getElementById('exerciseSelect');
+        if(!group) {
+            exerciseSelect.innerHTML = '<option value="">-- Сначала выберите группу --</option>';
+            exerciseSelect.disabled = true;
+            return;
+        }
+        
+        const exercises = exerciseLibrary.filter(ex => ex.muscleGroup === group);
+        exerciseSelect.innerHTML = '<option value="">-- Выберите упражнение --</option>' + 
+            exercises.map(ex => `<option value="${ex.id}" data-name="${escapeHtml(ex.name)}">${escapeHtml(ex.name)}</option>`).join('');
+        exerciseSelect.disabled = false;
+    };
+
+    window.onExerciseSelected = () => {
+        const select = document.getElementById('exerciseSelect');
+        const selectedOption = select.options[select.selectedIndex];
+        const exerciseName = selectedOption?.getAttribute('data-name');
+        const lastInfoDiv = document.getElementById('lastInfo');
+        
+        if(exerciseName) {
+            const lastData = getLastExerciseData(exerciseName);
+            if(lastData) {
+                lastInfoDiv.style.display = 'block';
+                lastInfoDiv.innerHTML = `📊 Последний раз: ${lastData.weight} кг × ${lastData.reps} повт`;
+                // Предлагаем заполнить первый подход последними данными
+                if(currentSets.length > 0 && currentSets[0].weight === '') {
+                    currentSets[0].weight = lastData.weight;
+                    currentSets[0].reps = lastData.reps;
+                    renderSetsList();
+                }
+            } else {
+                lastInfoDiv.style.display = 'none';
+            }
+            currentExerciseName = exerciseName;
+        } else {
+            lastInfoDiv.style.display = 'none';
+        }
+    };
+
+    window.addSetFieldWithCopy = () => {
+        let lastWeight = '', lastReps = '';
+        if(currentSets.length > 0) {
+            const last = currentSets[currentSets.length - 1];
+            lastWeight = last.weight;
+            lastReps = last.reps;
+        }
+        currentSets.push({ weight: lastWeight, reps: lastReps });
+        renderSetsList();
     };
 
     window.addSetField = () => { currentSets.push({ weight: '', reps: '' }); renderSetsList(); };
@@ -1314,26 +1310,28 @@
     }
 
     function saveExerciseToWorkout(workoutId) {
-        const select = document.getElementById('exSelect');
-        let name, muscleGroup;
-        if(select.value === 'new') {
-            name = document.getElementById('newExNameLib')?.value;
-            muscleGroup = document.getElementById('newExMuscleLib')?.value;
-            if(!name || !muscleGroup) return alert("Заполните поля");
-            exerciseLibrary.push({ id: Date.now().toString(), name, muscleGroup });
-            saveAll();
-        } else {
-            const ex = exerciseLibrary.find(e => e.id === select.value);
-            name = ex.name; muscleGroup = ex.muscleGroup;
+        const exerciseSelect = document.getElementById('exerciseSelect');
+        const selectedOption = exerciseSelect.options[exerciseSelect.selectedIndex];
+        const exerciseName = selectedOption?.getAttribute('data-name');
+        const exerciseId = exerciseSelect.value;
+        
+        if(!exerciseId || !exerciseName) {
+            alert("Выберите упражнение");
+            return;
         }
+        
+        const ex = exerciseLibrary.find(e => e.id === exerciseId);
+        if(!ex) return;
+        
         const sets = currentSets.filter(s => s.weight && s.reps).map(s => ({ weight: parseFloat(s.weight), reps: parseInt(s.reps) }));
-        if(sets.length === 0) return alert("Добавьте подходы");
+        if(sets.length === 0) return alert("Добавьте хотя бы один подход");
+        
         const workout = workouts.find(w => w.id === workoutId);
-        workout.exercises.push({ id: Date.now().toString(), name, muscleGroup, sets });
+        workout.exercises.push({ id: Date.now().toString(), name: ex.name, muscleGroup: ex.muscleGroup, sets });
         saveAll();
         closeModal();
         renderWorkoutsContent();
-        showToast(`✅ Упражнение "${name}" добавлено`);
+        showToast(`✅ "${ex.name}" добавлено`);
     }
 
     function editExerciseInWorkout(workoutId, exerciseId) {
@@ -1348,7 +1346,7 @@
                 <div id="setsContainer">
                     <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
-                    <button class="small-btn" onclick="addSetField()">+ Добавить подход</button>
+                    <button class="small-btn" onclick="addSetFieldWithCopy()">+ Добавить подход (копировать последний)</button>
                 </div>
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateExerciseInWorkout('${workoutId}','${exerciseId}')">Сохранить</button>
@@ -1383,7 +1381,6 @@
         }
     }
 
-    // Запуск
     loadAll();
     renderStartScreen();
 </script>
