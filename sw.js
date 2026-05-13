@@ -1,4 +1,4 @@
-const CACHE_NAME = "fitness-v3";   // меняем номер версии
+const CACHE_NAME = "fitness-v4";
 const urlsToCache = [
   "/",
   "/index.html",
