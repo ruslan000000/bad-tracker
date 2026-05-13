@@ -2,11 +2,9 @@
 <html lang="ru">
 <head>
     <link rel="manifest" href="manifest.json">
-
     <meta name="theme-color" content="#0F1115">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta charset="UTF-8">
     <title>Fitness Tracker</title>
     <style>
         * {
@@ -119,7 +117,7 @@
         }
         .modal-card input, .modal-card select { 
             width: 100%; 
-            padding: 16px; 
+            padding: 14px; 
             margin: 5px 0; 
             border: 1px solid #252B36; 
             border-radius: 32px; 
@@ -388,6 +386,11 @@
             color: #7cb342;
             margin-top: 4px;
         }
+        .portion-info {
+            font-size: 0.75rem;
+            color: #A0A6B2;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -400,128 +403,93 @@
     let workouts = [];
     let exerciseLibrary = [];
     let collapsedWorkouts = {};
-function getExercisePR(name) {
-    let max = 0;
 
-    workouts.forEach(w => {
-        (w.exercises || []).forEach(ex => {
-            if(ex.name === name) {
-                (ex.sets || []).forEach(s => {
-                    if(s.weight > max) max = s.weight;
-                });
-            }
+    function getExercisePR(name) {
+        let max = 0;
+        workouts.forEach(w => {
+            (w.exercises || []).forEach(ex => {
+                if(ex.name === name) {
+                    (ex.sets || []).forEach(s => {
+                        if(s.weight > max) max = s.weight;
+                    });
+                }
+            });
         });
-    });
-
-    return max;
-}
-
-function vibrate() {
-    if(navigator.vibrate) navigator.vibrate(40);
-}
-
-function checkPR(exName, sets) {
-    let oldPR = getExercisePR(exName);
-    let newPR = Math.max(...sets.map(s => s.weight || 0));
-
-    if(newPR > oldPR && oldPR > 0) {
-        showToast("🏆 Новый PR: " + newPR + " кг");
-        vibrate();
+        return max;
     }
-}
 
-function autoBackup() {
-    try {
-        localStorage.setItem("fitness_auto_backup", JSON.stringify({
-            date: new Date().toISOString(),
-            workouts,
-            supplements,
-            historyLog,
-            exerciseLibrary
-        }));
-
-        localStorage.setItem("fitness_backup_date", new Date().toISOString());
-    } catch(e) {
-        console.log("backup error", e);
+    function vibrate() {
+        if(navigator.vibrate) navigator.vibrate(40);
     }
-}
-async function saveAll() {
-    const state = {
-        supplements,
-        historyLog,
-        workouts,
-        exerciseLibrary,
-        collapsedWorkouts
-    };
 
-    // 1. localStorage (быстро)
-    localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
-    localStorage.setItem('fitness_history', JSON.stringify(historyLog));
-    localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
-    localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
-    localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
-
-    // 2. IndexedDB (надёжно)
-    try {
-        await saveToIndexedDB(state);
-    } catch (e) {
-        console.log("IndexedDB save error:", e);
-    }
-}
-
-    
-    async function loadAll() {
-
-    // 1. сначала localStorage
-    supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
-    historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
-    workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
-    exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
-    collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
-
-    // 2. если пусто → пробуем IndexedDB
-    const isEmpty = supplements.length === 0 &&
-                    workouts.length === 0 &&
-                    historyLog.length === 0;
-
-    if (isEmpty) {
-        try {
-            const dbData = await loadFromIndexedDB();
-
-            if (dbData) {
-                supplements = dbData.supplements || [];
-                historyLog = dbData.historyLog || [];
-                workouts = dbData.workouts || [];
-                exerciseLibrary = dbData.exerciseLibrary || [];
-                collapsedWorkouts = dbData.collapsedWorkouts || {};
-            }
-        } catch (e) {
-            console.log("IndexedDB load error:", e);
+    function checkPR(exName, sets) {
+        let oldPR = getExercisePR(exName);
+        let newPR = Math.max(...sets.map(s => s.weight || 0));
+        if(newPR > oldPR && oldPR > 0) {
+            showToast("🏆 Новый PR: " + newPR + " кг");
+            vibrate();
         }
     }
 
-    // 3. первый запуск (как у тебя было)
-    const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
-
-    if (isFirstLaunch && exerciseLibrary.length === 0) {
-        localStorage.setItem('fitness_first_launch', 'done');
-
-        exerciseLibrary = [
-            { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
-            { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
-            { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
-        ];
-
-        workouts = [{
-            id: 'demo1',
-            name: 'Первая тренировка',
-            date: new Date().toISOString().slice(0, 10),
-            exercises: []
-        }];
-
-        await saveAll();
+    async function saveAll() {
+        const state = {
+            supplements,
+            historyLog,
+            workouts,
+            exerciseLibrary,
+            collapsedWorkouts
+        };
+        localStorage.setItem('fitness_supplements', JSON.stringify(supplements));
+        localStorage.setItem('fitness_history', JSON.stringify(historyLog));
+        localStorage.setItem('fitness_workouts', JSON.stringify(workouts));
+        localStorage.setItem('fitness_exercise_library', JSON.stringify(exerciseLibrary));
+        localStorage.setItem('fitness_collapsed', JSON.stringify(collapsedWorkouts));
+        try {
+            await saveToIndexedDB(state);
+        } catch (e) {
+            console.log("IndexedDB save error:", e);
+        }
     }
-}
+
+    async function loadAll() {
+        supplements = JSON.parse(localStorage.getItem('fitness_supplements') || '[]');
+        historyLog = JSON.parse(localStorage.getItem('fitness_history') || '[]');
+        workouts = JSON.parse(localStorage.getItem('fitness_workouts') || '[]');
+        exerciseLibrary = JSON.parse(localStorage.getItem('fitness_exercise_library') || '[]');
+        collapsedWorkouts = JSON.parse(localStorage.getItem('fitness_collapsed') || '{}');
+
+        const isEmpty = supplements.length === 0 && workouts.length === 0 && historyLog.length === 0;
+        if (isEmpty) {
+            try {
+                const dbData = await loadFromIndexedDB();
+                if (dbData) {
+                    supplements = dbData.supplements || [];
+                    historyLog = dbData.historyLog || [];
+                    workouts = dbData.workouts || [];
+                    exerciseLibrary = dbData.exerciseLibrary || [];
+                    collapsedWorkouts = dbData.collapsedWorkouts || {};
+                }
+            } catch (e) {}
+        }
+
+        const isFirstLaunch = localStorage.getItem('fitness_first_launch') === null;
+        if (isFirstLaunch && exerciseLibrary.length === 0) {
+            localStorage.setItem('fitness_first_launch', 'done');
+            exerciseLibrary = [
+                { id: 'ex1', name: 'Жим лёжа', muscleGroup: 'Грудь' },
+                { id: 'ex2', name: 'Приседания', muscleGroup: 'Ноги' },
+                { id: 'ex3', name: 'Тяга вертикальная', muscleGroup: 'Спина' }
+            ];
+            workouts = [{
+                id: 'demo1',
+                name: 'Первая тренировка',
+                date: new Date().toISOString().slice(0, 10),
+                exercises: []
+            }];
+            await saveAll();
+        }
+    }
+
     function showToast(msg) {
         let toast = document.createElement('div');
         toast.className = 'toast';
@@ -529,11 +497,7 @@ async function saveAll() {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
-function vibrate(pattern = 30) {
-    if (navigator.vibrate) {
-        navigator.vibrate(pattern);
-    }
-}
+
     function escapeHtml(str) {
         if(!str) return '';
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
@@ -573,31 +537,23 @@ function vibrate(pattern = 30) {
         if(content) scrollPosition = content.scrollTop;
     }
 
-    // ========== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ПОСЛЕДНЕГО ПОДХОДА ==========
-function getLastExerciseData(exerciseName) {
-    // Ищем все тренировки, сортируем по дате (новые сверху)
-    const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    for (let workout of sortedWorkouts) {
-        const exercise = workout.exercises.find(ex => ex.name === exerciseName);
-        if (exercise && exercise.sets && exercise.sets.length > 0) {
-            // Находим лучший подход в этой тренировке
-            let bestSet = null;
-            for (let set of exercise.sets) {
-                if (bestSet === null) {
-                    bestSet = set;
-                } else if (set.weight > bestSet.weight) {
-                    bestSet = set;
-                } else if (set.weight === bestSet.weight && set.reps > bestSet.reps) {
-                    bestSet = set;
+    function getLastExerciseData(exerciseName) {
+        const sortedWorkouts = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
+        for (let workout of sortedWorkouts) {
+            const exercise = workout.exercises.find(ex => ex.name === exerciseName);
+            if (exercise && exercise.sets && exercise.sets.length > 0) {
+                let bestSet = null;
+                for (let set of exercise.sets) {
+                    if (bestSet === null) bestSet = set;
+                    else if (set.weight > bestSet.weight) bestSet = set;
+                    else if (set.weight === bestSet.weight && set.reps > bestSet.reps) bestSet = set;
                 }
+                return { weight: bestSet.weight, reps: bestSet.reps };
             }
-            return { weight: bestSet.weight, reps: bestSet.reps };
         }
+        return null;
     }
-    return null;
-}
-    // ========== ИНСТРУКЦИЯ ==========
+
     function showInstruction() {
         saveScrollPosition();
         showModal(`
@@ -605,9 +561,9 @@ function getLastExerciseData(exerciseName) {
                 <h2>📖 Инструкция</h2>
                 <h3>💊 БАДы</h3>
                 <ul class="instruction-list">
-                    <li><strong>➕ Добавить БАД</strong> — ввести название, единицу, количество</li>
-                    <li><strong>✏️ Редактировать БАД</strong> — нажать ✏️ у карточки</li>
-                    <li><strong>💊 Приём БАДов</strong> — выбрать несколько БАДов → записать все сразу</li>
+                    <li><strong>➕ Добавить БАД</strong> — указать название, единицу, количество и порцию (по умолчанию 1)</li>
+                    <li><strong>✏️ Редактировать БАД</strong> — можно изменить порцию в любой момент</li>
+                    <li><strong>💊 Приём БАДов</strong> — при добавлении автоматически подставляется порция, но её можно изменить</li>
                 </ul>
                 <h3>🏋️ Тренировки</h3>
                 <ul class="instruction-list">
@@ -615,7 +571,6 @@ function getLastExerciseData(exerciseName) {
                     <li><strong>▶️▼ Свернуть/развернуть</strong> — нажмите на иконку</li>
                     <li><strong>➕ Упражнение</strong> — сначала выберите группу мышц, затем упражнение</li>
                     <li><strong>📊 Последний вес</strong> — автоматически показывается при выборе упражнения</li>
-                    <li><strong>📋 Копирование подхода</strong> — новый подход копирует предыдущий</li>
                 </ul>
                 <p style="margin-top: 20px; text-align: center; color: #7cb342;">📬 Вопросы: <strong style="color:white;">@Rusrus4</strong></p>
                 <button class="add-btn" onclick="closeModal()" style="margin-top: 20px;">Закрыть</button>
@@ -623,7 +578,6 @@ function getLastExerciseData(exerciseName) {
         `);
     }
 
-    // ========== СТАРТОВЫЙ ЭКРАН ==========
     function renderStartScreen() {
         document.getElementById('app').innerHTML = `
             <div class="start-screen">
@@ -639,16 +593,7 @@ function getLastExerciseData(exerciseName) {
                     <div class="contact-label">📱 ПРЕДЛОЖЕНИЯ И ДОРАБОТКИ</div>
                     <a href="https://t.me/Rusrus4" target="_blank" class="contact-link">✈️ @Rusrus4 (Telegram)</a>
                 </div>
-                <div class="version">
-v3.4 — PR + Auto Backup
-</div>
-
-<div style="font-size:11px;color:#7cb342;margin-top:6px;">
-💾 Backup: 
-${localStorage.getItem("fitness_backup_date")
-? new Date(localStorage.getItem("fitness_backup_date")).toLocaleString()
-: "ещё нет"}
-</div>
+                <div class="version">v3.5 — Порции БАДов</div>
             </div>
         `;
     }
@@ -665,7 +610,7 @@ ${localStorage.getItem("fitness_backup_date")
         try {
             const now = new Date();
             const backupData = {
-                version: '3.3',
+                version: '3.5',
                 date: now.toISOString(),
                 supplements, historyLog, workouts, exerciseLibrary, collapsedWorkouts
             };
@@ -779,7 +724,7 @@ ${localStorage.getItem("fitness_backup_date")
         closeModal();
     };
 
-    // ========== БАДЫ (сокращённо) ==========
+    // ========== БАДЫ ==========
     function renderBadsSection() {
         document.getElementById('app').innerHTML = `
             <div class="app-container">
@@ -804,18 +749,12 @@ ${localStorage.getItem("fitness_backup_date")
                 <div class="card-header">
                     <span class="card-title">${escapeHtml(sup.name)}</span>
                     <div>
-                        <span class="supply-stock">
-    ${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}
-</span>
-
-<div style="font-size:0.75rem; color:#A0A6B2; margin-top:4px;">
-    Порция: ${sup.portion || 1} ${sup.unit === 'г' ? 'г' : 'таб'}
-</div>
-
-<button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
-<button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
+                        <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
+                        <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
+                        <button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
                     </div>
                 </div>
+                <div class="portion-info">🍽️ Порция: ${sup.portion || 1} ${sup.unit === 'г' ? 'г' : 'таб'}</div>
             </div>
         `).join('');
         
@@ -866,6 +805,8 @@ ${localStorage.getItem("fitness_backup_date")
                 </select>
                 <label>Количество:</label>
                 <input type="number" id="editSuppQuantity" value="${supp.quantity}" step="any">
+                <label>🍽️ Порция (${supp.unit === 'г' ? 'грамм' : 'таблеток'}):</label>
+                <input type="number" id="editSuppPortion" value="${supp.portion || 1}" step="any" min="0.1">
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="updateSupplement('${id}')">Сохранить</button>
                     <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
@@ -878,12 +819,16 @@ ${localStorage.getItem("fitness_backup_date")
         const name = document.getElementById('editSuppName')?.value;
         const unit = document.getElementById('editSuppUnit')?.value;
         const quantity = parseFloat(document.getElementById('editSuppQuantity')?.value);
+        const portion = parseFloat(document.getElementById('editSuppPortion')?.value);
         const supp = supplements.find(s => s.id === id);
-        if(supp && name && !isNaN(quantity) && quantity >= 0) {
-            supp.name = name; supp.unit = unit; supp.quantity = quantity;
+        if(supp && name && !isNaN(quantity) && quantity >= 0 && !isNaN(portion) && portion > 0) {
+            supp.name = name;
+            supp.unit = unit;
+            supp.quantity = quantity;
+            supp.portion = portion;
             saveAll(); closeModal(); renderBadsContent();
             showToast('✅ БАД обновлён');
-        }
+        } else { alert("Проверьте корректность данных"); }
     }
 
     window.deleteSupplementFromList = (id) => {
@@ -905,14 +850,22 @@ ${localStorage.getItem("fitness_backup_date")
                 <select id="suppUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select>
                 <label>Количество:</label>
                 <input type="number" id="suppAmount" placeholder="Количество" step="any">
-                <label>Порция:</label>
-<input type="number" id="suppPortion" placeholder="Например: 2" step="any">
+                <label>🍽️ Порция (${document.getElementById('suppUnit')?.value === 'г' ? 'грамм' : 'таблеток'}):</label>
+                <input type="number" id="suppPortion" placeholder="Например: 2" step="any" value="1">
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
                     <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
                 </div>
             </div>
         `);
+        // Обновляем placeholder порции при смене единицы
+        const unitSelect = document.getElementById('suppUnit');
+        const portionInput = document.getElementById('suppPortion');
+        if(unitSelect && portionInput) {
+            unitSelect.onchange = () => {
+                portionInput.placeholder = unitSelect.value === 'г' ? 'грамм' : 'таблеток';
+            };
+        }
     };
 
     window.addSupplement = () => {
@@ -920,21 +873,23 @@ ${localStorage.getItem("fitness_backup_date")
         const unit = document.getElementById('suppUnit')?.value;
         const amount = parseFloat(document.getElementById('suppAmount')?.value);
         const portion = parseFloat(document.getElementById('suppPortion')?.value) || 1;
-        if(!name || isNaN(amount) || amount <= 0) return alert("Ошибка");
+        if(!name || isNaN(amount) || amount <= 0 || isNaN(portion) || portion <= 0) return alert("Ошибка: заполните все поля корректно");
+        
         let existing = supplements.find(s => s.name === name && s.unit === unit);
         if(existing) {
-    existing.quantity += amount;
-    existing.portion = portion;
-}
-        else supplements.push({
-    id: Date.now().toString(),
-    name,
-    unit,
-    quantity: amount,
-    portion
-});
-        saveAll(); closeModal(); renderBadsContent();vibrate(40);
-showToast("✅ БАД добавлен");
+            existing.quantity += amount;
+            existing.portion = portion;
+        } else {
+            supplements.push({
+                id: Date.now().toString(),
+                name,
+                unit,
+                quantity: amount,
+                portion
+            });
+        }
+        saveAll(); closeModal(); renderBadsContent(); vibrate(40);
+        showToast("✅ БАД добавлен");
     };
 
     function editHistoryEntry(entryId) {
@@ -1012,7 +967,7 @@ showToast("✅ БАД добавлен");
         filterBadsHistory();
     }
 
-    // ========== ГРУППОВОЙ ПРИЁМ БАДОВ ==========
+    // ========== ГРУППОВОЙ ПРИЁМ БАДОВ С ПОРЦИЯМИ ==========
     let selectedBads = [];
 
     function openGroupConsumeModal() {
@@ -1031,7 +986,7 @@ showToast("✅ БАД добавлен");
         `).join('');
         let availableHtml = availableBads.map(s => `
             <div class="group-item-available">
-                <span>${escapeHtml(s.name)} (${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'})</span>
+                <span>${escapeHtml(s.name)} (осталось: ${s.quantity} ${s.unit === 'г' ? 'г' : 'таб'}, порция: ${s.portion || 1})</span>
                 <button class="group-btn-add" onclick="addToGroup('${s.id}')">+ Добавить</button>
             </div>
         `).join('');
@@ -1056,10 +1011,8 @@ showToast("✅ БАД добавлен");
     function addToGroup(id) {
         const supp = supplements.find(s => s.id === id);
         if(!supp) return;
-        let amount = prompt(
-    `Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`,
-    supp.portion || 1
-);
+        const defaultPortion = supp.portion || 1;
+        let amount = prompt(`Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})\nОстаток: ${supp.quantity}\nПорция: ${defaultPortion}`, defaultPortion);
         amount = parseFloat(amount);
         if(isNaN(amount) || amount <= 0) return;
         if(supp.quantity < amount) { alert(`Недостаточно! Доступно: ${supp.quantity}`); return; }
@@ -1155,12 +1108,8 @@ showToast("✅ БАД добавлен");
     };
 
     function openExerciseLibrary() {
-        // Получаем уникальные группы мышц
         const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
-        let groupsHtml = muscleGroups.map(group => `
-            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
-        `).join('');
-        
+        let groupsHtml = muscleGroups.map(group => `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`).join('');
         saveScrollPosition();
         showModal(`
             <div class="modal-card">
@@ -1333,12 +1282,8 @@ showToast("✅ БАД добавлен");
     let currentExerciseName = '';
     
     function addExerciseToWorkout(workoutId) {
-        // Получаем уникальные группы мышц из библиотеки
         const muscleGroups = [...new Set(exerciseLibrary.map(ex => ex.muscleGroup))];
-        let groupsHtml = muscleGroups.map(group => `
-            <option value="${escapeHtml(group)}">${escapeHtml(group)}</option>
-        `).join('');
-        
+        let groupsHtml = muscleGroups.map(group => `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`).join('');
         saveScrollPosition();
         showModal(`
             <div class="modal-card">
@@ -1348,14 +1293,11 @@ showToast("✅ БАД добавлен");
                     <option value="">-- Выберите группу --</option>
                     ${groupsHtml}
                 </select>
-                
                 <label>2. Выберите упражнение:</label>
                 <select id="exerciseSelect" onchange="onExerciseSelected()" disabled>
                     <option value="">-- Сначала выберите группу --</option>
                 </select>
-                
                 <div id="lastInfo" class="last-info" style="display:none;"></div>
-                
                 <div id="setsContainer">
                     <div style="margin:15px 0 10px; color:white;">🏋️ Подходы:</div>
                     <div id="setsList"></div>
@@ -1380,7 +1322,6 @@ showToast("✅ БАД добавлен");
             exerciseSelect.disabled = true;
             return;
         }
-        
         const exercises = exerciseLibrary.filter(ex => ex.muscleGroup === group);
         exerciseSelect.innerHTML = '<option value="">-- Выберите упражнение --</option>' + 
             exercises.map(ex => `<option value="${ex.id}" data-name="${escapeHtml(ex.name)}">${escapeHtml(ex.name)}</option>`).join('');
@@ -1392,17 +1333,11 @@ showToast("✅ БАД добавлен");
         const selectedOption = select.options[select.selectedIndex];
         const exerciseName = selectedOption?.getAttribute('data-name');
         const lastInfoDiv = document.getElementById('lastInfo');
-        
         if(exerciseName) {
             const lastData = getLastExerciseData(exerciseName);
             if(lastData) {
                 lastInfoDiv.style.display = 'block';
-                lastInfoDiv.innerHTML = `
-📊 Последний раз: ${lastData.weight} кг × ${lastData.reps}
-<br>
-🏆 PR: ${getExercisePR(exerciseName)} кг
-`;
-                // Предлагаем заполнить первый подход последними данными
+                lastInfoDiv.innerHTML = `📊 Последний раз: ${lastData.weight} кг × ${lastData.reps}<br>🏆 PR: ${getExercisePR(exerciseName)} кг`;
                 if(currentSets.length > 0 && currentSets[0].weight === '') {
                     currentSets[0].weight = lastData.weight;
                     currentSets[0].reps = lastData.reps;
@@ -1448,18 +1383,11 @@ showToast("✅ БАД добавлен");
         const selectedOption = exerciseSelect.options[exerciseSelect.selectedIndex];
         const exerciseName = selectedOption?.getAttribute('data-name');
         const exerciseId = exerciseSelect.value;
-        
-        if(!exerciseId || !exerciseName) {
-            alert("Выберите упражнение");
-            return;
-        }
-        
+        if(!exerciseId || !exerciseName) { alert("Выберите упражнение"); return; }
         const ex = exerciseLibrary.find(e => e.id === exerciseId);
         if(!ex) return;
-        
         const sets = currentSets.filter(s => s.weight && s.reps).map(s => ({ weight: parseFloat(s.weight), reps: parseInt(s.reps) }));
         if(sets.length === 0) return alert("Добавьте хотя бы один подход");
-        
         const workout = workouts.find(w => w.id === workoutId);
         workout.exercises.push({ id: Date.now().toString(), name: ex.name, muscleGroup: ex.muscleGroup, sets });
         checkPR(ex.name, sets);
@@ -1515,52 +1443,44 @@ showToast("✅ БАД добавлен");
             }
         }
     }
-// ========== NEAR-REAL APP STORAGE LAYER ==========
-const DB_NAME = "fitness_db";
-const DB_STORE = "state";
 
-function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
+    // ========== INDEXEDDB ==========
+    const DB_NAME = "fitness_db";
+    const DB_STORE = "state";
 
-        request.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(DB_STORE)) {
-                db.createObjectStore(DB_STORE);
-            }
-        };
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, 1);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(DB_STORE)) {
+                    db.createObjectStore(DB_STORE);
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
 
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
-}
+    async function saveToIndexedDB(data) {
+        const db = await openDB();
+        const tx = db.transaction(DB_STORE, "readwrite");
+        const store = tx.objectStore(DB_STORE);
+        store.put(data, "app_state");
+    }
 
-async function saveToIndexedDB(data) {
-    const db = await openDB();
-    const tx = db.transaction(DB_STORE, "readwrite");
-    const store = tx.objectStore(DB_STORE);
-    store.put(data, "app_state");
-}
+    async function loadFromIndexedDB() {
+        const db = await openDB();
+        const tx = db.transaction(DB_STORE, "readonly");
+        const store = tx.objectStore(DB_STORE);
+        return new Promise((resolve) => {
+            const req = store.get("app_state");
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => resolve(null);
+        });
+    }
 
-async function loadFromIndexedDB() {
-    const db = await openDB();
-    const tx = db.transaction(DB_STORE, "readonly");
-    const store = tx.objectStore(DB_STORE);
-
-    return new Promise((resolve) => {
-        const req = store.get("app_state");
-        req.onsuccess = () => resolve(req.result || null);
-        req.onerror = () => resolve(null);
-    });
-}
-    loadAll().then(() => {
-    renderStartScreen();
-});
-    if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js");
-    });
-}
+    loadAll().then(() => renderStartScreen());
 </script>
 </body>
 </html>
