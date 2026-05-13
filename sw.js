@@ -1,4 +1,4 @@
-const CACHE_NAME = "fitness-v2";   // изменяем версию, чтобы создать новый кеш
+const CACHE_NAME = "fitness-v3";   // меняем номер версии
 const urlsToCache = [
   "/",
   "/index.html",
@@ -9,7 +9,6 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
-  // Принудительно активируем новый Service Worker сразу
   self.skipWaiting();
 });
 
@@ -26,7 +25,6 @@ self.addEventListener("activate", event => {
       );
     })
   );
-  // Берём под контроль все открытые страницы
   self.clients.claim();
 });
 
@@ -36,4 +34,4 @@ self.addEventListener("fetch", event => {
       return response || fetch(event.request);
     })
   );
-);
+});
