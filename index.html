@@ -847,10 +847,13 @@
                 <label>Название:</label>
                 <input type="text" id="suppName" placeholder="Например: Витамин D">
                 <label>Единица:</label>
-                <select id="suppUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select>
+                <select id="suppUnit">
+                    <option value="г">граммы</option>
+                    <option value="таб">таблетки</option>
+                </select>
                 <label>Количество:</label>
                 <input type="number" id="suppAmount" placeholder="Количество" step="any">
-                <label>🍽️ Порция (${document.getElementById('suppUnit')?.value === 'г' ? 'грамм' : 'таблеток'}):</label>
+                <label>🍽️ Порция (грамм/таблеток):</label>
                 <input type="number" id="suppPortion" placeholder="Например: 2" step="any" value="1">
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
@@ -858,12 +861,12 @@
                 </div>
             </div>
         `);
-        // Обновляем placeholder порции при смене единицы
         const unitSelect = document.getElementById('suppUnit');
-        const portionInput = document.getElementById('suppPortion');
-        if(unitSelect && portionInput) {
+        const portionLabel = document.querySelector('#dynamicModal label:has(+ #suppPortion)');
+        if(unitSelect) {
             unitSelect.onchange = () => {
-                portionInput.placeholder = unitSelect.value === 'г' ? 'грамм' : 'таблеток';
+                const portionInput = document.getElementById('suppPortion');
+                if(portionInput) portionInput.placeholder = unitSelect.value === 'г' ? 'грамм' : 'таблеток';
             };
         }
     };
