@@ -804,9 +804,16 @@ ${localStorage.getItem("fitness_backup_date")
                 <div class="card-header">
                     <span class="card-title">${escapeHtml(sup.name)}</span>
                     <div>
-                        <span class="supply-stock">${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}</span>
-                        <button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
-                        <button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
+                        <span class="supply-stock">
+    ${sup.quantity} ${sup.unit === 'г' ? 'г' : 'таб'}
+</span>
+
+<div style="font-size:0.75rem; color:#A0A6B2; margin-top:4px;">
+    Порция: ${sup.portion || 1} ${sup.unit === 'г' ? 'г' : 'таб'}
+</div>
+
+<button class="edit-icon" onclick="editSupplement('${sup.id}')">✏️</button>
+<button class="delete-icon" onclick="deleteSupplementFromList('${sup.id}')">🗑️</button>
                     </div>
                 </div>
             </div>
@@ -898,6 +905,8 @@ ${localStorage.getItem("fitness_backup_date")
                 <select id="suppUnit"><option value="г">граммы</option><option value="таб">таблетки</option></select>
                 <label>Количество:</label>
                 <input type="number" id="suppAmount" placeholder="Количество" step="any">
+                <label>Порция:</label>
+<input type="number" id="suppPortion" placeholder="Например: 2" step="any">
                 <div style="display:flex; gap:15px; margin-top:25px;">
                     <button class="small-btn" style="background:#2A5F3A; color:white; flex:1;" onclick="addSupplement()">Добавить</button>
                     <button class="small-btn danger-btn" style="flex:1;" onclick="closeModal()">Отмена</button>
@@ -910,10 +919,20 @@ ${localStorage.getItem("fitness_backup_date")
         const name = document.getElementById('suppName')?.value;
         const unit = document.getElementById('suppUnit')?.value;
         const amount = parseFloat(document.getElementById('suppAmount')?.value);
+        const portion = parseFloat(document.getElementById('suppPortion')?.value) || 1;
         if(!name || isNaN(amount) || amount <= 0) return alert("Ошибка");
         let existing = supplements.find(s => s.name === name && s.unit === unit);
-        if(existing) existing.quantity += amount;
-        else supplements.push({ id: Date.now().toString(), name, unit, quantity: amount });
+        if(existing) {
+    existing.quantity += amount;
+    existing.portion = portion;
+}
+        else supplements.push({
+    id: Date.now().toString(),
+    name,
+    unit,
+    quantity: amount,
+    portion
+});
         saveAll(); closeModal(); renderBadsContent();vibrate(40);
 showToast("✅ БАД добавлен");
     };
@@ -1037,7 +1056,10 @@ showToast("✅ БАД добавлен");
     function addToGroup(id) {
         const supp = supplements.find(s => s.id === id);
         if(!supp) return;
-        let amount = prompt(`Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`, "1");
+        let amount = prompt(
+    `Сколько ${supp.name}? (${supp.unit === 'г' ? 'грамм' : 'таблеток'})`,
+    supp.portion || 1
+);
         amount = parseFloat(amount);
         if(isNaN(amount) || amount <= 0) return;
         if(supp.quantity < amount) { alert(`Недостаточно! Доступно: ${supp.quantity}`); return; }
